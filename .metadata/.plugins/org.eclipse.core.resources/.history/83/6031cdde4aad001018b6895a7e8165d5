@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="/admin/fragments/head :: head"></head>
+<!-- [Body] Start -->
+
+<body data-pc-preset="preset-1" data-pc-direction="ltr" data-pc-theme="light">
+
+  <!-- [ Pre-loader ] start -->
+<div class="loader-bg">
+  <div class="loader-track">
+    <div class="loader-fill"></div>
+  </div>
+</div>
+<!-- [ Pre-loader ] End -->
+
+<div th:replace="/admin/fragments/sidebar :: sidebar"></div>
+
+<div th:replace="/admin/fragments/header :: header"></div>
+
+<div class="pc-container" th:fragment="main">
+<h1>Chào mừng đến với trang Category</h1>
+</div>
+
+<div th:replace="/admin/fragments/footer :: footer"></div>
+
+<div th:replace="/admin/fragments/script :: script"></div> 
+    
+
+</body>
+<!-- [Body] end -->
+
+</html>
