@@ -18,6 +18,9 @@
 --
 -- Table structure for table `brands`
 --
+DROP DATABASE IF EXISTS cellworld_db;
+CREATE DATABASE cellworld_db;
+USE cellworld_db;
 
 DROP TABLE IF EXISTS `brands`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
