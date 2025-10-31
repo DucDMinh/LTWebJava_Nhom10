@@ -174,7 +174,7 @@
 	<jsp:include page="/WEB-INF/view/client/layout/header.jsp"></jsp:include>
 
 	<!-- Breadcrumb - Banner -->
-	<section style="background: url(client/img/banner.jpg) center 15% / cover no-repeat; height: 350px;">
+	<section style="background: url(${pageContext.request.contextPath}/client/img/banner.jpg) center 15% / cover no-repeat; height: 350px;">
 		<div aria-label="breadcrumb" class="container">
 		</div>
 	</section>
@@ -183,10 +183,10 @@
 		<nav aria-label="breadcrumb">
 			<ol class="breadcrumb">
 				<li class="breadcrumb-item">
-					<a href="index.html">Home</a>
+					<a href="${pageContext.request.contextPath}/home">Home</a>
 				</li>
 				<li class="breadcrumb-item">
-					<a href="shop.html">Shop</a>
+					<a href="${pageContext.request.contextPath}/shop">Shop</a>
 				</li>
 				<li class="breadcrumb-item active" aria-current="page">
 					iPhone 13 Pro
@@ -202,19 +202,19 @@
 				<div id="productCarousel" class="carousel slide mb-3" data-bs-interval="false">
 					<div class="carousel-inner">
 						<div class="carousel-item active">
-							<img src="client/img/product-item4.jpg" class="d-block w-100" alt="Product Image 1">
+							<img src="${pageContext.request.contextPath}/client/img/product-item4.jpg" class="d-block w-100" alt="Product Image 1">
 						</div>
 						<div class="carousel-item">
-							<img src="client/img/product-item1.jpg" class="d-block w-100" alt="Product Image 2">
+							<img src="${pageContext.request.contextPath}/client/img/product-item1.jpg" class="d-block w-100" alt="Product Image 2">
 						</div>
 						<div class="carousel-item">
-							<img src="client/img/product-item2.jpg" class="d-block w-100" alt="Product Image 3">
+							<img src="${pageContext.request.contextPath}/client/img/product-item2.jpg" class="d-block w-100" alt="Product Image 3">
 						</div>
 						<div class="carousel-item">
-							<img src="client/img/product-item3.jpg" class="d-block w-100" alt="Product Image 4">
+							<img src="${pageContext.request.contextPath}/client/img/product-item3.jpg" class="d-block w-100" alt="Product Image 4">
 						</div>
 						<div class="carousel-item">
-							<img src="client/img/product-item5.jpg" class="d-block w-100" alt="Product Image 5">
+							<img src="${pageContext.request.contextPath}/client/img/product-item5.jpg" class="d-block w-100" alt="Product Image 5">
 						</div>
 					</div>
 
@@ -232,23 +232,23 @@
 				<!-- Thumbnail Indicators -->
 				<div class="row row-cols-5 g-2">
 					<div class="col">
-						<img src="client/img/product-item4.jpg" class="img-fluid img-thumbnail carousel-thumbnail active"
+						<img src="${pageContext.request.contextPath}/client/img/product-item4.jpg" class="img-fluid img-thumbnail carousel-thumbnail active"
 							data-bs-target="#productCarousel" data-bs-slide-to="0" alt="Thumbnail 1" role="button">
 					</div>
 					<div class="col">
-						<img src="client/img/product-item1.jpg" class="img-fluid img-thumbnail carousel-thumbnail"
+						<img src="${pageContext.request.contextPath}/client/img/product-item1.jpg" class="img-fluid img-thumbnail carousel-thumbnail"
 							data-bs-target="#productCarousel" data-bs-slide-to="1" alt="Thumbnail 2" role="button">
 					</div>
 					<div class="col">
-						<img src="client/img/product-item2.jpg" class="img-fluid img-thumbnail carousel-thumbnail"
+						<img src="${pageContext.request.contextPath}/client/img/product-item2.jpg" class="img-fluid img-thumbnail carousel-thumbnail"
 							data-bs-target="#productCarousel" data-bs-slide-to="2" alt="Thumbnail 3" role="button">
 					</div>
 					<div class="col">
-						<img src="client/img/product-item3.jpg" class="img-fluid img-thumbnail carousel-thumbnail"
+						<img src="${pageContext.request.contextPath}/client/img/product-item3.jpg" class="img-fluid img-thumbnail carousel-thumbnail"
 							data-bs-target="#productCarousel" data-bs-slide-to="3" alt="Thumbnail 4" role="button">
 					</div>
 					<div class="col">
-						<img src="client/img/product-item5.jpg" class="img-fluid img-thumbnail carousel-thumbnail"
+						<img src="${pageContext.request.contextPath}/client/img/product-item5.jpg" class="img-fluid img-thumbnail carousel-thumbnail"
 							data-bs-target="#productCarousel" data-bs-slide-to="4" alt="Thumbnail 5" role="button">
 					</div>
 				</div>
@@ -437,7 +437,7 @@
 				<div class="d-flex flex-wrap">
 					<figure class="instagram-item pe-2">
 						<a href="https://templatesjungle.com/" class="image-link position-relative">
-							<img src="client/img/insta-item1.jpg" alt="instagram" class="insta-image">
+							<img src="${pageContext.request.contextPath}/client/img/insta-item1.jpg" alt="instagram" class="insta-image">
 							<div class="icon-overlay position-absolute d-flex justify-content-center">
 								<svg class="instagram">
 									<use xlink:href="#instagram"></use>
@@ -447,7 +447,7 @@
 					</figure>
 					<figure class="instagram-item pe-2">
 						<a href="https://templatesjungle.com/" class="image-link position-relative">
-							<img src="client/img/insta-item2.jpg" alt="instagram" class="insta-image">
+							<img src="${pageContext.request.contextPath}/client/img/insta-item2.jpg" alt="instagram" class="insta-image">
 							<div class="icon-overlay position-absolute d-flex justify-content-center">
 								<svg class="instagram">
 									<use xlink:href="#instagram"></use>
@@ -457,7 +457,7 @@
 					</figure>
 					<figure class="instagram-item pe-2">
 						<a href="https://templatesjungle.com/" class="image-link position-relative">
-							<img src="client/img/insta-item3.jpg" alt="instagram" class="insta-image">
+							<img src="${pageContext.request.contextPath}/client/img/insta-item3.jpg" alt="instagram" class="insta-image">
 							<div class="icon-overlay position-absolute d-flex justify-content-center">
 								<svg class="instagram">
 									<use xlink:href="#instagram"></use>
@@ -467,7 +467,7 @@
 					</figure>
 					<figure class="instagram-item pe-2">
 						<a href="https://templatesjungle.com/" class="image-link position-relative">
-							<img src="client/img/insta-item4.jpg" alt="instagram" class="insta-image">
+							<img src="${pageContext.request.contextPath}/client/img/insta-item4.jpg" alt="instagram" class="insta-image">
 							<div class="icon-overlay position-absolute d-flex justify-content-center">
 								<svg class="instagram">
 									<use xlink:href="#instagram"></use>
@@ -477,7 +477,7 @@
 					</figure>
 					<figure class="instagram-item pe-2">
 						<a href="https://templatesjungle.com/" class="image-link position-relative">
-							<img src="client/img/insta-item5.jpg" alt="instagram" class="insta-image">
+							<img src="${pageContext.request.contextPath}/client/img/insta-item5.jpg" alt="instagram" class="insta-image">
 							<div class="icon-overlay position-absolute d-flex justify-content-center">
 								<svg class="instagram">
 									<use xlink:href="#instagram"></use>

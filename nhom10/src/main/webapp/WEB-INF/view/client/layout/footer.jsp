@@ -11,7 +11,7 @@
             <div class="row d-flex flex-wrap justify-content-between">
               <div class="col-lg-3 col-sm-6 pb-3">
                 <div class="footer-menu">
-                  <img src="client/img/logo.png" alt="logo" class="logo">
+                  <img src="${pageContext.request.contextPath}/client/img/logo.png" alt="logo" class="logo">
                   <p>Nisi, purus vitae, ultrices nunc. Sit ac sit suscipit hendrerit. Gravida massa volutpat aenean odio erat nullam fringilla.</p>
                   <div class="social-links">
                     <ul class="d-flex list-unstyled">

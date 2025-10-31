@@ -18,57 +18,57 @@
           </button>
           <div class="offcanvas offcanvas-end" tabindex="-1" id="bdNavbar" aria-labelledby="bdNavbarOffcanvasLabel">
             <div class="offcanvas-header px-4 pb-0">
-              <a class="navbar-brand" href="index.html">
-                <img src="client/img/logo.png" class="logo">
+              <a class="navbar-brand" href="${pageContext.request.contextPath}/home">
+                <img src="${pageContext.request.contextPath}/client/img/logo.png" class="logo">
               </a>
               <button type="button" class="btn-close btn-close-black" data-bs-dismiss="offcanvas" aria-label="Close" data-bs-target="#bdNavbar"></button>
             </div>
             <div class="offcanvas-body">
               <ul id="navbar" class="navbar-nav text-uppercase justify-content-end align-items-center flex-grow-1 pe-3">
                 <li class="nav-item">
-                  <a class="nav-link me-4 active" href="#billboard">Home</a>
+                  <a class="nav-link me-4 active" href="${pageContext.request.contextPath}/home#billboard">Home</a>
                 </li>
                 <li class="nav-item">
-                  <a class="nav-link me-4" href="#company-services">Services</a>
+                  <a class="nav-link me-4" href="${pageContext.request.contextPath}/home#company-services">Services</a>
                 </li>
                 <li class="nav-item">
-                  <a class="nav-link me-4" href="#mobile-products">Products</a>
+                  <a class="nav-link me-4" href="${pageContext.request.contextPath}/home#mobile-products">Products</a>
                 </li>
                 <li class="nav-item">
-                  <a class="nav-link me-4" href="#smart-watches">Watches</a>
+                  <a class="nav-link me-4" href="${pageContext.request.contextPath}/home#smart-watches">Watches</a>
                 </li>
                 <li class="nav-item">
-                  <a class="nav-link me-4" href="#yearly-sale">Sale</a>
+                  <a class="nav-link me-4" href="${pageContext.request.contextPath}/home#yearly-sale">Sale</a>
                 </li>
                 <li class="nav-item">
-                  <a class="nav-link me-4" href="#latest-blog">Blog</a>
+                  <a class="nav-link me-4" href="${pageContext.request.contextPath}/home#latest-blog">Blog</a>
                 </li>
                 <li class="nav-item dropdown">
                   <a class="nav-link me-4 dropdown-toggle link-dark" data-bs-toggle="dropdown" href="#" role="button" aria-expanded="false">Pages</a>
                   <ul class="dropdown-menu">
                     <li>
-                      <a href="about.html" class="dropdown-item">About</a>
+                      <a href="${pageContext.request.contextPath}/about" class="dropdown-item">About</a>
                     </li>
                     <li>
-                      <a href="blog.html" class="dropdown-item">Blog</a>
+                      <a href="${pageContext.request.contextPath}/blog" class="dropdown-item">Blog</a>
                     </li>
                     <li>
-                      <a href="shop.html" class="dropdown-item">Shop</a>
+                      <a href="${pageContext.request.contextPath}/shop" class="dropdown-item">Shop</a>
                     </li>
                     <li>
-                      <a href="cart.html" class="dropdown-item">Cart</a>
+                      <a href="${pageContext.request.contextPath}/cart" class="dropdown-item">Cart</a>
                     </li>
                     <li>
-                      <a href="checkout.html" class="dropdown-item">Checkout</a>
+                      <a href="${pageContext.request.contextPath}/payment" class="dropdown-item">Checkout</a>
                     </li>
                     <li>
-                      <a href="single-post.html" class="dropdown-item">Single Post</a>
+                      <a href="${pageContext.request.contextPath}/single-post" class="dropdown-item">Single Post</a>
                     </li>
                     <li>
-                      <a href="single-product.html" class="dropdown-item">Single Product</a>
+                      <a href="${pageContext.request.contextPath}/product-detail" class="dropdown-item">Product Detail</a>
                     </li>
                     <li>
-                      <a href="contact.html" class="dropdown-item">Contact</a>
+                      <a href="${pageContext.request.contextPath}/contact" class="dropdown-item">Contact</a>
                     </li>
                   </ul>
                 </li>
@@ -90,7 +90,7 @@
                         </a>
                       </li>
                       <li>
-                        <a href="cart.html">
+                        <a href="${pageContext.request.contextPath}/cart">
                           <svg class="cart">
                             <use xlink:href="#cart"></use>
                           </svg>
