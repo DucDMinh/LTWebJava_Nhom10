@@ -53,10 +53,64 @@
 
     }
 
+    var initStorageOptions = function() {
+      $('.storage-options .btn-group button').on('click', function() {
+        $('.storage-options .btn-group button').removeClass('active');
+        $(this).addClass('active');
+      });
+    }
+
+    var initColorOptions = function() {
+      $('.product-options .rounded-circle').on('click', function() {
+        $('.product-options .rounded-circle').removeClass('active');
+        $(this).addClass('active');
+      });
+    }
+
+    var initProductCarousel = function() {
+      var carousel = document.querySelector('#productCarousel');
+      if (carousel) {
+        var bsCarousel = new bootstrap.Carousel(carousel, {
+          interval: false,
+          wrap: true
+        });
+
+        $('.carousel-thumbnail').on('click', function() {
+          $('.carousel-thumbnail').removeClass('active');
+          $(this).addClass('active');
+        });
+
+        carousel.addEventListener('slide.bs.carousel', function(e) {
+          $('.carousel-thumbnail').removeClass('active');
+          $('.carousel-thumbnail').eq(e.to).addClass('active');
+        });
+      }
+    }
+
+    var initProductDetailQty = function(){
+      $('#button-plus').on('click', function(e) {
+        e.preventDefault();
+        var quantity = parseInt($('#quantityInput').val()) || 1;
+        $('#quantityInput').val(quantity + 1);
+      });
+
+      $('#button-minus').on('click', function(e) {
+        e.preventDefault();
+        var quantity = parseInt($('#quantityInput').val()) || 1;
+        if (quantity > 1) {
+          $('#quantityInput').val(quantity - 1);
+        }
+      });
+    }
+
     $(document).ready(function() {
 
       searchPopup();
       initProductQty();
+      initStorageOptions();
+      initColorOptions();
+      initProductCarousel();
+      initProductDetailQty();
 
       var swiper = new Swiper(".main-swiper", {
         speed: 500,
@@ -122,6 +176,8 @@ function formatUSD(x) {
 
 function initCart() {
     const tbody = document.getElementById('cart-items');
+    if (!tbody) return; // Exit if cart table doesn't exist
+    
     const rows = Array.from(tbody.querySelectorAll('tr'));
 
     function updateSummary() {
@@ -180,37 +236,47 @@ document.addEventListener("DOMContentLoaded", () => {
         { name: "Ớt chuông xanh", price: 14000, quantity: 5, img: "./Img/Green-Capsicum.png" },
         { name: "Ớt chuông đỏ", price: 14000, quantity: 1, img: "./Img/Red-Capsicum.png" },
     ];
-    function renderOrderItems() {
-        container.innerHTML = "";
-        let subtotal = 0;
+    
+    if (container) {
+        function renderOrderItems() {
+            container.innerHTML = "";
+            let subtotal = 0;
 
-        cart.forEach(item => {
-            const itemTotal = item.price * item.quantity;
-            subtotal += itemTotal;
+            cart.forEach(item => {
+                const itemTotal = item.price * item.quantity;
+                subtotal += itemTotal;
 
-            const div = document.createElement("div");
-            div.classList.add("summary-item");
-            div.innerHTML = `
-        <div class="product-summary">
-          <img src="${item.img}" alt="${item.name}" />
-          <span>${item.name} x${item.quantity}</span>
-        </div>
-        <span>${itemTotal.toLocaleString()}₫</span>
-      `;
-            container.appendChild(div);
-        });
+                const div = document.createElement("div");
+                div.classList.add("summary-item");
+                div.innerHTML = `
+            <div class="product-summary">
+              <img src="${item.img}" alt="${item.name}" />
+              <span>${item.name} x${item.quantity}</span>
+            </div>
+            <span>${itemTotal.toLocaleString()}₫</span>
+          `;
+                container.appendChild(div);
+            });
 
-        subtotalEl.innerText = `${subtotal.toLocaleString()}₫`;
-        totalEl.innerText = `${subtotal.toLocaleString()}₫`;
+            subtotalEl.innerText = `${subtotal.toLocaleString()}₫`;
+            totalEl.innerText = `${subtotal.toLocaleString()}₫`;
+        }
+
+        renderOrderItems();
+        if (orderBtn) {
+            orderBtn.addEventListener("click", e => {
+                e.preventDefault();
+                toast.classList.add("show");
+                setTimeout(() => {
+                    toast.classList.remove("show");
+                }, 2000);
+                localStorage.removeItem("cart");
+            });
+        }
     }
-
-    renderOrderItems();
-    orderBtn.addEventListener("click", e => {
-        e.preventDefault();
-        toast.classList.add("show");
-        setTimeout(() => {
-            toast.classList.remove("show");
-        }, 2000);
-        localStorage.removeItem("cart");
-    });
 });
+
+// Cart initialization (only if cart page is loaded)
+if (document.getElementById('cart-items')) {
+    initCart();
+}
