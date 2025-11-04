@@ -15,12 +15,13 @@
 /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
+
+DROP DATABASE IF EXISTS cellworld_db;
+CREATE DATABASE cellworld_db;
+use cellworld_db;
 --
 -- Table structure for table `brands`
 --
-DROP DATABASE IF EXISTS cellworld_db;
-CREATE DATABASE cellworld_db;
-USE cellworld_db;
 
 DROP TABLE IF EXISTS `brands`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
@@ -315,35 +316,8 @@ CREATE TABLE `roles` (
 
 LOCK TABLES `roles` WRITE;
 /*!40000 ALTER TABLE `roles` DISABLE KEYS */;
-INSERT INTO `roles` VALUES (1,'ROLE_ADMIN'),(2,'ROLE_SALE'),(3,'ROLE_USER');
+INSERT INTO `roles` VALUES (1,'ROLE_ADMIN'),(2,'ROLE_STAFF'),(3,'ROLE_USER');
 /*!40000 ALTER TABLE `roles` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `user_roles`
---
-
-DROP TABLE IF EXISTS `user_roles`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `user_roles` (
-  `user_id` int NOT NULL,
-  `role_id` int NOT NULL,
-  PRIMARY KEY (`user_id`,`role_id`),
-  KEY `role_id` (`role_id`),
-  CONSTRAINT `user_roles_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE,
-  CONSTRAINT `user_roles_ibfk_2` FOREIGN KEY (`role_id`) REFERENCES `roles` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `user_roles`
---
-
-LOCK TABLES `user_roles` WRITE;
-/*!40000 ALTER TABLE `user_roles` DISABLE KEYS */;
-INSERT INTO `user_roles` VALUES (1,1),(2,2),(3,3),(4,3);
-/*!40000 ALTER TABLE `user_roles` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -361,6 +335,7 @@ CREATE TABLE `users` (
   `full_name` varchar(255) DEFAULT NULL,
   `phone` varchar(30) DEFAULT NULL,
   `address` varchar(255) DEFAULT NULL,
+  `role` int NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -371,7 +346,7 @@ CREATE TABLE `users` (
 
 LOCK TABLES `users` WRITE;
 /*!40000 ALTER TABLE `users` DISABLE KEYS */;
-INSERT INTO `users` VALUES (1,'admin','{bcrypt}$2a$10$YfQ6z0u3Z0YbA2OxTthH6eZ5mQW4mC0mPY4aITa59Xz1Z4C3L/yeC','admin@cellworld.vn','Nguyen Van Admin','0900000001','1 Nguyen Trai, Q1, TP.HCM'),(2,'sale','{bcrypt}$2a$10$Aoc3W8z8Q2HzRtA1dYoHYewjq5ZV1epIbP4cAqEr9YjT7Gp2K93US','sale@cellworld.vn','Tran Thi Nhan Vien Ban Hang','0900000002','15 Le Duan, Q1, TP.HCM'),(3,'customer1','{bcrypt}$2a$10$4MEyPKj4zA8Cw6g7C/NvHu.JhRJxXJfP3oF6YFQ9xE8/y2ZZXwqKi','khach1@gmail.com','Le Hong Khach','0900000003','20 Hai Ba Trung, Q1, TP.HCM'),(4,'customer2','{bcrypt}$2a$10$y5blKM4N0U.tstqP8Wyz8uXqCPLbFq.2RIMNH7oFq0iSqt4lMZyxi','khach2@gmail.com','Pham Minh Quoc','0900000004','45 Vo Thi Sau, Q3, TP.HCM');
+INSERT INTO `users` VALUES (1,'admin','{bcrypt}$2a$10$YfQ6z0u3Z0YbA2OxTthH6eZ5mQW4mC0mPY4aITa59Xz1Z4C3L/yeC','admin@cellworld.vn','Nguyen Van Admin','0900000001','1 Nguyen Trai, Q1, TP.HCM',1),(2,'sale','{bcrypt}$2a$10$Aoc3W8z8Q2HzRtA1dYoHYewjq5ZV1epIbP4cAqEr9YjT7Gp2K93US','sale@cellworld.vn','Tran Thi Nhan Vien Ban Hang','0900000002','15 Le Duan, Q1, TP.HCM',2),(3,'customer1','{bcrypt}$2a$10$4MEyPKj4zA8Cw6g7C/NvHu.JhRJxXJfP3oF6YFQ9xE8/y2ZZXwqKi','khach1@gmail.com','Le Hong Khach','0900000003','20 Hai Ba Trung, Q1, TP.HCM',3),(4,'customer2','{bcrypt}$2a$10$y5blKM4N0U.tstqP8Wyz8uXqCPLbFq.2RIMNH7oFq0iSqt4lMZyxi','khach2@gmail.com','Pham Minh Quoc','0900000004','45 Vo Thi Sau, Q3, TP.HCM',3);
 /*!40000 ALTER TABLE `users` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -384,4 +359,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2025-10-30 13:26:05
+-- Dump completed on 2025-11-04 11:59:35
