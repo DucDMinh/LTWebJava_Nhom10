@@ -67,9 +67,10 @@ public class SecurityConfiguration {
                                                 .dispatcherTypeMatchers(DispatcherType.FORWARD, DispatcherType.INCLUDE)
                                                 .permitAll()
                                                 .requestMatchers(
-                                                                "/client/homes/**", "/products/**", "/signup/**",
+                                                                "/client/**", "/client/css/**", "/home/**",
+                                                                "/signup/**",
                                                                 "/admin/images/**",
-                                                                "/client/**", "/css/**", "/js/**", "/images/**", "/",
+                                                                "/css/**", "/js/**", "/images/**", "/",
                                                                 "/admin/css/**",
                                                                 "/admin/assets/**", "/admin/js/**")
                                                 .permitAll()
@@ -78,7 +79,7 @@ public class SecurityConfiguration {
                                                 .requestMatchers("/admin/**").hasRole("ADMIN")
                                                 .anyRequest().authenticated())
                                 .oauth2Login(oauth2 -> oauth2
-                                                .loginPage("/client/homes/signin")
+                                                .loginPage("/home/signin")
                                                 .successHandler(customSuccessHandler())
                                                 .failureUrl("/signin?error")
                                                 .userInfoEndpoint(user -> user
@@ -94,9 +95,9 @@ public class SecurityConfiguration {
                                 .rememberMe(remember -> remember
                                                 .rememberMeServices(rememberMeServices()))
                                 .formLogin(formLogin -> formLogin
-                                                .loginPage("/client/homes/signin")
-                                                .loginProcessingUrl("/client/homes/signin")
-                                                .failureUrl("/client/homes/signin?error")
+                                                .loginPage("/home/signin")
+                                                .loginProcessingUrl("/home/signin")
+                                                .failureUrl("/home/signin?error")
                                                 .successHandler(customSuccessHandler())
                                                 .permitAll())
                                 .exceptionHandling(ex -> ex.accessDeniedPage("/error/403"));

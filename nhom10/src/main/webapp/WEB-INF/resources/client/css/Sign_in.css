@@ -1,0 +1,54 @@
+.signin{
+    width: 572px;
+    height: 675px;
+    box-shadow: 0 0 10px #c3c3c3;
+    border-radius: 10px;
+    margin: 25px auto;
+}
+.signin__content{
+    padding: 0 65px;
+}
+.signin__title{
+    margin-top: 72px;
+    margin-bottom: 60px;
+}
+.signin__content--item{
+    width: 435px;
+    height: 75px;
+    box-shadow: 0 0 10px #ebf3f4;
+    border-radius: 10px;
+}
+.signin__content--left{
+    width: 5px;
+    height: 100%;
+    background-color: #0443c0;
+    border-radius: 5px 0 0 5px;
+}
+.gach{
+    width: 2px;
+    height: 20px;
+    background-color: #a4bbd0;
+}
+.input__email{
+    width: 300px;
+    height: 24px;
+    border: none;
+    outline: none;
+    background-color: transparent;
+}
+.it1{
+    margin-bottom: 27px;
+}
+.it2{
+    margin-bottom: 54px;
+}
+.remember-forgot{
+    margin-bottom: 5px;
+}
+.but{
+    width: 162px;
+    height: 55px;
+}
+.signup{
+    margin-bottom: 47px;
+}

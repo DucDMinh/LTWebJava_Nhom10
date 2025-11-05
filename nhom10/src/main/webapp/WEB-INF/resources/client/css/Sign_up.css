@@ -1,0 +1,49 @@
+.singup{
+    width: 572px;
+    height: 945px;
+    box-shadow: 0 0 10px #c3c3c3;
+    border-radius: 10px;
+    margin: 45px auto;
+}
+.signup__title{
+    margin-top: 30px;
+    margin-bottom: 30px;
+}
+.signup__content{
+    padding: 0 65px;
+}
+.signup__content--item{
+    width: 435px;
+    height: 75px;
+    box-shadow: 0 0 10px #ebf3f4;
+    border-radius: 10px;
+}
+.signup__content--left{
+    width: 5px;
+    height: 100%;
+    background-color: #0443c0;
+    border-radius: 5px 0 0 5px;
+}
+.gach{
+    width: 2px;
+    height: 20px;
+    background-color: #a4bbd0;
+}
+.input__email{
+    width: 300px;
+    height: 24px;
+    border: none;
+    outline: none;
+    background-color: transparent;
+}
+.it1{
+    margin-bottom: 27px;
+}
+.signin{
+    margin-bottom: 30px;
+}
+.but{
+    width: 162px;
+    height: 55px;
+    
+}
