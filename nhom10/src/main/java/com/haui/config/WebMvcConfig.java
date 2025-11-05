@@ -21,10 +21,13 @@ public class WebMvcConfig implements WebMvcConfigurer {
 
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
-        registry.addResourceHandler("/client/**").addResourceLocations("/resources/client/");
-        registry.addResourceHandler("/admin/**").addResourceLocations("/WEB-INF/resources/admin/");
-        // registry.addResourceHandler("/admin/images/**").addResourceLocations("/resources/admin/images/");
-        // registry.addResourceHandler("/client/images/**").addResourceLocations("/resources/client/images/");
+        // Serve static resources from client directory
+        registry.addResourceHandler("/client/**")
+                .addResourceLocations("/WEB-INF/resources/client/");
+        
+        // Serve static resources from admin directory
+        registry.addResourceHandler("/admin/**")
+                .addResourceLocations("/WEB-INF/resources/admin/");
     }
 
 }
