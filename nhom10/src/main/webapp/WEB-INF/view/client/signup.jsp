@@ -22,7 +22,7 @@
                     <div class="signup__title fs-4 text-center fw-bold ">
                         Đăng ký tài khoản
                     </div>
-                    <form:form method="post" action="/client/homes/signup-create" modelAttribute="signUp">
+                    <form:form method="post" action="/home/signup-create" modelAttribute="signUp">
                         <div class="signup__content">
                             <div class="it1 signup__content--item border d-flex align-items-center gap-4">
                                 <div class="signup__content--left"></div>

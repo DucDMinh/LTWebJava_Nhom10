@@ -20,7 +20,7 @@ public class UploadService {
         if (file.isEmpty()) {
             return "";
         }
-        String rootPath = this.servletContext.getRealPath("/resources/admin/images");
+        String rootPath = this.servletContext.getRealPath("/WEB-INF/resources/admin/images/user");
         String finalName = "";
         try {
             byte[] bytes = file.getBytes();
