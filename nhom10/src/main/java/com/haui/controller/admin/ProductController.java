@@ -83,7 +83,7 @@ public class ProductController {
         return "admin/product/create";
     }
 
-    @PostMapping("/creates")
+    @PostMapping("/create")
     public String postMethodName(Model model, @ModelAttribute("newProduct") @Valid Product laptop,
             BindingResult bindingResult, @RequestParam("daominhducFile") MultipartFile file) {
         if (bindingResult.hasErrors()) {

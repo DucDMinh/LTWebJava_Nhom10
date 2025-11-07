@@ -53,7 +53,7 @@
                                 <div class="row">
                                     <div class="col-md-5 col-12 mx-auto">
                                         <h1>Add new product</h1>
-                                        <form:form method="post" action="/admin/product/creates"
+                                        <form:form method="post" action="/admin/product/create"
                                             modelAttribute="newProduct" enctype="multipart/form-data">
                                             <hr>
                                             <div class="col" style="display: none;">
