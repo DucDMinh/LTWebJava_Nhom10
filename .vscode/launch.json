@@ -1,0 +1,14 @@
+{
+    "configurations": [
+        {
+            "type": "java",
+            "name": "Spring Boot-Nhom10Application<nhom5>",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "mainClass": "com.haui.Nhom10Application",
+            "projectName": "nhom5",
+            "args": "",
+            "envFile": "${workspaceFolder}/.env"
+        }
+    ]
+}
