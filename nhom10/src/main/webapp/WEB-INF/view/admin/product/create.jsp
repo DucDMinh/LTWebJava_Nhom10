@@ -124,12 +124,11 @@
                                                     </form:select>
                                                 </div>
                                                 <div class="col">
-                                                    <label class="form-label">Target</label>
-                                                    <form:select class="form-select" path="target">
-                                                        <form:option value="Gaming">Gaming</form:option>
-                                                        <form:option value="Design">Design</form:option>
-                                                        <form:option value="Office">Office</form:option>
-                                                        <form:option value="Coding">Coding</form:option>
+                                                    <label class="form-label">Category</label>
+                                                    <form:select class="form-select" path="category">
+                                                        <form:option value="Điện thoại">Điện thoại</form:option>
+                                                        <form:option value="Đồng Hồ">Đồng Hồ</form:option>
+                                                        <form:option value="Máy Tính">Máy Tính</form:option>
                                                     </form:select>
                                                 </div>
                                             </div>

@@ -14,7 +14,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.haui.dto.UserDto;
+import com.haui.model.Product;
 import com.haui.model.User;
+import com.haui.service.ProductService;
 import com.haui.service.RoleService;
 import com.haui.service.UserService;
 
@@ -32,8 +34,13 @@ public class HomeController {
 	@Autowired
 	private UserService userService;
 
+	@Autowired
+	private ProductService productService;
+
 	@GetMapping()
-	public String homePage() {
+	public String homePage(Model model) {
+		List<Product> products = this.productService.getAllProduct();
+		model.addAttribute("products", products);
 		return "client/home";
 	}
 

@@ -146,7 +146,7 @@ public class ProductController {
             currentProduct.setDetailDesc(updateProduct.getDetailDesc());
             currentProduct.setShortDesc(updateProduct.getShortDesc());
             currentProduct.setFactory(updateProduct.getFactory());
-            currentProduct.setTarget(updateProduct.getTarget());
+            currentProduct.setCategory(updateProduct.getCategory());
             productService.handleSaveProduct(currentProduct);
 
         } else {

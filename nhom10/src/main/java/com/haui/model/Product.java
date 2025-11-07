@@ -48,5 +48,5 @@ public class Product {
     private String factory;
 
     @NotEmpty
-    private String target;
+    private String category;
 }
