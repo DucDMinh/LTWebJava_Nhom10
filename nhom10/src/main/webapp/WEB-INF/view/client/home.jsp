@@ -112,8 +112,8 @@
 						</symbol>
 					</svg>
 
-					<jsp:include page="/WEB-INF/view/client/layout/header.jsp"></jsp:include>
 
+					<jsp:include page="/WEB-INF/view/client/layout/header.jsp"></jsp:include>
 					<section id="billboard" class="position-relative overflow-hidden bg-light-blue">
 						<div class="swiper main-swiper">
 							<div class="swiper-wrapper">
@@ -241,6 +241,7 @@
 											Shop</a>
 									</div>
 								</div>
+
 								<div class="swiper product-swiper overflow-x-auto">
 									<div class=" row flex-nowrap">
 										<c:forEach var="product" items="${products}">
@@ -290,6 +291,7 @@
 												</div>
 											</c:if>
 										</c:forEach>
+
 									</div>
 								</div>
 							</div>
