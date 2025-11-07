@@ -209,7 +209,7 @@
 											</svg>
 										</div>
 										<div class="icon-box-content">
-											<h3 class="card-title text-uppercase text-dark">Daily offers</h3>
+											<h3 class="card-title text-uppercase text-dark">Dailys offers</h3>
 											<p>Amet consectetur adipi elit loreme ipsum dolor sit.</p>
 										</div>
 									</div>
