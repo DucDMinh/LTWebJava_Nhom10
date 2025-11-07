@@ -306,122 +306,55 @@
 											Shop</a>
 									</div>
 								</div>
-								<div class="swiper product-watch-swiper">
-									<div class="swiper-wrapper">
-										<div class="swiper-slide">
-											<div class="product-card position-relative">
-												<div class="image-holder">
-													<img src="client/img/product-item6.jpg" alt="product-item"
-														class="img-fluid">
-												</div>
-												<div class="cart-concern position-absolute">
-													<div class="cart-button d-flex">
-														<a href="#" class="btn btn-medium btn-black">Add to Cart<svg
-																class="cart-outline">
-																<use xlink:href="#cart-outline"></use>
-															</svg></a>
+								<div class="swiper product-swiper overflow-x-auto">
+									<div class=" row flex-nowrap">
+										<c:forEach var="product" items="${products}">
+											<c:if test="${product.category == 'Đồng Hồ'}">
+												<div class="col-md-6 col-lg-4 col-xl-3 mb-4" style="padding: 5px;">
+													<div class="card h-100 shadow-sm border-0">
+														<span class="badge bg-danger position-absolute top-0 end-0 m-2"
+															style="z-index: 2;">
+															Hot
+														</span>
+														<a href="/product/${product.id}">
+															<img src="/images/product/${product.image}"
+																class="card-img-top" alt="${product.name}">
+														</a>
+
+														<div class="card-body text-center d-flex flex-column">
+
+															<h5 class="card-title fs-6">
+																<a href="/product/${product.id}"
+																	class="text-decoration-none text-dark">
+																	${product.name}
+																</a>
+															</h5>
+
+															<p class="card-text text-muted small mb-2">
+																${product.shortDesc}
+															</p>
+
+															<p class="fs-5 fw-bold text-primary mb-3">
+																<fmt:formatNumber type="number"
+																	value="${product.price}" /> $
+															</p>
+
+															<form action="/add-product-to-cart/${product.id}"
+																method="post" class="mt-auto">
+																<button
+																	class="btn btn-outline-primary rounded-pill px-3 w-100">
+																	<i class="fa fa-shopping-bag me-2"></i>
+																	Add to cart
+																</button>
+																<input type="hidden" name="${_csrf.parameterName}"
+																	value="${_csrf.token}" />
+															</form>
+
+														</div>
 													</div>
 												</div>
-												<div
-													class="card-detail d-flex justify-content-between align-items-baseline pt-3">
-													<h3 class="card-title text-uppercase">
-														<a href="#">Pink watch</a>
-													</h3>
-													<span class="item-price text-primary">$870</span>
-												</div>
-											</div>
-										</div>
-										<div class="swiper-slide">
-											<div class="product-card position-relative">
-												<div class="image-holder">
-													<img src="client/img/product-item7.jpg" alt="product-item"
-														class="img-fluid">
-												</div>
-												<div class="cart-concern position-absolute">
-													<div class="cart-button d-flex">
-														<a href="#" class="btn btn-medium btn-black">Add to Cart<svg
-																class="cart-outline">
-																<use xlink:href="#cart-outline"></use>
-															</svg></a>
-													</div>
-												</div>
-												<div
-													class="card-detail d-flex justify-content-between align-items-baseline pt-3">
-													<h3 class="card-title text-uppercase">
-														<a href="#">Heavy watch</a>
-													</h3>
-													<span class="item-price text-primary">$680</span>
-												</div>
-											</div>
-										</div>
-										<div class="swiper-slide">
-											<div class="product-card position-relative">
-												<div class="image-holder">
-													<img src="client/img/product-item8.jpg" alt="product-item"
-														class="img-fluid">
-												</div>
-												<div class="cart-concern position-absolute">
-													<div class="cart-button d-flex">
-														<a href="#" class="btn btn-medium btn-black">Add to Cart<svg
-																class="cart-outline">
-																<use xlink:href="#cart-outline"></use>
-															</svg></a>
-													</div>
-												</div>
-												<div
-													class="card-detail d-flex justify-content-between align-items-baseline pt-3">
-													<h3 class="card-title text-uppercase">
-														<a href="#">spotted watch</a>
-													</h3>
-													<span class="item-price text-primary">$750</span>
-												</div>
-											</div>
-										</div>
-										<div class="swiper-slide">
-											<div class="product-card position-relative">
-												<div class="image-holder">
-													<img src="client/img/product-item9.jpg" alt="product-item"
-														class="img-fluid">
-												</div>
-												<div class="cart-concern position-absolute">
-													<div class="cart-button d-flex">
-														<a href="#" class="btn btn-medium btn-black">Add to Cart<svg
-																class="cart-outline">
-																<use xlink:href="#cart-outline"></use>
-															</svg></a>
-													</div>
-												</div>
-												<div
-													class="card-detail d-flex justify-content-between align-items-baseline pt-3">
-													<h3 class="card-title text-uppercase">
-														<a href="#">black watch</a>
-													</h3>
-													<span class="item-price text-primary">$650</span>
-												</div>
-											</div>
-										</div>
-										<div class="swiper-slide">
-											<div class="product-card position-relative">
-												<div class="image-holder">
-													<img src="client/img/product-item10.jpg" alt="product-item"
-														class="img-fluid">
-												</div>
-												<div class="cart-concern position-absolute">
-													<div class="cart-button d-flex">
-														<a href="#" class="btn btn-medium btn-black">Add to Cart<svg
-																class="cart-outline">
-																<use xlink:href="#cart-outline"></use>
-															</svg></a>
-													</div>
-												</div>
-												<div class="card-detail d-flex justify-content-between pt-3">
-													<h3 class="card-title text-uppercase">
-														<a href="#">black watch</a>
-													</h3>
-													<span class="item-price text-primary">$750</span>
-												</div>
-											</div>
-										</div>
+											</c:if>
+										</c:forEach>
 									</div>
 								</div>
 							</div>
