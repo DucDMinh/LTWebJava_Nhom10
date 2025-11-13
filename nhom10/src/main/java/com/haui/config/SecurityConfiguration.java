@@ -65,26 +65,17 @@ public class SecurityConfiguration {
                 http
                                 // ✅ Cho phép tất cả request không cần xác thực
                                 .authorizeHttpRequests(authorize -> authorize
-                                                .dispatcherTypeMatchers(DispatcherType.FORWARD, DispatcherType.INCLUDE)
-                                                .permitAll()
-                                                .requestMatchers(
-                                                                "/client/**", "/client/css/**", "/home/**",
-                                                                "/signup/**",
-                                                                "/admin/images/**",
-                                                                "/css/**", "/js/**", "/images/**", "/",
-                                                                "/admin/css/**",
-                                                                "/admin/assets/**", "/admin/js/**")
-                                                .permitAll()
-                                                // .requestMatchers("/admin/orders/**", "/admin/reviews/**", "/admin")
-                                                // .hasAnyRole("STAFF", "ADMIN")
-                                                // .requestMatchers("/admin/**").hasRole("ADMIN")
                                                 .anyRequest().permitAll())
-                                .oauth2Login(oauth2 -> oauth2
-                                                .loginPage("/home/signin")
-                                                .successHandler(customSuccessHandler())
-                                                .failureUrl("/signin?error")
-                                                .userInfoEndpoint(user -> user
-                                                                .userService(new CustomOAuth2UserService(userService))))
+
+                                // ⚙️ Nếu bạn không cần OAuth2 login lúc test => tắt đi cho gọn
+                                // .oauth2Login(oauth2 -> oauth2
+                                // .loginPage("/home/signin")
+                                // .successHandler(customSuccessHandler())
+                                // .failureUrl("/signin?error")
+                                // .userInfoEndpoint(user -> user
+                                // .userService(new CustomOAuth2UserService(userService))))
+
+                                // ⚙️ Session vẫn giữ nguyên (để nhớ đăng nhập khi test có cần)
                                 .sessionManagement(session -> session
                                                 .sessionCreationPolicy(SessionCreationPolicy.ALWAYS)
                                                 .invalidSessionUrl("/signin?expired")
