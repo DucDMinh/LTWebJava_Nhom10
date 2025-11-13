@@ -134,9 +134,9 @@
                             </div>
                         </div>
                         <div class="signup__content">
-                            <div class="signin">
+                            <div class="already">
                                 <span>Bạn đã có tài khoản?</span>
-                                <a href="/client/homes/signin">Đăng nhập ngay!</a>
+                                <a href="/home/signin">Đăng nhập ngay!</a>
                             </div>
                             <button type="submit"
                                 class="btn btn-primary but d-flex justify-content-center align-items-center gap-2 m-auto">
