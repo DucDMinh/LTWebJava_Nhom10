@@ -40,4 +40,32 @@ public class UploadService {
         }
         return finalName;
     }
+
+    public String handleSaveUploadProductPicture(MultipartFile file, String targetFolder) {
+        String rootPath = this.servletContext.getRealPath("/resources/images");
+        String finalName = "";
+        try {
+            if (file == null || file.isEmpty()) {
+                return "";
+            }
+            byte[] bytes;
+            bytes = file.getBytes();
+
+            File dir = new File(rootPath + File.separator + "product");
+            if (!dir.exists())
+                dir.mkdirs();
+            finalName = System.currentTimeMillis() + "-" + file.getOriginalFilename();
+            // Create the file on server
+            File serverFile = new File(dir.getAbsolutePath() + File.separator + finalName);
+
+            BufferedOutputStream stream = new BufferedOutputStream(
+                    new FileOutputStream(serverFile));
+            stream.write(bytes);
+            stream.close();
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        return finalName;
+    }
 }
