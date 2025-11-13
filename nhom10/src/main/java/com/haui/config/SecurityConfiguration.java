@@ -63,6 +63,7 @@ public class SecurityConfiguration {
                         CustomRememberMeSuccessHandler rememberMeSuccessHandler) throws Exception {
 
                 http
+                                // ✅ Cho phép tất cả request không cần xác thực
                                 .authorizeHttpRequests(authorize -> authorize
                                                 .dispatcherTypeMatchers(DispatcherType.FORWARD, DispatcherType.INCLUDE)
                                                 .permitAll()
@@ -89,18 +90,26 @@ public class SecurityConfiguration {
                                                 .invalidSessionUrl("/signin?expired")
                                                 .maximumSessions(1)
                                                 .maxSessionsPreventsLogin(false))
+
+                                // ⚙️ Logout config — giữ lại nếu sau này dùng
                                 .logout(logout -> logout
                                                 .deleteCookies("JSESSIONID")
                                                 .invalidateHttpSession(true))
+
+                                // ⚙️ Remember-me — giữ nguyên để không lỗi bean
                                 .rememberMe(remember -> remember
                                                 .rememberMeServices(rememberMeServices()))
+
+                                // ⚙️ Form login — vô hiệu hoá login form vì ta cho phép tất cả
                                 .formLogin(formLogin -> formLogin
-                                                .loginPage("/home/signin")
-                                                .loginProcessingUrl("/home/signin")
-                                                .failureUrl("/home/signin?error")
-                                                .successHandler(customSuccessHandler())
-                                                .permitAll())
-                                .exceptionHandling(ex -> ex.accessDeniedPage("/error/403"));
+                                                .disable())
+
+                                // ⚙️ Nếu không muốn bị lỗi 403 khi test => có thể bỏ hẳn
+                                .exceptionHandling(ex -> ex
+                                                .accessDeniedPage("/error/403"))
+
+                                // ⚙️ CSRF nên tắt khi test để tránh lỗi POST
+                                .csrf(csrf -> csrf.disable());
 
                 return http.build();
         }

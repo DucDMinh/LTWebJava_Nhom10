@@ -67,7 +67,7 @@
                             </div>
                             <div class="signup">
                                 <span>Chưa có tài khoản?</span>
-                                <a href="/client/home/signup">Đăng ký ngay!</a>
+                                <a href="/home/signup" style="color: blue;">Đăng ký ngay!</a>
                             </div>
                             <button type="submit"
                                 class="btn btn-primary but d-flex justify-content-center align-items-center gap-2 m-auto">
