@@ -22,7 +22,7 @@
                 <div class="signin border">
                     <div class="signin__title fs-4 fw-bold text-center">Đăng nhập</div>
                     <div class="signin__content">
-                        <form action="/client/home/signin" method="post">
+                        <form action="/home/signin" method="post">
                             <div class="it1 signin__content--item border d-flex align-items-center gap-4">
                                 <div class="signin__content--left"></div>
                                 <div class="item__icon">

@@ -25,7 +25,7 @@ public class EmailService {
             MimeMessage message = mailSender.createMimeMessage();
             MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
 
-            helper.setFrom("iphoneserversendemail@gmail.com", "IPhone Shop");
+            helper.setFrom("javawebnhom10@gmail.com", "CellWorld Support");
             helper.setTo(recipientEmail);
             helper.setSubject("Đăng nhập thành công");
             String content = "<div style=\"font-family: Arial, sans-serif; padding: 20px; background: #f5f7fa; border-radius: 10px; max-width: 600px; margin: auto; box-shadow: 0 4px 10px rgba(0,0,0,0.1);\">\n"

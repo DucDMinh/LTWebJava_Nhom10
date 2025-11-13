@@ -31,9 +31,9 @@ public class CustomSuccessHandler implements AuthenticationSuccessHandler {
     protected String determineTargetUrl(final Authentication authentication) {
 
         Map<String, String> roleTargetUrlMap = new HashMap<>();
-        roleTargetUrlMap.put("ROLE_USER", "/client/homes");
+        roleTargetUrlMap.put("ROLE_USER", "/home");
         roleTargetUrlMap.put("ROLE_ADMIN", "/admin");
-        roleTargetUrlMap.put("ROLE_STAFF", "/admin/orders");
+        roleTargetUrlMap.put("ROLE_STAFF", "/admin");
 
         final Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
         for (final GrantedAuthority grantedAuthority : authorities) {
@@ -60,7 +60,7 @@ public class CustomSuccessHandler implements AuthenticationSuccessHandler {
             session.setAttribute("avatar", user.getAvatar());
             session.setAttribute("email", user.getEmail());
             session.setAttribute("id", user.getId());
-            session.setAttribute("role", user.getRole().getName().toString().trim());
+            session.setAttribute("role", user.getRole().getName().trim());
             emailService.sendLoginSuccessEmail(user.getEmail(), user.getFullName());
         } else {
             user = userService.getUserByEmail(username);
@@ -69,7 +69,7 @@ public class CustomSuccessHandler implements AuthenticationSuccessHandler {
                 session.setAttribute("avatar", user.getAvatar());
                 session.setAttribute("email", user.getEmail());
                 session.setAttribute("id", user.getId());
-                session.setAttribute("role", user.getRole().getName().toString().trim());
+                session.setAttribute("role", user.getRole().getName().trim());
                 emailService.sendLoginSuccessEmail(user.getEmail(), user.getFullName());
             }
         }
