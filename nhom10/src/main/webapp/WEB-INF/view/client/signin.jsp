@@ -22,7 +22,7 @@
                 <div class="signin border">
                     <div class="signin__title fs-4 fw-bold text-center">Đăng nhập</div>
                     <div class="signin__content">
-                        <form action="/client/home/signin" method="post">
+                        <form action="/home/signin" method="post">
                             <div class="it1 signin__content--item border d-flex align-items-center gap-4">
                                 <div class="signin__content--left"></div>
                                 <div class="item__icon">
@@ -67,7 +67,7 @@
                             </div>
                             <div class="signup">
                                 <span>Chưa có tài khoản?</span>
-                                <a href="/client/home/signup">Đăng ký ngay!</a>
+                                <a href="/home/signup" style="color: blue;">Đăng ký ngay!</a>
                             </div>
                             <button type="submit"
                                 class="btn btn-primary but d-flex justify-content-center align-items-center gap-2 m-auto">

@@ -50,7 +50,7 @@
                             <div class=" header__search d-flex align-items-center gap-2">
                                 <form action="/admin/users" method="get">
                                     <label for="search" class="p-2">
-                                        <img src="${env}/client/images/home/Icon/Search.png" alt="logo">
+                                        <img src="${env}/client/img/Search.png" alt="logo">
                                     </label>
                                     <input type="text" placeholder="Search by Full Name" name="name" class="header__search--input" id="search" value="${nameSearch}">
                                 </form>
@@ -78,7 +78,7 @@
                                     <td>${user.email}</td>
                                     <td>${user.username}</td>
                                     <td>${user.fullName}</td>
-                                    <td>${user.role}</td>
+                                    <td>${user.role.name}</td>
                                     <td>
                                         <a href="/admin/users/views/${user.id}" class="btn btn-success">View</a>
                                         <a href="/admin/users/updates/${user.id}"

@@ -34,7 +34,7 @@
                 <div class="panel-body inf-content">
                     <div class="row">
                         <div class="col-md-4 m-2">
-                            <img alt="" style="width:600px;" title="" class="img-circle img-thumbnail isTooltip" src="<c:url value='/admin/images/user/${user.avatar}'/>" data-original-title="Usuario">
+                            <img alt="" style="width:600px;" title="" class="img-circle img-thumbnail isTooltip" src="\admin\images\user\user\1762411832879-mikz.png" data-original-title="Usuario">
                             <ul title="Ratings" class="list-inline ratings text-center">
                                 <li><a href="#"><span class="glyphicon glyphicon-star"></span></a></li>
                                 <li><a href="#"><span class="glyphicon glyphicon-star"></span></a></li>
@@ -111,7 +111,7 @@
                                             </strong>
                                         </td>
                                         <td class="text-primary">
-                                            ${user.role}
+                                            ${user.role.name}
                                         </td>
                                     </tr>
                                     <tr>
@@ -133,7 +133,7 @@
                                             </strong>
                                         </td>
                                         <td class="text-primary">
-                                            ${user.createdDateFormatted}
+                                            ${user.createdDate}
                                         </td>
                                     </tr>
 

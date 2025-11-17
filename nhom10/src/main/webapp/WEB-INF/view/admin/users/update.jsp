@@ -75,11 +75,12 @@
 
                                 <div class="mb-3 col-12 col-md-6">
                                     <label class="form-label">Role:</label>
-                                    <form:select class="form-select" path="roleId" disabled="true">
+                                    <form:select class="form-select" path="role.id" disabled="true">
                                         <form:option value="1">ADMIN</form:option>
-                                        <form:option value="2">USER</form:option>
+                                        <form:option value="2">STAFF</form:option>
+                                        <form:option value="3">USER</form:option>
                                     </form:select>
-                                    <form:hidden path="roleId"/>
+                                    <form:hidden path="role.id"/>
                                 </div>
                                 <div class="mb-3 col-12 col-md-6">
                                     <label for="avatarFile" class="form-label">Avatar:</label>

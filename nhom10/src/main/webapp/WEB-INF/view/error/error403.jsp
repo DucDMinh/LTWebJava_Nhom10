@@ -49,9 +49,17 @@
     </div>
     <h1 class="text-danger">Không đủ quyền hạn</h1>
     <p>Xin lỗi, bạn không có quyền truy cập vào trang này.<br>Vui lòng liên hệ quản trị viên nếu bạn nghĩ đây là lỗi.</p>
-    <a href="/admin" class="btn btn-dark" style="text-decoration: none">
-        <i class="fas fa-home"></i> Về trang chủ
-    </a>
+    <c:choose>
+    <c:when test="${sessionScope.role eq 'USER'}">
+        <c:set var="homeUrl" value="/home"/>
+    </c:when>
+    <c:otherwise>
+        <c:set var="homeUrl" value="/admin"/>
+    </c:otherwise>
+</c:choose>
+    <a href="${homeUrl}" class="btn btn-dark" style="text-decoration: none">
+    <i class="fas fa-home"></i> Về trang chủ
+</a>
 </div>
 </body>
 </html>
