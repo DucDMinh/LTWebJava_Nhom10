@@ -205,25 +205,133 @@
 										<p>${product.shortDesc}</p>
 									</div>
 
-									<!-- Product options -->
-									<div class="product-options mb-4">
+									<form class="product-options mb-4" method="POST">
+										<div class="mb-3">
+											<label class="form-label fw-bold">Chọn màu sắc</label>
+											<div class="d-flex align-items-center gap-2">
+												<div class="form-check">
+													<input class="form-check-input visually-hidden" type="radio"
+														name="productColor" id="colorRed" value="red" checked>
+													<label class="form-check-label color-swatch" for="colorRed"
+														style="background-color: black;" title="Đen"></label>
+												</div>
+												<div class="form-check">
+													<input class="form-check-input visually-hidden" type="radio"
+														name="productColor" id="colorBlue" value="blue">
+													<label class="form-check-label color-swatch" for="colorBlue"
+														style="background-color: white;" title="Trắng"></label>
+												</div>
+												<div class="form-check">
+													<input class="form-check-input visually-hidden" type="radio"
+														name="productColor" id="colorGreen" value="green">
+													<label class="form-check-label color-swatch" for="colorGreen"
+														style="background-color: gold;" title="Vàng"></label>
+												</div>
+											</div>
+										</div>
+										<div class="mb-3">
+											<label class="form-label fw-bold">Chọn RAM:</label>
+											<div class="d-flex flex-wrap gap-2">
+												<div class="form-check">
+													<input class="form-check-input visually-hidden" type="radio"
+														name="ramOption" id="ram8gb" value="8gb" checked>
+													<label class="form-check-label btn-chip-outline"
+														for="ram8gb">8GB</label>
+												</div>
+												<div class="form-check">
+													<input class="form-check-input visually-hidden" type="radio"
+														name="ramOption" id="ram16gb" value="16gb">
+													<label class="form-check-label btn-chip-outline"
+														for="ram16gb">16GB</label>
+												</div>
+												<div class="form-check">
+													<input class="form-check-input visually-hidden" type="radio"
+														name="ramOption" id="ram4gb" value="4gb" disabled>
+													<label class="form-check-label btn-chip-outline" for="ram4gb">4GB
+														(Hết hàng)</label>
+												</div>
+											</div>
+										</div>
+										<div class="mb-3">
+											<label class="form-label fw-bold">Chọn Kích thước màn hình:</label>
+											<div class="d-flex flex-wrap gap-2">
+												<div class="form-check">
+													<input class="form-check-input visually-hidden" type="radio"
+														name="screenSizeOption" id="size61" value="6.1" checked>
+													<label class="form-check-label btn-chip-outline" for="size61">6.1
+														inch</label>
+												</div>
+												<div class="form-check">
+													<input class="form-check-input visually-hidden" type="radio"
+														name="screenSizeOption" id="size65" value="6.5">
+													<label class="form-check-label btn-chip-outline" for="size65">6.5
+														inch</label>
+												</div>
+												<div class="form-check">
+													<input class="form-check-input visually-hidden" type="radio"
+														name="screenSizeOption" id="size67" value="6.7">
+													<label class="form-check-label btn-chip-outline" for="size67">6.7
+														inch</label>
+												</div>
+											</div>
+										</div>
+										<div class="mb-3">
+											<label class="form-label fw-bold">Chọn Loại màn hình:</label>
+											<div class="d-flex flex-wrap gap-2">
+												<div class="form-check">
+													<input class="form-check-input visually-hidden" type="radio"
+														name="screenTypeOption" id="typeAmoled" value="amoled" checked>
+													<label class="form-check-label btn-chip-outline"
+														for="typeAmoled">AMOLED</label>
+												</div>
+												<div class="form-check">
+													<input class="form-check-input visually-hidden" type="radio"
+														name="screenTypeOption" id="typeLcd" value="lcd">
+													<label class="form-check-label btn-chip-outline"
+														for="typeLcd">LCD</label>
+												</div>
+											</div>
+										</div>
+										<div class="mb-3">
+											<label class="form-label fw-bold">Chọn Pin:</label>
+											<div class="d-flex flex-wrap gap-2">
+												<div class="form-check">
+													<input class="form-check-input visually-hidden" type="radio"
+														name="pinOption" id="pin4500" value="4500" checked>
+													<label class="form-check-label btn-chip-outline" for="pin4500">4500
+														mAh</label>
+												</div>
+												<div class="form-check">
+													<input class="form-check-input visually-hidden" type="radio"
+														name="pinOption" id="pin5000" value="5000">
+													<label class="form-check-label btn-chip-outline" for="pin5000">5000
+														mAh</label>
+												</div>
+											</div>
+										</div>
 										<div class="quantity-selector mb-3">
 											<label for="quantityInput" class="form-label fw-bold">Quantity</label>
 											<div class="input-group w-50">
 												<button class="btn btn-outline-secondary" type="button"
 													id="button-minus">-</button>
 												<input type="text" class="form-control text-center" value="1"
-													id="quantityInput" aria-label="Quantity selector">
+													id="quantityInput" name="quantity" aria-label="Quantity selector">
+
 												<button class="btn btn-outline-secondary" type="button"
 													id="button-plus">+</button>
 											</div>
 										</div>
-
 										<div class="action-buttons d-grid gap-2">
-											<button class="btn btn-accent btn-medium">Add to Cart</button>
-											<button class="btn btn-black btn-medium">Buy Now</button>
+											<button class="btn btn-accent btn-medium" type="submit"
+												formaction="/client/payment">
+												Add to Cart
+											</button>
+											<button class="btn btn-black btn-medium" type="submit"
+												formaction="/api/buy-now">
+												Buy Now
+											</button>
 										</div>
-									</div>
+									</form>
 
 									<div class="product-meta border-top pt-3 text-secondary">
 										<div class="d-flex justify-content-between mb-1">
