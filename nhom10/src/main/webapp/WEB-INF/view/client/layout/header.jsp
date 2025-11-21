@@ -66,8 +66,8 @@
                             <ul class="dropdown-menu dropdown-menu-end">
 
                               <li>
-                                <a class="dropdown-item" href="#">
-                                  <i class="align-middle me-1" data-feather="shopping-bag"></i> Hồ Sơ
+                                <a class="dropdown-item" href="/profile">
+                                  <i class="align-middle me-1" data-feather="shopping-bag"></i> Hồ Sơ cá nhân
                                 </a>
                               </li>
 
