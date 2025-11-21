@@ -42,30 +42,75 @@ public class UploadService {
     }
 
     public String handleSaveUploadProductPicture(MultipartFile file, String targetFolder) {
-        String rootPath = this.servletContext.getRealPath("/resources/images");
-        String finalName = "";
-        try {
-            if (file == null || file.isEmpty()) {
-                return "";
-            }
-            byte[] bytes;
-            bytes = file.getBytes();
+        // 1. Kiểm tra file rỗng
+        if (file.isEmpty()) {
+            return "";
+        }
 
-            File dir = new File(rootPath + File.separator + "product");
-            if (!dir.exists())
+        try {
+            // 2. Tạo đường dẫn lưu trữ: /webapp/resources/images/{targetFolder}
+            // getRealPath("") trả về đường dẫn gốc của ứng dụng đang chạy
+            String rootPath = this.servletContext.getRealPath("/resources/images");
+            String finalPath = rootPath + File.separator + targetFolder;
+
+            // 3. Tạo thư mục nếu chưa tồn tại
+            File dir = new File(finalPath);
+            if (!dir.exists()) {
                 dir.mkdirs();
-            finalName = System.currentTimeMillis() + "-" + file.getOriginalFilename();
-            // Create the file on server
+            }
+
+            // 4. Đổi tên file để tránh trùng lặp (Ví dụ: avatar.png -> 17623123-avatar.png)
+            // Dùng System.currentTimeMillis() cho đơn giản, hoặc UUID
+            String finalName = System.currentTimeMillis() + "-" + file.getOriginalFilename();
+
+            // 5. Lưu file xuống ổ cứng
             File serverFile = new File(dir.getAbsolutePath() + File.separator + finalName);
 
-            BufferedOutputStream stream = new BufferedOutputStream(
-                    new FileOutputStream(serverFile));
-            stream.write(bytes);
+            // Cách 1: Dùng Stream (Cổ điển)
+            BufferedOutputStream stream = new BufferedOutputStream(new FileOutputStream(serverFile));
+            stream.write(file.getBytes());
             stream.close();
+
+            // Cách 2: Dùng transferTo (Ngắn gọn hơn)
+            // file.transferTo(serverFile);
+
+            return finalName;
+
         } catch (IOException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+            e.printStackTrace(); // Ghi log lỗi nếu có
+            return "";
         }
-        return finalName;
+    }
+
+    /**
+     * Hàm xử lý xóa file
+     * 
+     * @param fileName     : Tên file cần xóa
+     * @param targetFolder : Thư mục chứa file
+     */
+    public void handleDeleteFile(String fileName, String targetFolder) {
+        if (fileName == null || fileName.isEmpty()) {
+            return;
+        }
+
+        try {
+            // 1. Lấy đường dẫn tới file
+            String rootPath = this.servletContext.getRealPath("/resources/images");
+            String finalPath = rootPath + File.separator + targetFolder + File.separator + fileName;
+
+            // 2. Tạo đối tượng File
+            File file = new File(finalPath);
+
+            // 3. Xóa nếu tồn tại
+            if (file.exists()) {
+                if (file.delete()) {
+                    System.out.println("Đã xóa file thành công: " + fileName);
+                } else {
+                    System.out.println("Không thể xóa file: " + fileName);
+                }
+            }
+        } catch (Exception e) {
+            System.out.println("Lỗi khi xóa file: " + e.getMessage());
+        }
     }
 }

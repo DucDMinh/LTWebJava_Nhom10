@@ -1,21 +1,10 @@
 package com.haui.model;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
-import jakarta.validation.constraints.DecimalMin;
-import jakarta.validation.constraints.Min;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotEmpty;
-import jakarta.validation.constraints.Size;
+import jakarta.persistence.*;
+import jakarta.validation.constraints.*;
 import lombok.Getter;
-import lombok.NonNull;
 import lombok.Setter;
+import java.util.List;
 
 @Entity
 @Table(name = "products")
@@ -24,7 +13,7 @@ import lombok.Setter;
 public class Product {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    private Long id;
 
     @NotEmpty(message = "- Không được để trống")
     @Size(min = 2, message = "- Tên phải có ít nhất 2 ký tự")
@@ -42,9 +31,6 @@ public class Product {
     @NotEmpty(message = "- Không được để trống")
     private String shortDesc;
 
-    @Min(value = 1, message = "- Số lượng phải lớn hơn 0")
-    private long quantity;
-
     private long sold;
 
     @NotBlank
@@ -53,8 +39,10 @@ public class Product {
     @NotEmpty
     private String category;
 
-    @ManyToOne
-    @JoinColumn(name = "spec_id")
-    @NonNull
-    private ProConfiguration proConfiguration;
+    private Integer pin;
+    private String screenType;
+    private Double screenSize;
+
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
+    private List<ProConfiguration> productVariants;
 }
