@@ -113,7 +113,7 @@
 										<p>${product.shortDesc}</p>
 									</div>
 
-									<form method="POST" action="${pageContext.request.contextPath}/cart/add-to-cart">
+									<form method="POST" action="${pageContext.request.contextPath}/add-to-cart">
 
 										<div class="mb-4">
 											<label class="form-label fw-bold">Chọn phiên bản (Màu sắc & RAM):</label>

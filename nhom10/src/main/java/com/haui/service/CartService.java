@@ -87,4 +87,25 @@ public class CartService {
             this.cartDetailRepository.save(oldDetail);
         }
     }
+
+    @Transactional
+    public void handleRemoveCartDetail(long cartDetailId, HttpSession session) {
+        Optional<CartDetail> cartDetailOptional = this.cartDetailRepository.findById(cartDetailId);
+
+        if (cartDetailOptional.isEmpty()) {
+            return;
+        }
+
+        CartDetail cartDetailToRemove = cartDetailOptional.get();
+        Cart currentCart = cartDetailToRemove.getCart();
+        currentCart.getCartDetails().remove(cartDetailToRemove);
+
+        if (currentCart.getCartDetails().isEmpty()) {
+            this.cartRepository.delete(currentCart);
+            session.setAttribute("sum", 0);
+        } else {
+            this.cartRepository.save(currentCart);
+            session.setAttribute("sum", currentCart.getCartDetails().size());
+        }
+    }
 }

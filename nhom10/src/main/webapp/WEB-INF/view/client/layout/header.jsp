@@ -3,7 +3,6 @@
     <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
       <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 
-
         <header id="header" class="site-header header-scrolled position-fixed text-black bg-light">
           <nav id="header-nav" class="navbar navbar-expand-lg px-3 mb-3">
             <div class="container-fluid">
@@ -111,4 +110,30 @@
               </div>
             </div>
           </nav>
+          <c:if test="${not empty successMessage}">
+            <div class="position-fixed bottom-0 end-0 p-3" style="z-index: 11">
+              <div id="liveToast" class="toast show align-items-center text-white bg-success border-0" role="alert"
+                aria-live="assertive" aria-atomic="true">
+                <div class="d-flex">
+                  <div class="toast-body">
+                    <i class="fas fa-check-circle me-2"></i> ${successMessage}
+                  </div>
+                  <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"
+                    aria-label="Close"></button>
+                </div>
+              </div>
+            </div>
+
+            <script>
+              document.addEventListener("DOMContentLoaded", function () {
+                var toastEl = document.getElementById('liveToast');
+                setTimeout(function () {
+                  if (toastEl) {
+                    toastEl.classList.remove('show');
+                    toastEl.classList.add('hide');
+                  }
+                }, 3000);
+              });
+            </script>
+          </c:if>
         </header>
