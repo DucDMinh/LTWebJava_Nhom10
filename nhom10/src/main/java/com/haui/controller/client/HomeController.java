@@ -79,4 +79,10 @@ public class HomeController {
 		userService.save(user);
 		return "redirect:/client/home/signin";
 	}
+
+	@GetMapping("/wishlist")
+	public String wishlist(Model model) {
+		;
+		return "client/wishlist";
+	}
 }

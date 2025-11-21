@@ -102,6 +102,7 @@ public class SecurityConfiguration {
                                 .exceptionHandling(ex -> ex.accessDeniedPage("/error/403"));
 
                 return http.build();
+
         }
 
 }

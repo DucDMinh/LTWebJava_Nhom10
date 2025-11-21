@@ -3,6 +3,9 @@
     <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
       <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 
+
+
+
         <header id="header" class="site-header header-scrolled position-fixed text-black bg-light">
           <nav id="header-nav" class="navbar navbar-expand-lg px-3 mb-3">
             <div class="container-fluid">
@@ -28,6 +31,71 @@
                   <ul id="navbar"
                     class="navbar-nav text-uppercase justify-content-end align-items-center flex-grow-1 pe-3">
                     <li class="nav-item">
+
+                      <a class="nav-link me-4 active" href="${pageContext.request.contextPath}/home#billboard">Trang Chủ</a>
+                    </li>
+
+                    <li class="nav-item">
+                      <a class="nav-link me-4"
+                        href="${pageContext.request.contextPath}/home#mobile-products">Sản Phẩm</a>
+                    </li>
+
+                    <li class="nav-item">
+                      <a class="nav-link me-4" href="${pageContext.request.contextPath}/home#latest-blog">Tin Tức</a>
+                    </li>
+
+                    <li class="nav-item">
+                      <div class="user-items ps-5">
+                        <ul class="d-flex align-items-center justify-content-end list-unstyled m-0">
+
+
+                          <li class="pe-3">
+                            <a href="/home/wishlist" class="search-button">
+                              <i class="fa-regular fa-heart fa-lg"></i>
+                            </a>
+                          </li>
+
+
+                          <li class="pe-3 dropdown">
+                            <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" role="button"
+                              data-bs-toggle="dropdown" aria-expanded="false">
+                              <i class="fa-solid fa-user fa-lg me-1 text-dark"></i>
+                              <span class="text-dark">${sessionScope.fullName}</span>
+                            </a>
+
+                            <ul class="dropdown-menu dropdown-menu-end">
+
+                              <li>
+                                <a class="dropdown-item" href="#">
+                                  <i class="align-middle me-1" data-feather="shopping-bag"></i> Hồ Sơ
+                                </a>
+                              </li>
+
+                              <li>
+                                <a class="dropdown-item" href="/order/history">
+                                  <i class="align-middle me-1" data-feather="shopping-bag"></i> Lịch sử mua hàng
+                                </a>
+                              </li>
+
+                              <li>
+                                <hr class="dropdown-divider">
+                              </li>
+
+
+                              <li>
+                                <form action="/logout" method="post">
+                                  <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
+                                  <button class="dropdown-item">Đăng xuất</button>
+                                </form>
+                              </li>
+
+                            </ul>
+                          </li>
+
+                          <!-- Cart -->
+                          <li>
+                            <a href="/carts">
+=======
                       <a class="nav-link me-4 active" href="${pageContext.request.contextPath}/home#billboard">Home</a>
                     </li>
                     <li class="nav-item">
@@ -97,17 +165,21 @@
                           </li>
                           <li>
                             <a href="${pageContext.request.contextPath}/cart">
-                              <svg class="cart">
+               <svg class="cart">
                                 <use xlink:href="#cart"></use>
                               </svg>
                             </a>
                           </li>
+
                         </ul>
                       </div>
                     </li>
                   </ul>
                 </div>
-              </div>
+              </div><<<<<<< edit-new-wishlist
+            </div>
+          </nav>
+
             </div>
           </nav>
           <c:if test="${not empty successMessage}">
@@ -136,4 +208,5 @@
               });
             </script>
           </c:if>
+
         </header>
