@@ -371,7 +371,7 @@
 									<h3>Giảm 10%</h3>
 									<h2 class="display-2 pb-5 text-uppercase text-dark">Khuyến Mãi Năm Mới</h2>
 									<a href="shop.html"
-										class="btn btn-medium btn-dark text-uppercase btn-rounded-none">Mua Sale</a>
+										class="btn btn-medium btn-dark text-uppercase btn-rounded-none">Săn Sale</a>
 								</div>
 							</div>
 							<div class="col-md-6 col-sm-12"></div>
