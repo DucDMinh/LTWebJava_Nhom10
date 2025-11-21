@@ -79,7 +79,7 @@
                                                             <td>
                                                                 <a href="/admin/product/detail-${product.id}"
                                                                     type="submit" class="btn btn-success">View</a>
-                                                                <a href="/admin/product/update-${product.id}"
+                                                                <a href="/admin/product/update/${product.id}"
                                                                     type="submit" class="btn btn-warning">Update</a>
                                                                 <a href="/admin/product/delete-${product.id}"
                                                                     type="submit" class="btn btn-danger">Delete</a>

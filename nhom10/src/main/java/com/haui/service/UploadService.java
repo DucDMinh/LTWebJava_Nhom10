@@ -42,30 +42,55 @@ public class UploadService {
     }
 
     public String handleSaveUploadProductPicture(MultipartFile file, String targetFolder) {
-        String rootPath = this.servletContext.getRealPath("/resources/images");
-        String finalName = "";
-        try {
-            if (file == null || file.isEmpty()) {
-                return "";
-            }
-            byte[] bytes;
-            bytes = file.getBytes();
-
-            File dir = new File(rootPath + File.separator + "product");
-            if (!dir.exists())
-                dir.mkdirs();
-            finalName = System.currentTimeMillis() + "-" + file.getOriginalFilename();
-            // Create the file on server
-            File serverFile = new File(dir.getAbsolutePath() + File.separator + finalName);
-
-            BufferedOutputStream stream = new BufferedOutputStream(
-                    new FileOutputStream(serverFile));
-            stream.write(bytes);
-            stream.close();
-        } catch (IOException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+        if (file.isEmpty()) {
+            return "";
         }
-        return finalName;
+
+        try {
+            String rootPath = this.servletContext.getRealPath("/resources/images");
+            String finalPath = rootPath + File.separator + targetFolder;
+            File dir = new File(finalPath);
+            if (!dir.exists()) {
+                dir.mkdirs();
+            }
+            String finalName = System.currentTimeMillis() + "-" + file.getOriginalFilename();
+
+            File serverFile = new File(dir.getAbsolutePath() + File.separator + finalName);
+            BufferedOutputStream stream = new BufferedOutputStream(new FileOutputStream(serverFile));
+            stream.write(file.getBytes());
+            stream.close();
+            return finalName;
+
+        } catch (IOException e) {
+            e.printStackTrace();
+            return "";
+        }
+    }
+
+    /**
+     * Hàm xử lý xóa file
+     * 
+     * @param fileName     : Tên file cần xóa
+     * @param targetFolder : Thư mục chứa file
+     */
+    public void handleDeleteFile(String fileName, String targetFolder) {
+        if (fileName == null || fileName.isEmpty()) {
+            return;
+        }
+
+        try {
+            String rootPath = this.servletContext.getRealPath("/resources/images");
+            String finalPath = rootPath + File.separator + targetFolder + File.separator + fileName;
+            File file = new File(finalPath);
+            if (file.exists()) {
+                if (file.delete()) {
+                    System.out.println("Đã xóa file thành công: " + fileName);
+                } else {
+                    System.out.println("Không thể xóa file: " + fileName);
+                }
+            }
+        } catch (Exception e) {
+            System.out.println("Lỗi khi xóa file: " + e.getMessage());
+        }
     }
 }

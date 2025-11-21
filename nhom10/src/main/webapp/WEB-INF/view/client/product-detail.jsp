@@ -1,68 +1,47 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 	<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-		<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
-			<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+		<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+			<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 
 				<!DOCTYPE html>
-				<html>
+				<html lang="en">
 
 				<head>
-					<title>Product Detail - CellWorld</title>
+					<title>${product.name} - Product Detail</title>
 					<meta charset="utf-8">
 					<meta http-equiv="X-UA-Compatible" content="IE=edge">
 					<meta name="viewport" content="width=device-width, initial-scale=1.0">
-					<meta name="format-detection" content="telephone=no">
-					<meta name="apple-mobile-web-app-capable" content="yes">
-					<meta name="author" content="">
-					<meta name="keywords" content="">
-					<meta name="description" content="">
 					<jsp:include page="/WEB-INF/view/client/layout/css.jsp"></jsp:include>
+					<style>
+						.variant-option {
+							border: 1px solid #e1e1e1;
+							padding: 10px;
+							margin-bottom: 8px;
+							border-radius: 8px;
+							cursor: pointer;
+							transition: all 0.2s;
+						}
 
+						.variant-option:hover {
+							border-color: #0d6efd;
+							background-color: #f8f9fa;
+						}
+
+						.variant-option input:checked+label {
+							font-weight: bold;
+							color: #0d6efd;
+						}
+
+						.variant-option.out-of-stock {
+							opacity: 0.6;
+							background-color: #f2f2f2;
+							pointer-events: none;
+						}
+					</style>
 				</head>
 
-				<body data-bs-spy="scroll" data-bs-target="#navbar" data-bs-root-margin="0px 0px -40%"
-					data-bs-smooth-scroll="true" tabindex="0">
+				<body>
 					<svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
-						<symbol id="search" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
-							<title>Search</title>
-							<path fill="currentColor"
-								d="M19 3C13.488 3 9 7.488 9 13c0 2.395.84 4.59 2.25 6.313L3.281 27.28l1.439 1.44l7.968-7.969A9.922 9.922 0 0 0 19 23c5.512 0 10-4.488 10-10S24.512 3 19 3zm0 2c4.43 0 8 3.57 8 8s-3.57 8-8 8s-8-3.57-8-8s3.57-8 8-8z" />
-						</symbol>
-						<symbol xmlns="http://www.w3.org/2000/svg" id="user" viewBox="0 0 16 16">
-							<path d="M3 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1H3Zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6Z" />
-						</symbol>
-						<symbol xmlns="http://www.w3.org/2000/svg" id="cart" viewBox="0 0 16 16">
-							<path
-								d="M0 1.5A.5.5 0 0 1 .5 1H2a.5.5 0 0 1 .485.379L2.89 3H14.5a.5.5 0 0 1 .491.592l-1.5 8A.5.5 0 0 1 13 12H4a.5.5 0 0 1-.491-.408L2.01 3.607 1.61 2H.5a.5.5 0 0 1-.5-.5zM5 12a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm7 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm-7 1a1 1 0 1 1 0 2 1 1 0 0 1 0-2zm7 0a1 1 0 1 1 0 2 1 1 0 0 1 0-2z" />
-						</symbol>
-						<svg xmlns="http://www.w3.org/2000/svg" id="chevron-left" viewBox="0 0 16 16">
-							<path fill-rule="evenodd"
-								d="M11.354 1.646a.5.5 0 0 1 0 .708L5.707 8l5.647 5.646a.5.5 0 0 1-.708.708l-6-6a.5.5 0 0 1 0-.708l6-6a.5.5 0 0 1 .708 0z" />
-						</svg>
-						<symbol xmlns="http://www.w3.org/2000/svg" id="chevron-right" viewBox="0 0 16 16">
-							<path fill-rule="evenodd"
-								d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708z" />
-						</symbol>
-						<symbol xmlns="http://www.w3.org/2000/svg" id="cart-outline" viewBox="0 0 16 16">
-							<path
-								d="M0 1.5A.5.5 0 0 1 .5 1H2a.5.5 0 0 1 .485.379L2.89 3H14.5a.5.5 0 0 1 .49.598l-1 5a.5.5 0 0 1-.465.401l-9.397.472L4.415 11H13a.5.5 0 0 1 0 1H4a.5.5 0 0 1-.491-.408L2.01 3.607 1.61 2H.5a.5.5 0 0 1-.5-.5zM3.102 4l.84 4.479 9.144-.459L13.89 4H3.102zM5 12a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm7 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm-7 1a1 1 0 1 1 0 2 1 1 0 0 1 0-2zm7 0a1 1 0 1 1 0 2 1 1 0 0 1 0-2z" />
-						</symbol>
-						<symbol xmlns="http://www.w3.org/2000/svg" id="quality" viewBox="0 0 16 16">
-							<path
-								d="M9.669.864 8 0 6.331.864l-1.858.282-.842 1.68-1.337 1.32L2.6 6l-.306 1.854 1.337 1.32.842 1.68 1.858.282L8 12l1.669-.864 1.858-.282.842-1.68 1.337-1.32L13.4 6l.306-1.854-1.337-1.32-.842-1.68L9.669.864zm1.196 1.193.684 1.365 1.086 1.072L12.387 6l.248 1.506-1.086 1.072-.684 1.365-1.51.229L8 10.874l-1.355-.702-1.51-.229-.684-1.365-1.086-1.072L3.614 6l-.25-1.506 1.087-1.072.684-1.365 1.51-.229L8 1.126l1.356.702 1.509.229z" />
-							<path d="M4 11.794V16l4-1 4 1v-4.206l-2.018.306L8 13.126 6.018 12.1 4 11.794z" />
-						</symbol>
-						<symbol xmlns="http://www.w3.org/2000/svg" id="price-tag" viewBox="0 0 16 16">
-							<path d="M6 4.5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm-1 0a.5.5 0 1 0-1 0 .5.5 0 0 0 1 0z" />
-							<path
-								d="M2 1h4.586a1 1 0 0 1 .707.293l7 7a1 1 0 0 1 0 1.414l-4.586 4.586a1 1 0 0 1-1.414 0l-7-7A1 1 0 0 1 1 6.586V2a1 1 0 0 1 1-1zm0 5.586 7 7L13.586 9l-7-7H2v4.586z" />
-						</symbol>
-						<symbol xmlns="http://www.w3.org/2000/svg" id="shield-plus" viewBox="0 0 16 16">
-							<path
-								d="M5.338 1.59a61.44 61.44 0 0 0-2.837.856.481.481 0 0 0-.328.39c-.554 4.157.726 7.19 2.253 9.188a10.725 10.725 0 0 0 2.287 2.233c.346.244.652.42.893.533.12.057.218.095.293.118a.55.55 0 0 0 .101.025.615.615 0 0 0 .1-.025c.076-.023.174-.061.294-.118.24-.113.547-.29.893-.533a10.726 10.726 0 0 0 2.287-2.233c1.527-1.997 2.807-5.031 2.253-9.188a.48.48 0 0 0-.328-.39c-.651-.213-1.75-.56-2.837-.855C9.552 1.29 8.531 1.067 8 1.067c-.53 0-1.552.223-2.662.524zM5.072.56C6.157.265 7.31 0 8 0s1.843.265 2.928.56c1.11.3 2.229.655 2.887.87a1.54 1.54 0 0 1 1.044 1.262c.596 4.477-.787 7.795-2.465 9.99a11.775 11.775 0 0 1-2.517 2.453 7.159 7.159 0 0 1-1.048.625c-.28.132-.581.24-.829.24s-.548-.108-.829-.24a7.158 7.158 0 0 1-1.048-.625 11.777 11.777 0 0 1-2.517-2.453C1.928 10.487.545 7.169 1.141 2.692A1.54 1.54 0 0 1 2.185 1.43 62.456 62.456 0 0 1 5.072.56z" />
-							<path
-								d="M8 4.5a.5.5 0 0 1 .5.5v1.5H10a.5.5 0 0 1 0 1H8.5V9a.5.5 0 0 1-1 0V7.5H6a.5.5 0 0 1 0-1h1.5V5a.5.5 0 0 1 .5-.5z" />
-						</symbol>
 						<symbol xmlns="http://www.w3.org/2000/svg" id="star-fill" viewBox="0 0 16 16">
 							<path
 								d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.282.95l-3.522 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z" />
@@ -75,62 +54,26 @@
 							<path
 								d="M5.354 5.119 7.538.792A.516.516 0 0 1 8 .5c.183 0 .366.097.465.292l2.184 4.327 4.898.696A.537.537 0 0 1 16 6.32a.548.548 0 0 1-.17.445l-3.523 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256a.52.52 0 0 1-.146.05c-.342.06-.668-.254-.6-.642l.83-4.73L.173 6.765a.55.55 0 0 1-.172-.403.58.58 0 0 1 .085-.302.513.513 0 0 1 .37-.245l4.898-.696zM8 12.027a.5.5 0 0 1 .232.056l3.686 1.894-.694-3.957a.565.565 0 0 1 .162-.505l2.907-2.77-4.052-.576a.525.525 0 0 1-.393-.288L8.001 2.223 8 2.226v9.8z" />
 						</symbol>
-						<symbol xmlns="http://www.w3.org/2000/svg" id="quote" viewBox="0 0 24 24">
-							<path fill="currentColor" d="m15 17l2-4h-4V6h7v7l-2 4h-3Zm-9 0l2-4H4V6h7v7l-2 4H6Z" />
+						<symbol xmlns="http://www.w3.org/2000/svg" id="hand-thumbs-up" viewBox="0 0 16 16">
+							<path d="M8.864.046C7.908-.193 7.02.53 6.956 1.466c-.072 1.051-.23 2.016-.428 2.59-.125.36-.479 1.013-1.04 1.639-.557.623-1.282 1.178-2.131 1.41C2.685 7.288 2 7.87 2 8.72v4.001c0 .845.682 1.464 1.448 1.545 1.07.114 1.564.415 2.068.723l.048.03c.272.165.578.348.97.484.397.136.861.217 1.466.217h3.5c.937 0 1.599-.477 1.934-1.064a1.86 1.86 0 0 0 .254-.912c0-.152-.023-.312-.077-.464.201-.263.38-.578.488-.901.11-.33.172-.762.004-1.149.069-.13.12-.269.159-.403.077-.27.113-.568.113-.857 0-.288-.036-.585-.113-.856a2.144 2.144 0 0 0-.138-.362 1.9 1.9 0 0 0 .234-1.734c-.206-.592-.682-1.1-1.2-1.272-.847-.282-1.803-.276-2.516-.211a9.84 9.84 0 0 0-.443.05 9.365 9.365 0 0 0-.062-4.509A1.38 1.38 0 0 0 9.125.111L8.864.046zM11.5 14.721H8c-.51 0-.863-.069-1.14-.164-.281-.097-.506-.228-.776-.393l-.04-.024c-.555-.339-1.198-.731-2.49-.868-.333-.036-.554-.29-.554-.55V8.72c0-.254.226-.543.62-.65 1.095-.3 1.977-.996 2.614-1.708.635-.71 1.064-1.475 1.238-1.978.243-.7.407-1.768.482-2.85.025-.362.36-.594.667-.518l.262.066c.16.04.258.143.288.255a8.34 8.34 0 0 1-.145 4.725.5.5 0 0 0 .595.644l.003-.001.014-.003.058-.014a8.908 8.908 0 0 1 1.036-.157c.663-.06 1.457-.054 2.11.164.175.058.45.3.57.65.107.308.087.67-.266 1.022l-.353.353.353.354c.043.043.105.141.154.315.048.167.075.37.075.581 0 .212-.027.414-.075.582-.05.174-.111.272-.154.315l-.353.353.353.354c.047.047.109.177.005.488a2.224 2.224 0 0 1-.505.805l-.353.353.353.354c.006.005.041.05.041.17a.866.866 0 0 1-.121.416c-.165.288-.503.56-1.066.56z"/>
 						</symbol>
-						<symbol xmlns="http://www.w3.org/2000/svg" id="facebook" viewBox="0 0 24 24">
-							<path fill="currentColor"
-								d="M9.198 21.5h4v-8.01h3.604l.396-3.98h-4V7.5a1 1 0 0 1 1-1h3v-4h-3a5 5 0 0 0-5 5v2.01h-2l-.396 3.98h2.396v8.01Z" />
-						</symbol>
-						<symbol xmlns="http://www.w3.org/2000/svg" id="youtube" viewBox="0 0 32 32">
-							<path fill="currentColor"
-								d="M29.41 9.26a3.5 3.5 0 0 0-2.47-2.47C24.76 6.2 16 6.2 16 6.2s-8.76 0-10.94.59a3.5 3.5 0 0 0-2.47 2.47A36.13 36.13 0 0 0 2 16a36.13 36.13 0 0 0 .59 6.74a3.5 3.5 0 0 0 2.47 2.47c2.18.59 10.94.59 10.94.59s8.76 0 10.94-.59a3.5 3.5 0 0 0 2.47-2.47A36.13 36.13 0 0 0 30 16a36.13 36.13 0 0 0-.59-6.74ZM13.2 20.2v-8.4l7.27 4.2Z" />
-						</symbol>
-						<symbol xmlns="http://www.w3.org/2000/svg" id="twitter" viewBox="0 0 256 256">
-							<path fill="currentColor"
-								d="m245.66 77.66l-29.9 29.9C209.72 177.58 150.67 232 80 232c-14.52 0-26.49-2.3-35.58-6.84c-7.33-3.67-10.33-7.6-11.08-8.72a8 8 0 0 1 3.85-11.93c.26-.1 24.24-9.31 39.47-26.84a110.93 110.93 0 0 1-21.88-24.2c-12.4-18.41-26.28-50.39-22-98.18a8 8 0 0 1 13.65-4.92c.35.35 33.28 33.1 73.54 43.72V88a47.87 47.87 0 0 1 14.36-34.3A46.87 46.87 0 0 1 168.1 40a48.66 48.66 0 0 1 41.47 24H240a8 8 0 0 1 5.66 13.66Z" />
-						</symbol>
-						<symbol xmlns="http://www.w3.org/2000/svg" id="instagram" viewBox="0 0 256 256">
-							<path fill="currentColor"
-								d="M128 80a48 48 0 1 0 48 48a48.05 48.05 0 0 0-48-48Zm0 80a32 32 0 1 1 32-32a32 32 0 0 1-32 32Zm48-136H80a56.06 56.06 0 0 0-56 56v96a56.06 56.06 0 0 0 56 56h96a56.06 56.06 0 0 0 56-56V80a56.06 56.06 0 0 0-56-56Zm40 152a40 40 0 0 1-40 40H80a40 40 0 0 1-40-40V80a40 40 0 0 1 40-40h96a40 40 0 0 1 40 40ZM192 76a12 12 0 1 1-12-12a12 12 0 0 1 12 12Z" />
-						</symbol>
-						<symbol xmlns="http://www.w3.org/2000/svg" id="linkedin" viewBox="0 0 24 24">
-							<path fill="currentColor"
-								d="M6.94 5a2 2 0 1 1-4-.002a2 2 0 0 1 4 .002zM7 8.48H3V21h4V8.48zm6.32 0H9.34V21h3.94v-6.57c0-3.66 4.77-4 4.77 0V21H22v-7.93c0-6.17-7.06-5.94-8.72-2.91l.04-1.68z" />
-						</symbol>
-						<symbol xmlns="http://www.w3.org/2000/svg" id="nav-icon" viewBox="0 0 16 16">
-							<path
-								d="M14 10.5a.5.5 0 0 0-.5-.5h-3a.5.5 0 0 0 0 1h3a.5.5 0 0 0 .5-.5zm0-3a.5.5 0 0 0-.5-.5h-7a.5.5 0 0 0 0 1h7a.5.5 0 0 0 .5-.5zm0-3a.5.5 0 0 0-.5-.5h-11a.5.5 0 0 0 0 1h11a.5.5 0 0 0 .5-.5z" />
-						</symbol>
-						<symbol xmlns="http://www.w3.org/2000/svg" id="close" viewBox="0 0 16 16">
-							<path
-								d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8 2.146 2.854Z" />
-						</symbol>
-						<symbol xmlns="http://www.w3.org/2000/svg" id="navbar-icon" viewBox="0 0 16 16">
-							<path
-								d="M14 10.5a.5.5 0 0 0-.5-.5h-3a.5.5 0 0 0 0 1h3a.5.5 0 0 0 .5-.5zm0-3a.5.5 0 0 0-.5-.5h-7a.5.5 0 0 0 0 1h7a.5.5 0 0 0 .5-.5zm0-3a.5.5 0 0 0-.5-.5h-11a.5.5 0 0 0 0 1h11a.5.5 0 0 0 .5-.5z" />
+						<symbol xmlns="http://www.w3.org/2000/svg" id="hand-thumbs-up-fill" viewBox="0 0 16 16">
+							<path d="M6.956 1.745C7.021.81 7.908.087 8.864.325l.261.066c.463.116.874.456 1.012.965.22.816.533 2.511.062 4.51a9.84 9.84 0 0 1 .443-.051c.713-.065 1.669-.072 2.516.21.518.173.994.681 1.2 1.273.184.532.16 1.162-.234 1.733.058.119.103.242.138.363.077.27.113.567.113.856 0 .289-.036.586-.113.856-.039.135-.09.273-.16.404.169.387.107.819-.003 1.148a3.163 3.163 0 0 1-.488.901c.054.152.076.312.076.465 0 .305-.089.625-.253.912C13.1 15.522 12.437 16 11.5 16H8c-.605 0-1.07-.081-1.466-.218a4.82 4.82 0 0 1-.97-.484l-.048-.03c-.504-.307-.999-.609-2.068-.722C2.682 14.464 2 13.846 2 13V9c0-.85.685-1.432 1.357-1.615.849-.232 1.574-.787 2.132-1.41.56-.627.914-1.28 1.039-1.639.199-.575.356-1.539.428-2.59z"/>
 						</symbol>
 					</svg>
+
 					<jsp:include page="/WEB-INF/view/client/layout/header.jsp"></jsp:include>
-					<!-- Breadcrumb - Banner -->
+
 					<section
 						style="background: url(${pageContext.request.contextPath}/client/img/banner.jpg) center 15% / cover no-repeat; height: 350px;">
-						<div aria-label="breadcrumb" class="container">
-						</div>
 					</section>
 
 					<div class="container padding-small no-padding-bottom">
 						<nav aria-label="breadcrumb">
 							<ol class="breadcrumb">
-								<li class="breadcrumb-item">
-									<a href="${pageContext.request.contextPath}/home">Home</a>
-								</li>
-								<li class="breadcrumb-item">
-									<a href="${pageContext.request.contextPath}/shop">Shop</a>
-								</li>
-								<li class="breadcrumb-item active" aria-current="page">
-									${product.name}
-								</li>
+								<li class="breadcrumb-item"><a href="/">Home</a></li>
+								<li class="breadcrumb-item"><a href="/shop">Shop</a></li>
+								<li class="breadcrumb-item active" aria-current="page">${product.name}</li>
 							</ol>
 						</nav>
 					</div>
@@ -138,28 +81,11 @@
 					<div class="container padding-xsmall">
 						<div class="row">
 							<div class="col-12 col-lg-6">
-								<!-- Product Image Carousel -->
 								<div id="productCarousel" class="carousel slide mb-3" data-bs-interval="false">
 									<div class="carousel-inner">
 										<div class="carousel-item active">
 											<img src="/images/product/${product.image}" class="d-block w-100"
-												alt="Product Image 1">
-										</div>
-										<div class="carousel-item">
-											<img src="${pageContext.request.contextPath}/client/img/product-item1.jpg"
-												class="d-block w-100" alt="Product Image 2">
-										</div>
-										<div class="carousel-item">
-											<img src="${pageContext.request.contextPath}/client/img/product-item2.jpg"
-												class="d-block w-100" alt="Product Image 3">
-										</div>
-										<div class="carousel-item">
-											<img src="${pageContext.request.contextPath}/client/img/product-item3.jpg"
-												class="d-block w-100" alt="Product Image 4">
-										</div>
-										<div class="carousel-item">
-											<img src="${pageContext.request.contextPath}/client/img/product-item5.jpg"
-												class="d-block w-100" alt="Product Image 5">
+												alt="${product.name}">
 										</div>
 									</div>
 								</div>
@@ -170,69 +96,98 @@
 									<h2 class="fs-3 mb-2">${product.name}</h2>
 
 									<div class="d-flex align-items-center mb-3">
-										<div class="rating-stars d-flex">
-											<svg class="me-1" width="20" height="20" fill="currentColor"
-												aria-hidden="true">
+										<div class="rating-stars d-flex text-warning">
+											<svg width="20" height="20">
 												<use xlink:href="#star-fill"></use>
 											</svg>
-											<svg class="me-1" width="20" height="20" fill="currentColor"
-												aria-hidden="true">
+											<svg width="20" height="20">
 												<use xlink:href="#star-fill"></use>
 											</svg>
-											<svg class="me-1" width="20" height="20" fill="currentColor"
-												aria-hidden="true">
+											<svg width="20" height="20">
 												<use xlink:href="#star-fill"></use>
 											</svg>
-											<svg class="me-1" width="20" height="20" fill="currentColor"
-												aria-hidden="true">
+											<svg width="20" height="20">
 												<use xlink:href="#star-fill"></use>
 											</svg>
-											<svg width="20" height="20" fill="currentColor" aria-hidden="true">
-												<use xlink:href="#star-empty"></use>
+											<svg width="20" height="20">
+												<use xlink:href="#star-fill"></use>
 											</svg>
 										</div>
-
-										<span class="ms-2 text-muted small">(120 reviews)</span>
+										<span class="ms-2 text-muted small">(120 đánh giá)</span>
 									</div>
 
 									<div class="d-flex align-items-baseline mb-3">
-										<p class="fs-5 fw-bold text-primary mb-3">
+										<p class="fs-4 fw-bold text-primary mb-0">
+											Giá từ:
 											<fmt:formatNumber type="number" value="${product.price}" /> $
 										</p>
 									</div>
 
-									<div class="product-description mb-4">
+									<div class="product-description mb-4 text-secondary">
 										<p>${product.shortDesc}</p>
 									</div>
 
-									<!-- Product options -->
-									<div class="product-options mb-4">
-										<div class="quantity-selector mb-3">
-											<label for="quantityInput" class="form-label fw-bold">Quantity</label>
-											<div class="input-group w-50">
+									<form method="POST" action="${pageContext.request.contextPath}/cart/add-to-cart">
+										<div class="mb-4">
+											<label class="form-label fw-bold">Chọn phiên bản (Màu sắc & RAM):</label>
+											<div class="d-flex flex-column gap-2">
+												<c:forEach items="${product.productVariants}" var="variant"
+													varStatus="status">
+													<div
+														class="form-check variant-option ${variant.quantity <= 0 ? 'out-of-stock' : ''}">
+														<input class="form-check-input" type="radio" name="variantId"
+															id="variant_${variant.id}" value="${variant.id}"
+															${status.first && variant.quantity> 0 ? 'checked' : ''}
+														${variant.quantity <= 0 ? 'disabled' : '' }>
+
+															<label
+																class="form-check-label d-flex justify-content-between w-100"
+																for="variant_${variant.id}">
+																<span>
+																	<strong>${variant.color}</strong> - ${variant.ram}GB
+																	RAM
+																</span>
+																<span>
+																	<strong class="text-danger">
+																		<fmt:formatNumber value="${variant.price}" /> $
+																	</strong>
+																	<small class="text-muted ms-2">
+																		(${variant.quantity > 0 ? 'Còn hàng' : 'Hết
+																		hàng'})
+																	</small>
+																</span>
+															</label>
+													</div>
+												</c:forEach>
+											</div>
+										</div>
+										<div class="quantity-selector mb-4">
+											<label for="quantityInput" class="form-label fw-bold">Số lượng</label>
+											<div class="input-group" style="width: 140px;">
 												<button class="btn btn-outline-secondary" type="button"
-													id="button-minus">-</button>
-												<input type="text" class="form-control text-center" value="1"
-													id="quantityInput" aria-label="Quantity selector">
+													onclick="decreaseQty()">-</button>
+												<input type="number" class="form-control text-center" value="1" min="1"
+													id="quantityInput" name="quantity">
 												<button class="btn btn-outline-secondary" type="button"
-													id="button-plus">+</button>
+													onclick="increaseQty()">+</button>
 											</div>
 										</div>
 
-										<div class="action-buttons d-grid gap-2">
-											<button class="btn btn-accent btn-medium">Add to Cart</button>
-											<button class="btn btn-black btn-medium">Buy Now</button>
+										<div class="action-buttons d-grid gap-2 d-md-flex">
+											<button class="btn btn-primary btn-lg flex-grow-1" type="submit">
+											  Thêm vào giỏ hàng
+											</button>
 										</div>
-									</div>
-
-									<div class="product-meta border-top pt-3 text-secondary">
+										<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
+									</form>
+									<div class="product-meta border-top pt-3 mt-4 text-secondary">
 										<div class="d-flex justify-content-between mb-1">
-											<small class="text-uppercase fw-bold">SKU:</small>
-											<small>XYZ-12345</small>
+											<small class="text-uppercase fw-bold">Category:</small>
+											<small>${product.category}</small>
 										</div>
 										<div class="d-flex justify-content-between">
-											<small class="text-uppercase fw-bold">Stock Status:</small>
-											<small class="text-success fw-bold">In Stock (15 available)</small>
+											<small class="text-uppercase fw-bold">Factory:</small>
+											<small>${product.factory}</small>
 										</div>
 									</div>
 								</div>
@@ -243,13 +198,12 @@
 							<div class="accordion-item">
 								<h2 class="accordion-header" id="headingDescription">
 									<button class="accordion-button" type="button" data-bs-toggle="collapse"
-										data-bs-target="#collapseDescription" aria-expanded="true"
-										aria-controls="collapseDescription">
-										Detailed Description
+										data-bs-target="#collapseDescription" aria-expanded="true">
+										Mô tả chi tiết sản phẩm
 									</button>
 								</h2>
 								<div id="collapseDescription" class="accordion-collapse collapse show"
-									aria-labelledby="headingDescription" data-bs-parent="#productDetailsAccordion">
+									data-bs-parent="#productDetailsAccordion">
 									<div class="accordion-body">
 										<p>${product.detailDesc}</p>
 									</div>
@@ -259,43 +213,30 @@
 							<div class="accordion-item">
 								<h2 class="accordion-header" id="headingSpecs">
 									<button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
-										data-bs-target="#collapseSpecs" aria-expanded="false"
-										aria-controls="collapseSpecs">
-										Technical Specifications
+										data-bs-target="#collapseSpecs">
+										Thông số kỹ thuật
 									</button>
 								</h2>
 								<div id="collapseSpecs" class="accordion-collapse collapse"
-									aria-labelledby="headingSpecs" data-bs-parent="#productDetailsAccordion">
+									data-bs-parent="#productDetailsAccordion">
 									<div class="accordion-body">
 										<table class="table table-striped">
 											<tbody>
 												<tr>
-													<th scope="row">Display</th>
-													<td>6.1-inch Super Retina XDR (OLED)</td>
+													<th scope="row">Màn hình (Screen Type)</th>
+													<td>${product.screenType}</td>
 												</tr>
 												<tr>
-													<th scope="row">Processor</th>
-													<td>A15 Bionic Chip with 5-core GPU</td>
+													<th scope="row">Kích thước (Size)</th>
+													<td>${product.screenSize} inch</td>
 												</tr>
 												<tr>
-													<th scope="row">Camera System</th>
-													<td>12MP Triple Camera (Ultra-Wide, Wide, Telephoto)</td>
+													<th scope="row">Dung lượng Pin (Battery)</th>
+													<td>${product.pin} mAh</td>
 												</tr>
 												<tr>
-													<th scope="row">Storage Options</th>
-													<td>128GB / 256GB / 512GB</td>
-												</tr>
-												<tr>
-													<th scope="row">Battery Life</th>
-													<td>Up to 22 hours of video playback</td>
-												</tr>
-												<tr>
-													<th scope="row">Connectivity</th>
-													<td>5G, Wi-Fi 6, Bluetooth 5.0, MagSafe</td>
-												</tr>
-												<tr>
-													<th scope="row">Operating System</th>
-													<td>iOS 15 (Upgradeable)</td>
+													<th scope="row">Hãng sản xuất</th>
+													<td>${product.factory}</td>
 												</tr>
 											</tbody>
 										</table>
@@ -303,79 +244,27 @@
 								</div>
 							</div>
 						</div>
+
+            <jsp:include page="/WEB-INF/view/client/components/rating-summary.jsp"></jsp:include>
+            <jsp:include page="/WEB-INF/view/client/components/comments-section.jsp"></jsp:include>
 					</div>
 
 
-					<section id="instagram" class="padding-large overflow-hidden no-padding-top">
-						<div class="container">
-							<div class="row">
-								<div class="display-header text-uppercase text-dark text-center pb-3">
-									<h2 class="display-7">Shop Our Insta</h2>
-								</div>
-								<div class="d-flex flex-wrap">
-									<figure class="instagram-item pe-2">
-										<a href="https://templatesjungle.com/" class="image-link position-relative">
-											<img src="${pageContext.request.contextPath}/client/img/insta-item1.jpg"
-												alt="instagram" class="insta-image">
-											<div class="icon-overlay position-absolute d-flex justify-content-center">
-												<svg class="instagram">
-													<use xlink:href="#instagram"></use>
-												</svg>
-											</div>
-										</a>
-									</figure>
-									<figure class="instagram-item pe-2">
-										<a href="https://templatesjungle.com/" class="image-link position-relative">
-											<img src="${pageContext.request.contextPath}/client/img/insta-item2.jpg"
-												alt="instagram" class="insta-image">
-											<div class="icon-overlay position-absolute d-flex justify-content-center">
-												<svg class="instagram">
-													<use xlink:href="#instagram"></use>
-												</svg>
-											</div>
-										</a>
-									</figure>
-									<figure class="instagram-item pe-2">
-										<a href="https://templatesjungle.com/" class="image-link position-relative">
-											<img src="${pageContext.request.contextPath}/client/img/insta-item3.jpg"
-												alt="instagram" class="insta-image">
-											<div class="icon-overlay position-absolute d-flex justify-content-center">
-												<svg class="instagram">
-													<use xlink:href="#instagram"></use>
-												</svg>
-											</div>
-										</a>
-									</figure>
-									<figure class="instagram-item pe-2">
-										<a href="https://templatesjungle.com/" class="image-link position-relative">
-											<img src="${pageContext.request.contextPath}/client/img/insta-item4.jpg"
-												alt="instagram" class="insta-image">
-											<div class="icon-overlay position-absolute d-flex justify-content-center">
-												<svg class="instagram">
-													<use xlink:href="#instagram"></use>
-												</svg>
-											</div>
-										</a>
-									</figure>
-									<figure class="instagram-item pe-2">
-										<a href="https://templatesjungle.com/" class="image-link position-relative">
-											<img src="${pageContext.request.contextPath}/client/img/insta-item5.jpg"
-												alt="instagram" class="insta-image">
-											<div class="icon-overlay position-absolute d-flex justify-content-center">
-												<svg class="instagram">
-													<use xlink:href="#instagram"></use>
-												</svg>
-											</div>
-										</a>
-									</figure>
-								</div>
-							</div>
-						</div>
-					</section>
-
 					<jsp:include page="/WEB-INF/view/client/layout/footer.jsp"></jsp:include>
-
 					<jsp:include page="/WEB-INF/view/client/layout/js.jsp"></jsp:include>
+
+					<script>
+						function increaseQty() {
+							var qtyInput = document.getElementById('quantityInput');
+							qtyInput.value = parseInt(qtyInput.value) + 1;
+						}
+						function decreaseQty() {
+							var qtyInput = document.getElementById('quantityInput');
+							if (parseInt(qtyInput.value) > 1) {
+								qtyInput.value = parseInt(qtyInput.value) - 1;
+							}
+						}
+					</script>
 				</body>
 
 				</html>

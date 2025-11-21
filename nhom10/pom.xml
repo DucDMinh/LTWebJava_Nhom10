@@ -86,10 +86,10 @@
         </dependency>
 
 		<dependency>
-            <groupId>org.projectlombok</groupId>
-            <artifactId>lombok</artifactId>
-            <optional>true</optional>
-        </dependency>
+    <groupId>org.projectlombok</groupId>
+    <artifactId>lombok</artifactId>
+    <version>1.18.30</version> <scope>provided</scope>
+</dependency>
 	
 		<dependency>
     		<groupId>org.hibernate.orm</groupId>
@@ -122,6 +122,18 @@
             <groupId>org.springframework.session</groupId>
             <artifactId>spring-session-jdbc</artifactId>
         </dependency>
+
+		<dependency>
+    <groupId>jakarta.xml.bind</groupId>
+    <artifactId>jakarta.xml.bind-api</artifactId>
+    <version>4.0.0</version>
+</dependency>
+
+<dependency>
+    <groupId>org.glassfish.jaxb</groupId>
+    <artifactId>jaxb-runtime</artifactId>
+    <version>4.0.2</version>
+</dependency>
  </dependencies>
 
 	<build>
