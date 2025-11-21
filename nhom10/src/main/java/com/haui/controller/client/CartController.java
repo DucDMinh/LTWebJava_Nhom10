@@ -6,8 +6,10 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.haui.model.Cart;
 import com.haui.model.CartDetail;
@@ -54,10 +56,10 @@ public class CartController {
 		return "client/cart";
 	}
 
-	@PostMapping("/cart/add-to-cart")
+	@PostMapping("/add-to-cart")
 	public String addToCart(@RequestParam("variantId") long variantId,
 			@RequestParam("quantity") long quantity,
-			HttpServletRequest request) {
+			HttpServletRequest request, RedirectAttributes redirectAttributes) {
 		HttpSession session = request.getSession(true);
 		String currentUsername = request.getRemoteUser();
 		if (currentUsername == null) {
@@ -69,6 +71,15 @@ public class CartController {
 		}
 		String email = currentUser.getEmail();
 		this.cartService.handleAddProductToCart(email, variantId, quantity, session);
+		redirectAttributes.addFlashAttribute("successMessage", "Đã thêm sản phẩm vào giỏ hàng thành công!");
 		return "redirect:/home";
+	}
+
+	@PostMapping("/delete-cart-product/{id}")
+	public String deleteCartDetail(@PathVariable long id, HttpServletRequest request) {
+		HttpSession session = request.getSession(false);
+		long cartDetailId = id;
+		this.cartService.handleRemoveCartDetail(cartDetailId, session);
+		return "redirect:/cart";
 	}
 }

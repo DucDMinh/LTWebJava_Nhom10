@@ -158,7 +158,6 @@
 						<h1 class="cart-title">Your Shopping Cart</h1>
 
 						<div class="cart-grid mx-auto" style="width: 75%;">
-							<!-- LEFT: -->
 							<div class="cart-card">
 								<table class="cart-table">
 									<thead>
@@ -168,34 +167,78 @@
 											<th>PRICE</th>
 											<th>QUANTITY</th>
 											<th>TOTAL</th>
+											<th></th>
 										</tr>
 									</thead>
 									<tbody id="cart-items">
-										<c:forEach var="item" items="${cartDetails}">
+										<c:if test="${ empty cartDetails}">
+											<tr>
+												<td colspan="6" class="text-center py-4">
+													Không có sản phẩm trong giỏ hàng
+												</td>
+											</tr>
+										</c:if>
+
+										<c:forEach var="item" items="${cartDetails}" varStatus="status">
 											<tr>
 												<td>
-													<img style="width: 100px; height: 100px;"
+													<img style="width: 80px; height: 80px;"
 														src="/images/product/${item.proConfiguration.product.image}"
-														... />
+														class="img-fluid rounded" alt="">
 												</td>
 
 												<td>
-													${item.proConfiguration.product.name}
+													<span class="fw-bold">${item.proConfiguration.product.name}</span>
 													<br>
-													<small>
+													<small class="text-muted">
 														Màu: ${item.proConfiguration.color} | RAM:
 														${item.proConfiguration.ram}GB
 													</small>
 												</td>
 
 												<td>
-													<fmt:formatNumber value="${item.price}" /> đ
+													<fmt:formatNumber value="${item.price}" /> ₫
 												</td>
 
-												<td>${item.quantity}</td>
+												<td>
+													<div class="input-group quantity" style="width: 120px;">
+														<div class="input-group-btn">
+															<button type="button"
+																class="btn btn-sm btn-minus rounded-circle bg-light border">
+																<i class="fa fa-minus"></i>
+															</button>
+														</div>
+
+														<input type="text"
+															class="form-control form-control-sm text-center border-0"
+															value="${item.quantity}" data-cart-detail-id="${item.id}"
+															data-cart-detail-price="${item.price}"
+															data-cart-detail-index="${status.index}" readonly>
+
+														<div class="input-group-btn">
+															<button type="button"
+																class="btn btn-sm btn-plus rounded-circle bg-light border">
+																<i class="fa fa-plus"></i>
+															</button>
+														</div>
+													</div>
+												</td>
 
 												<td>
-													<fmt:formatNumber value="${item.price * item.quantity}" /> đ
+													<p class="mb-0 fw-bold" data-total-price-id="${item.id}">
+														<fmt:formatNumber type="number"
+															value="${item.price * item.quantity}" /> ₫
+													</p>
+												</td>
+
+												<td>
+													<form method="post" action="/delete-cart-product/${item.id}">
+														<input type="hidden" name="${_csrf.parameterName}"
+															value="${_csrf.token}" />
+														<button class="btn btn-sm text-danger border-0 bg-transparent">
+															<i class="fa fa-times fa-lg"></i>
+														</button>
+													</form>
 												</td>
 											</tr>
 										</c:forEach>
@@ -203,30 +246,47 @@
 								</table>
 							</div>
 
-							<!-- RIGHT: -->
 							<div class="summary-card">
-								<h5 style="font-weight: 500; font-size: 25px; line-height: 150%; letter-spacing: 0%;">
-									Thông tin đơn hàng</h5>
+								<h5 class="summary-title">Thông tin đơn hàng</h5>
+
 								<div class="summary-row">
-									<span>Tạm tinh</span>
-									<div id="summary-subtotal" class="muted">
-										<p class="mb-0 pe-4" data-cart-total-price="${totalPrice}">
-											<fmt:formatNumber type="number" value="${totalPrice}" /> đ
-										</p>
+									<span class="label">Tạm tính</span>
+									<span class="value" id="cart-subtotal" data-value="${totalPrice}">
+										<fmt:formatNumber type="number" value="${totalPrice}" /> ₫
+									</span>
+								</div>
+
+								<div class="summary-row">
+									<span class="label">Phí vận chuyển</span>
+									<span class="value text-success">Miễn phí</span>
+								</div>
+
+								<div class="summary-row total">
+									<span class="label" style="font-weight: 700; color: #374151;">Tổng cộng</span>
+									<span class="value text-danger fw-bold fs-5" id="cart-total"
+										data-value="${totalPrice}">
+										<fmt:formatNumber type="number" value="${totalPrice}" /> ₫
+									</span>
+								</div>
+
+								<form:form action="/confirm-checkout" method="post" modelAttribute="cart">
+									<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
+
+									<div style="display: none;">
+										<c:forEach var="cartDetail" items="${cart.cartDetails}" varStatus="status">
+											<input type="hidden" name="cartDetails[${status.index}].id"
+												value="${cartDetail.id}" />
+											<input type="hidden" id="hidden-qty-${status.index}"
+												name="cartDetails[${status.index}].quantity"
+												value="${cartDetail.quantity}" />
+										</c:forEach>
 									</div>
-								</div>
-								<div class="summary-row">
-									<span>Shipping Fee</span>
-									<div class="muted">Free</div>
-								</div>
-								<div class="summary-total">
-									<label>Total</label>
-									<p class="mb-0 pe-4" data-cart-total-price="${totalPrice}">
-										<fmt:formatNumber type="number" value="${totalPrice}" /> đ
-									</p>
-								</div>
-								<button class="checkout-btn" id="checkoutBtn">Proceed to
-									Checkout</button>
+
+									<button type="submit" class="checkout-btn" id="checkoutBtn">
+										Proceed to Checkout
+									</button>
+								</form:form>
+
 							</div>
 						</div>
 					</section>
@@ -299,6 +359,7 @@
 
 
 					<jsp:include page="/WEB-INF/view/client/layout/js.jsp"></jsp:include>
+					<script src="/client/js/script.js"></script>
 				</body>
 
 				</html>
