@@ -385,7 +385,7 @@
 									<h2 class="display-7 text-dark text-uppercase">Bài Viết Mới Nhất</h2>
 									<div class="btn-right">
 										<a href="blog.html" class="btn btn-medium btn-normal text-uppercase">Đọc
-											Blog</a>
+											tin tức</a>
 									</div>
 								</div>
 								<div class="post-grid d-flex flex-wrap justify-content-between">

@@ -64,7 +64,7 @@
 
                               <li>
                                 <a class="dropdown-item" href="/profile">
-                                  <i class="align-middle me-1" data-feather="shopping-bag"></i> Hồ Sơ
+                                  <i class="align-middle me-1" data-feather="shopping-bag"></i> Hồ Sơ cá nhân
                                 </a>
                               </li>
 
