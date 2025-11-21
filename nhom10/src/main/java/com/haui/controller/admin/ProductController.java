@@ -108,6 +108,14 @@ public class ProductController {
             String fileName = this.uploadService.handleSaveUploadProductPicture(file, "product");
             product.setImage(fileName);
         }
+        if (product.getProductVariants() != null) {
+            for (ProConfiguration variant : product.getProductVariants()) {
+                variant.setProduct(product);
+                if (variant.getPrice() == null || variant.getPrice() == 0) {
+                    variant.setPrice(product.getPrice());
+                }
+            }
+        }
 
         this.productService.handleSaveProduct(product);
         return "redirect:/admin/product";
