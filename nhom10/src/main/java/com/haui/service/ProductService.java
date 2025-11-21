@@ -50,26 +50,18 @@ public class ProductService {
     }
 
     public void handleDeleteProduct(long id) {
-        // 1. Tìm sản phẩm cần xóa
         Optional<Product> productOpt = this.productRepository.findById(id);
 
         if (productOpt.isPresent()) {
             Product product = productOpt.get();
-
-            // 2. Duyệt qua từng Variant của sản phẩm đó
-            // Vì cấu trúc: Product -> List<Variant> -> được tham chiếu bởi CartDetail
             if (product.getProductVariants() != null) {
                 for (ProConfiguration variant : product.getProductVariants()) {
-
-                    // 3. Xóa sạch Variant này khỏi tất cả các Giỏ hàng
                     List<CartDetail> cartItems = this.cartDetailRepository.findByProConfiguration(variant);
                     if (cartItems != null && !cartItems.isEmpty()) {
                         this.cartDetailRepository.deleteAll(cartItems);
                     }
                 }
             }
-
-            // 4. Sau khi dọn sạch giỏ hàng, mới được xóa Product
             this.productRepository.deleteById(id);
         }
     }

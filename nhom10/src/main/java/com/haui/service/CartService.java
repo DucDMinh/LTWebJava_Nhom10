@@ -34,16 +34,12 @@ public class CartService {
     public void handleAddProductToCart(String email, long variantId, long quantity, HttpSession session) {
         System.out.println("---- START ADD TO CART ----");
         System.out.println("Input: Email=" + email + ", VariantID=" + variantId + ", Quantity=" + quantity);
-
-        // 1. Lấy User
         User user = this.userService.getUserByEmail(email);
         if (user == null) {
             System.out.println("LỖI: Không tìm thấy User với email: " + email);
             return;
         }
         System.out.println("User found: ID=" + user.getId());
-
-        // 2. Kiểm tra và tạo Cart
         Cart cart = this.cartRepository.findByUser(user);
         if (cart == null) {
             System.out.println("User chưa có Cart -> Đang tạo mới...");
@@ -55,8 +51,6 @@ public class CartService {
         } else {
             System.out.println("User đã có Cart. Cart ID=" + cart.getId());
         }
-
-        // 3. Lấy Variant
         Optional<ProConfiguration> variantOpt = this.proConfigurationRepository.findById(variantId);
         if (variantOpt.isEmpty()) {
             System.out.println("LỖI: Không tìm thấy Variant ID=" + variantId);
@@ -66,42 +60,30 @@ public class CartService {
         ProConfiguration currentVariant = variantOpt.get();
         System.out.println(
                 "Variant found: " + currentVariant.getId() + " | Stock hiện tại: " + currentVariant.getQuantity());
-
-        // --- KIỂM TRA TỒN KHO ---
-        // Nếu mua nhiều hơn tồn kho -> Chặn
         if (currentVariant.getQuantity() < quantity) {
             System.out.println(
                     "LỖI: Tồn kho không đủ! (Yêu cầu: " + quantity + ", Kho: " + currentVariant.getQuantity() + ")");
             return;
         }
 
-        // 4. Kiểm tra chi tiết giỏ hàng
         CartDetail oldDetail = this.cartDetailRepository.findByCartAndProConfiguration(cart, currentVariant);
 
         if (oldDetail == null) {
             System.out.println("Sản phẩm chưa có trong giỏ -> INSERT mới...");
-            // --- TRƯỜNG HỢP 1: CHƯA CÓ -> TẠO DÒNG MỚI ---
             CartDetail cd = new CartDetail();
             cd.setCart(cart);
             cd.setProConfiguration(currentVariant);
             cd.setPrice(currentVariant.getPrice());
             cd.setQuantity(quantity);
-
             this.cartDetailRepository.save(cd);
             System.out.println("Đã lưu CartDetail mới.");
-
-            // Cập nhật tổng số dòng (badge)
             int s = cart.getSum() + 1;
             cart.setSum(s);
             this.cartRepository.save(cart);
             session.setAttribute("sum", s);
-
         } else {
             System.out.println("Sản phẩm đã có trong giỏ -> UPDATE số lượng...");
-            // --- TRƯỜNG HỢP 2: ĐÃ CÓ -> CỘNG DỒN ---
             long newQuantity = oldDetail.getQuantity() + quantity;
-
-            // Check tồn kho lần nữa với tổng số lượng mới
             if (currentVariant.getQuantity() < newQuantity) {
                 System.out.println("LỖI: Tổng số lượng vượt quá tồn kho!");
                 return;

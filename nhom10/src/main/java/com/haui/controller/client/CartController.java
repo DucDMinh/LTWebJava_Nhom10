@@ -7,7 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam; // Bỏ RequestMapping class level nếu không cần thiết
+import org.springframework.web.bind.annotation.RequestParam;
 
 import com.haui.model.Cart;
 import com.haui.model.CartDetail;
@@ -32,7 +32,7 @@ public class CartController {
 	@Autowired
 	private ProductService productService;
 
-	@GetMapping("/cart") // Sửa thành /cart cho chuẩn RESTful (số ít)
+	@GetMapping("/cart")
 	public String getCartPage(Model model, HttpServletRequest request) {
 		User currentUser = new User();
 		HttpSession session = request.getSession(false);
@@ -54,7 +54,6 @@ public class CartController {
 		return "client/cart";
 	}
 
-	// API thêm vào giỏ hàng
 	@PostMapping("/cart/add-to-cart")
 	public String addToCart(@RequestParam("variantId") long variantId,
 			@RequestParam("quantity") long quantity,
