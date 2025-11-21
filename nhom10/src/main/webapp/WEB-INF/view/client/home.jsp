@@ -275,8 +275,8 @@
 																	value="${product.price}" /> $
 															</p>
 
-															<form action="/add-product-to-cart/${product.id}"
-																method="post" class="mt-auto">
+															<form action="/product/${product.id}" method="get"
+																class="mt-auto">
 																<button
 																	class="btn btn-outline-primary rounded-pill px-3 w-100">
 																	<i class="fa fa-shopping-bag me-2"></i>
