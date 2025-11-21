@@ -3,9 +3,16 @@ package com.haui.service;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.haui.model.Cart;
+import com.haui.model.CartDetail;
+import com.haui.model.ProConfiguration;
 import com.haui.model.Product;
+import com.haui.model.User;
+import com.haui.repository.CartDetailRepository;
+import com.haui.repository.CartRepository;
 import com.haui.repository.ProductRepository;
 
 import jakarta.transaction.Transactional;
@@ -13,6 +20,12 @@ import jakarta.transaction.Transactional;
 @Service
 @Transactional
 public class ProductService {
+
+    @Autowired
+    private CartDetailRepository cartDetailRepository;
+
+    @Autowired
+    private CartRepository cartRepository;
 
     private final ProductRepository productRepository;
 
@@ -32,7 +45,32 @@ public class ProductService {
         return this.productRepository.findById(id);
     }
 
+    public Cart fetchByUser(User user) {
+        return this.cartRepository.findByUser(user);
+    }
+
     public void handleDeleteProduct(long id) {
-        this.productRepository.deleteById(id);
+        // 1. Tìm sản phẩm cần xóa
+        Optional<Product> productOpt = this.productRepository.findById(id);
+
+        if (productOpt.isPresent()) {
+            Product product = productOpt.get();
+
+            // 2. Duyệt qua từng Variant của sản phẩm đó
+            // Vì cấu trúc: Product -> List<Variant> -> được tham chiếu bởi CartDetail
+            if (product.getProductVariants() != null) {
+                for (ProConfiguration variant : product.getProductVariants()) {
+
+                    // 3. Xóa sạch Variant này khỏi tất cả các Giỏ hàng
+                    List<CartDetail> cartItems = this.cartDetailRepository.findByProConfiguration(variant);
+                    if (cartItems != null && !cartItems.isEmpty()) {
+                        this.cartDetailRepository.deleteAll(cartItems);
+                    }
+                }
+            }
+
+            // 4. Sau khi dọn sạch giỏ hàng, mới được xóa Product
+            this.productRepository.deleteById(id);
+        }
     }
 }

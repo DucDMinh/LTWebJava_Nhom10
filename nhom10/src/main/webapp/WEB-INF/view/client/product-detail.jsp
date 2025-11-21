@@ -4,7 +4,7 @@
 			<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 
 				<!DOCTYPE html>
-				<html>
+				<html lang="en">
 
 				<head>
 					<title>${product.name} - Product Detail</title>
@@ -113,7 +113,7 @@
 										<p>${product.shortDesc}</p>
 									</div>
 
-									<form method="POST" action="/cart/add-to-cart">
+									<form method="POST" action="${pageContext.request.contextPath}/cart/add-to-cart">
 
 										<div class="mb-4">
 											<label class="form-label fw-bold">Chọn phiên bản (Màu sắc & RAM):</label>
@@ -166,6 +166,7 @@
 												Add to Cart
 											</button>
 										</div>
+										<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
 									</form>
 									<div class="product-meta border-top pt-3 mt-4 text-secondary">
 										<div class="d-flex justify-content-between mb-1">

@@ -14,19 +14,16 @@ public class CartDetail implements Serializable {
 
     private long quantity;
 
-    private double price; // Giá tại thời điểm thêm vào giỏ
+    private double price;
 
-    // cart_id: long
     @ManyToOne
     @JoinColumn(name = "cart_id")
     private Cart cart;
 
-    // --- QUAN TRỌNG: Link đến Cấu hình chi tiết thay vì Product chung ---
     @ManyToOne
     @JoinColumn(name = "pro_configuration_id")
     private ProConfiguration proConfiguration;
 
-    // Getter & Setter
     public long getId() {
         return id;
     }
@@ -67,8 +64,4 @@ public class CartDetail implements Serializable {
         this.proConfiguration = proConfiguration;
     }
 
-    // Helper để lấy thông tin Product cha khi cần hiển thị
-    // public Product getProduct() {
-    // return proConfiguration != null ? proConfiguration.getProduct() : null;
-    // }
 }
