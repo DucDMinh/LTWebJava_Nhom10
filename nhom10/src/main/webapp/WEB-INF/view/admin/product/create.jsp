@@ -6,16 +6,9 @@
             <head>
                 <meta charset="UTF-8">
                 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-                <meta charset="utf-8" />
-                <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-                <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
-                <meta name="description" content="" />
-                <meta name="author" content="" />
                 <title>Create Product</title>
-                <!--css-->
                 <jsp:include page="/WEB-INF/view/admin/layout/css.jsp"></jsp:include>
                 <style>
-                    /* Header */
                     .header__search {
                         width: 372px;
                         height: 56px;
@@ -28,6 +21,16 @@
                         border: 0;
                         outline: none;
                         background-color: transparent;
+                    }
+
+                    /* Thêm style để phân biệt các section */
+                    .form-section-title {
+                        margin-top: 20px;
+                        margin-bottom: 10px;
+                        font-weight: bold;
+                        color: #4e73df;
+                        border-bottom: 1px solid #e3e6f0;
+                        padding-bottom: 5px;
                     }
                 </style>
 
@@ -51,18 +54,16 @@
                         <main>
                             <div class="container mt-2">
                                 <div class="row">
-                                    <div class="col-md-5 col-12 mx-auto">
-                                        <h1>Add new product</h1>
+                                    <div class="col-md-8 col-12 mx-auto">
+                                        <h3>Add new product</h3>
                                         <form:form method="post" action="/admin/product/create"
                                             modelAttribute="newProduct" enctype="multipart/form-data">
                                             <hr>
-                                            <div class="col" style="display: none;">
-                                                <label for="">ID</label>
-                                                <input type="text" class="form-control" placeholder="" aria-label=""
-                                                    readonly="true">
-                                            </div>
+
+                                            <div class="form-section-title">General Information</div>
+
                                             <div class="row mt-2">
-                                                <div class="col">
+                                                <div class="col-md-6">
                                                     <c:set var="errorName">
                                                         <form:errors path="name" cssClass="invalid-feedback" />
                                                     </c:set>
@@ -71,27 +72,86 @@
                                                         class="form-control ${not empty errorName ? 'is-invalid' : ''}" />
                                                     ${errorName}
                                                 </div>
-                                                <div class="col">
+                                                <div class="col-md-6">
                                                     <c:set var="errorPrice">
                                                         <form:errors path="price" cssClass="invalid-feedback" />
                                                     </c:set>
-                                                    <label class="form-label">Price</label>
+                                                    <label class="form-label">Base Price ($)</label>
                                                     <form:input type="number" min="0" step="0.01" path="price"
                                                         class="form-control ${not empty errorPrice ? 'is-invalid' : ''}" />
                                                     ${errorPrice}
                                                 </div>
                                             </div>
+
                                             <div class="row mt-2">
-                                                <c:set var="errorDetailDesc">
-                                                    <form:errors path="detailDesc" cssClass="invalid-feedback" />
-                                                </c:set>
-                                                <label class="form-label">Detail Description</label>
-                                                <form:textarea type="text" path="detailDesc"
-                                                    class="form-control ${not empty errorDetailDesc ? 'is-invalid' : ''}" />
-                                                ${errorDetailDesc}
+                                                <div class="col-md-6">
+                                                    <label class="form-label">Factory</label>
+                                                    <form:select class="form-select" path="factory">
+                                                        <form:option value="Apple (Macbook)">Apple (Macbook)
+                                                        </form:option>
+                                                        <form:option value="Asus">Asus</form:option>
+                                                        <form:option value="Lenovo">Lenovo</form:option>
+                                                        <form:option value="HP">HP</form:option>
+                                                        <form:option value="Dell">Dell</form:option>
+                                                    </form:select>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <label class="form-label">Category</label>
+                                                    <form:select class="form-select" path="category">
+                                                        <form:option value="Máy Tính">Máy Tính</form:option>
+                                                        <form:option value="Điện Thoại">Điện Thoại</form:option>
+                                                        <form:option value="Đồng Hồ">Đồng Hồ</form:option>
+                                                    </form:select>
+                                                </div>
                                             </div>
+
+                                            <div class="form-section-title">Technical Specifications (Fixed)</div>
+
                                             <div class="row mt-2">
-                                                <div class="col">
+                                                <div class="col-md-4">
+                                                    <label class="form-label">Screen Type</label>
+                                                    <form:input type="text" path="screenType" class="form-control"
+                                                        placeholder="e.g. IPS LCD" />
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <label class="form-label">Screen Size (inch)</label>
+                                                    <form:input type="number" step="0.1" path="screenSize"
+                                                        class="form-control" />
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <label class="form-label">Battery (Pin - mAh)</label>
+                                                    <form:input type="number" path="pin" class="form-control" />
+                                                </div>
+                                            </div>
+
+                                            <div class="form-section-title">Initial Configuration (Variant)</div>
+                                            <div class="alert alert-info" role="alert">
+                                                Đây là cấu hình mặc định đầu tiên. Bạn có thể thêm nhiều màu sắc/RAM
+                                                khác sau khi tạo xong.
+                                            </div>
+
+                                            <div class="row mt-2">
+                                                <div class="col-md-4">
+                                                    <label class="form-label">Color</label>
+                                                    <form:input type="text" path="productVariants[0].color"
+                                                        class="form-control" placeholder="e.g. Black" />
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <label class="form-label">RAM (GB)</label>
+                                                    <form:input type="number" path="productVariants[0].ram"
+                                                        class="form-control" />
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <label class="form-label">Quantity (Stock)</label>
+                                                    <form:input type="number" min="0" path="productVariants[0].quantity"
+                                                        class="form-control" />
+                                                </div>
+                                            </div>
+
+                                            <div class="form-section-title">Description & Image</div>
+
+                                            <div class="row mt-2">
+                                                <div class="col-12">
                                                     <c:set var="errorShortDesc">
                                                         <form:errors path="shortDesc" cssClass="invalid-feedback" />
                                                     </c:set>
@@ -100,52 +160,33 @@
                                                         class="form-control ${not empty errorShortDesc ? 'is-invalid' : ''}" />
                                                     ${errorShortDesc}
                                                 </div>
-                                                <div class="col">
-                                                    <c:set var="errorQuantity">
-                                                        <form:errors path="quantity" cssClass="invalid-feedback" />
-                                                    </c:set>
-                                                    <label class="form-label">Quantity</label>
-                                                    <form:input type="number" min="0" step="1" path="quantity"
-                                                        class="form-control ${not empty errorQuantity ? 'is-invalid' : ''}" />
-                                                    ${errorQuantity}
-                                                </div>
                                             </div>
+
                                             <div class="row mt-2">
-                                                <div class="col">
-                                                    <label class="form-label">Factory</label>
-                                                    <form:select class="form-select" path="factory">
-                                                        <form:option value="Apple (Macbook)">Apple (Macbook)
-                                                        </form:option>
-                                                        <form:option value="Asus">Asus</form:option>
-                                                        <form:option value="Lenovo">Lenovo</form:option>
-                                                        <form:option value="HP">HP</form:option>
-                                                        <form:option value="Alien">Alien</form:option>
-                                                        <form:option value="Dell">Dell</form:option>
-                                                    </form:select>
-                                                </div>
-                                                <div class="col">
-                                                    <label class="form-label">Category</label>
-                                                    <form:select class="form-select" path="category">
-                                                        <form:option value="Điện thoại">Điện thoại</form:option>
-                                                        <form:option value="Đồng Hồ">Đồng Hồ</form:option>
-                                                        <form:option value="Máy Tính">Máy Tính</form:option>
-                                                    </form:select>
+                                                <div class="col-12">
+                                                    <c:set var="errorDetailDesc">
+                                                        <form:errors path="detailDesc" cssClass="invalid-feedback" />
+                                                    </c:set>
+                                                    <label class="form-label">Detail Description</label>
+                                                    <form:textarea rows="3" path="detailDesc"
+                                                        class="form-control ${not empty errorDetailDesc ? 'is-invalid' : ''}" />
+                                                    ${errorDetailDesc}
                                                 </div>
                                             </div>
 
                                             <div class="row mt-2">
-                                                <div class="col">
-                                                    <label for="avatarFile" class="form-label">Choose Product
-                                                        Picture</label>
+                                                <div class="col-12">
+                                                    <label for="avatarFile" class="form-label">Product Image</label>
                                                     <input class="form-control" type="file" id="avatarFile"
                                                         accept=".png, .jpg, .jpeg" name="daominhducFile" />
                                                 </div>
                                             </div>
-                                            <div class="col-12 mb-3">
+                                            <div class="col-12 mb-3 mt-2">
                                                 <img style="max-height: 250px; display: none;" alt="avatar preview"
                                                     id="avatarPreview">
                                             </div>
-                                            <button type=" submit" class="btn btn-primary mt-3">Submit</button>
+
+                                            <button type="submit" class="btn btn-primary mt-3">Create Product</button>
                                         </form:form>
                                     </div>
                                 </div>
