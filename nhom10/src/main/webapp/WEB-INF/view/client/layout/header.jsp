@@ -34,7 +34,7 @@
 
                     <li class="nav-item">
                       <a class="nav-link me-4"
-                        href="${pageContext.request.contextPath}/home#mobile-products">Sản Phẩm</a>
+                        href="${pageContext.request.contextPath}/products">Sản Phẩm</a>
                     </li>
 
                     <li class="nav-item">

@@ -124,9 +124,21 @@
                                                 </div>
                                             </div>
 
+                                            <div class="row mt-2">
+                                                <div class="col-md-4">
+                                                    <label class="form-label">Operating System</label>
+                                                    <form:select path="operatingSystem" class="form-control">
+                                                        <form:option value="">Select OS</form:option>
+                                                        <form:option value="Windows">Windows</form:option>
+                                                        <form:option value="Android">Android</form:option>
+                                                        <form:option value="iOS">iOS</form:option>
+                                                    </form:select>
+                                                </div>
+                                            </div>
+
                                             <div class="form-section-title">Initial Configuration (Variant)</div>
                                             <div class="alert alert-info" role="alert">
-                                                Đây là cấu hình mặc định đầu tiên. Bạn có thể thêm nhiều màu sắc/RAM
+                                                Đây là cấu hình mặc định đầu tiên. Bạn có thể thêm nhiều màu sắc/RAM/storage
                                                 khác sau khi tạo xong.
                                             </div>
 
@@ -142,6 +154,14 @@
                                                         class="form-control" />
                                                 </div>
                                                 <div class="col-md-4">
+                                                    <label class="form-label">Storage (GB)</label>
+                                                    <form:input type="number" path="productVariants[0].storage"
+                                                        class="form-control" />
+                                                </div>
+                                            </div>
+
+                                            <div class="row mt-2">
+                                                <div class="col-md-6">
                                                     <label class="form-label">Quantity (Stock)</label>
                                                     <form:input type="number" min="0" path="productVariants[0].quantity"
                                                         class="form-control" />

@@ -42,6 +42,7 @@ public class Product {
     private Integer pin;
     private String screenType;
     private Double screenSize;
+    private String operatingSystem;
 
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
     private List<ProConfiguration> productVariants;

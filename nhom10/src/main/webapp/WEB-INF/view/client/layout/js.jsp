@@ -26,3 +26,6 @@
 <!-- Custom JS -->
 
 <script src="${env }/client/js/script.js"></script>
+
+<!-- Product filtering JS -->
+<script src="${env }/client/js/products-filter.js"></script>

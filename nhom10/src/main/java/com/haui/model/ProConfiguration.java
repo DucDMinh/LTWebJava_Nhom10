@@ -23,16 +23,20 @@ public class ProConfiguration implements Serializable {
     @Column(name = "ram", nullable = false)
     private Integer ram;
 
+    @Column(name = "storage", nullable = false)
+    private Integer storage;
+
     @Column(name = "variant_price")
     private Double price;
 
     @Column(name = "quantity")
     private Long quantity;
+
     @ManyToOne
     @JoinColumn(name = "product_id")
     private Product product;
 
     public String getVariantName() {
-        return (product != null ? product.getName() : "") + " " + ram + "GB - " + color;
+        return (product != null ? product.getName() : "") + " " + ram + "GB " + storage + "GB - " + color;
     }
 }

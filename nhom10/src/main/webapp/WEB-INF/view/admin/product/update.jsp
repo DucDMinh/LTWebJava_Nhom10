@@ -134,6 +134,17 @@
                                                                     class="form-control" />
                                                             </div>
                                                         </div>
+                                                        <div class="row">
+                                                            <div class="col-md-4 mb-3">
+                                                                <label class="form-label">Operating System</label>
+                                                                <form:select path="operatingSystem" class="form-control">
+                                                                    <form:option value="">Select OS</form:option>
+                                                                    <form:option value="Windows">Windows</form:option>
+                                                                    <form:option value="Android">Android</form:option>
+                                                                    <form:option value="iOS">iOS</form:option>
+                                                                </form:select>
+                                                            </div>
+                                                        </div>
 
                                                         <div class="form-section-title">
                                                             <span>Product Variants (Color & RAM)</span>
@@ -165,6 +176,14 @@
                                                                                     (GB)</label>
                                                                                 <form:input type="number"
                                                                                     path="productVariants[${status.index}].ram"
+                                                                                    class="form-control form-control-sm"
+                                                                                    required="true" />
+                                                                            </div>
+                                                                            <div class="col-md-2">
+                                                                                <label class="small text-muted">Storage
+                                                                                    (GB)</label>
+                                                                                <form:input type="number"
+                                                                                    path="productVariants[${status.index}].storage"
                                                                                     class="form-control form-control-sm"
                                                                                     required="true" />
                                                                             </div>
@@ -254,6 +273,10 @@
                             <div class="col-md-2">
                                 <label class="small text-muted">RAM</label>
                                 <input type="number" name="productVariants[\${variantIndex}].ram" class="form-control form-control-sm" value="8" required />
+                            </div>
+                            <div class="col-md-2">
+                                <label class="small text-muted">Storage</label>
+                                <input type="number" name="productVariants[\${variantIndex}].storage" class="form-control form-control-sm" value="128" required />
                             </div>
                             <div class="col-md-3">
                                 <label class="small text-muted">Price</label>

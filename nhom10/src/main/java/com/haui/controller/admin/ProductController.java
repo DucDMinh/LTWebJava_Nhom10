@@ -77,6 +77,8 @@ public class ProductController {
         product.setPin(rand.nextInt(2000) + 3000);
         product.setScreenSize(15.6);
         product.setScreenType("IPS LCD");
+        String[] operatingSystems = {"Windows", "Android", "iOS"};
+        product.setOperatingSystem(operatingSystems[rand.nextInt(operatingSystems.length)]);
 
         ProConfiguration defaultVariant = new ProConfiguration();
 
@@ -85,6 +87,9 @@ public class ProductController {
 
         int[] rams = { 8, 16, 32 };
         defaultVariant.setRam(rams[rand.nextInt(rams.length)]);
+
+        int[] storages = { 64, 128, 256, 512 };
+        defaultVariant.setStorage(storages[rand.nextInt(storages.length)]);
 
         defaultVariant.setQuantity(rand.nextLong(300));
 
