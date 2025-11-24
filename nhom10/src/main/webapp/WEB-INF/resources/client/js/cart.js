@@ -1,94 +1,140 @@
-/**
- * CART QUANTITY LOGIC
- * File này chỉ xử lý việc tăng giảm số lượng sản phẩm trong giỏ hàng
- * và cập nhật giá tiền tương ứng.
- */
-
 (function ($) {
     "use strict";
-
-    // Hàm định dạng tiền tệ Việt Nam (Ví dụ: 1200000 => 1.200.000 ₫)
     function formatCurrency(value) {
         return new Intl.NumberFormat('vi-VN').format(value) + " ₫";
     }
 
-    // Hàm tính tổng tiền cả giỏ hàng (Subtotal & Total)
-    function updateCartTotal() {
+    function updateSelectedTotal() {
         var total = 0;
+        var count = 0;
+        if ($('.item-checkbox').length === 0) return;
 
-        // Duyệt qua tất cả các ô input số lượng đang có trên bảng
-        $('.quantity input').each(function () {
-            var qty = parseFloat($(this).val()) || 0;
-            // Lấy giá đơn vị từ thuộc tính data
-            var price = parseFloat($(this).attr("data-cart-detail-price")) || 0;
-            total += (qty * price);
+        $('.item-checkbox').each(function () {
+            if ($(this).is(':checked')) {
+                count++;
+                var row = $(this).closest('tr');
+                var inputQty = row.find('.quantity input');
+                var price = parseFloat(inputQty.attr("data-cart-detail-price")) || 0;
+                var quantity = parseFloat(inputQty.val()) || 0;
+
+                total += price * quantity;
+            }
         });
-
-        // Cập nhật text hiển thị tổng tiền
-        var formattedTotal = formatCurrency(total);
-        $("#cart-subtotal").text(formattedTotal);
-        $("#cart-total").text(formattedTotal);
+        $('#final-total').text(formatCurrency(total));
+        $('#selected-count').text(count);
     }
 
-    // Hàm chính: Xử lý sự kiện click
-    function initCartButtons() {
-        // Gán sự kiện click cho các nút bên trong div .quantity
-        // Dùng .off() để đảm bảo không bị gán trùng lặp nếu gọi hàm nhiều lần
+    function initQuantityLogic() {
         $('.quantity button').off('click').on('click', function (e) {
-            e.preventDefault(); // Chặn hành vi submit mặc định của button
+            e.preventDefault();
 
             var button = $(this);
-            // Tìm ô input hiển thị nằm cùng nhóm với nút bấm
             var inputVisible = button.closest('.quantity').find('input');
 
-            // Lấy giá trị hiện tại
             var oldValue = parseFloat(inputVisible.val()) || 0;
             var newVal = oldValue;
-
-            // --- 1. XÁC ĐỊNH TĂNG HAY GIẢM ---
-            // Kiểm tra class 'btn-plus' hoặc icon 'fa-plus'
             if (button.hasClass('btn-plus') || button.find('.fa-plus').length > 0) {
                 newVal = oldValue + 1;
             } else {
-                // Nếu là nút giảm
                 if (oldValue > 1) {
                     newVal = oldValue - 1;
                 } else {
-                    newVal = 1; // Không cho giảm dưới 1
+                    newVal = 1;
                 }
             }
-
-            // --- 2. CẬP NHẬT GIAO DIỆN ---
-            // Cập nhật số mới vào ô input hiển thị
             inputVisible.val(newVal);
-
-            // --- 3. ĐỒNG BỘ DỮ LIỆU ĐỂ GỬI VỀ SERVER ---
-            // Lấy index từ thuộc tính data (ví dụ: 0, 1, 2...)
             var index = inputVisible.attr("data-cart-detail-index");
-
-            // Tìm input ẩn tương ứng (id="hidden-qty-0", "hidden-qty-1"...) và cập nhật
             if (index !== undefined) {
                 $('#hidden-qty-' + index).val(newVal);
             }
-
-            // --- 4. TÍNH TOÁN LẠI GIÁ TIỀN ---
             var price = parseFloat(inputVisible.attr("data-cart-detail-price")) || 0;
             var id = inputVisible.attr("data-cart-detail-id");
-
-            // Tính thành tiền của dòng sản phẩm này
             var newRowTotal = price * newVal;
 
-            // Tìm thẻ hiển thị tiền của dòng (dựa vào data-total-price-id) và cập nhật
             $('p[data-total-price-id="' + id + '"]').text(formatCurrency(newRowTotal));
-
-            // Tính lại tổng tiền cả giỏ hàng
-            updateCartTotal();
+            updateSelectedTotal();
         });
     }
 
-    // Tự động chạy khi trang web tải xong
+    function initCheckboxLogic() {
+        $('#selectAll').on('change', function () {
+            var isChecked = $(this).is(':checked');
+            $('.item-checkbox').prop('checked', isChecked);
+            updateSelectedTotal();
+        });
+        $('.item-checkbox').on('change', function () {
+            if (!$(this).is(':checked')) {
+                $('#selectAll').prop('checked', false);
+            }
+            var totalItems = $('.item-checkbox').length;
+            var checkedItems = $('.item-checkbox:checked').length;
+            if (totalItems === checkedItems && totalItems > 0) {
+                $('#selectAll').prop('checked', true);
+            }
+
+            updateSelectedTotal();
+        });
+    }
+
+    function initSubmitLogic() {
+        $('#checkout-form').on('submit', function (e) {
+            if ($('.item-checkbox').length > 0) {
+                var checkedItems = $('.item-checkbox:checked').length;
+                if (checkedItems === 0) {
+                    e.preventDefault();
+                    alert("Vui lòng chọn ít nhất một sản phẩm để thanh toán!");
+                    return false;
+                }
+                $('.item-checkbox').each(function () {
+                    if (!$(this).is(':checked')) {
+                        var index = $(this).attr("data-item-index");
+                        $('#hidden-id-' + index).prop('disabled', true);
+                        $('#hidden-qty-' + index).prop('disabled', true);
+                    }
+                });
+            }
+        });
+    }
+
+    function initCheckoutLogic() {
+        var shippingSelect = $('#shippingMethod');
+        if (shippingSelect.length === 0) return;
+
+        var subtotalEl = $('#subtotalDisplay');
+        var shippingFeeEl = $('#shippingFeeDisplay');
+        var totalEl = $('#totalDisplay');
+
+        var hiddenShippingFee = $('#hiddenShippingFee');
+        var hiddenTotalPrice = $('#hiddenTotalPrice');
+        var baseSubtotal = parseFloat(subtotalEl.attr('data-subtotal')) || 0;
+
+        function updateTotals() {
+
+            var selectedOption = shippingSelect.find('option:selected');
+
+            var shippingFee = parseFloat(selectedOption.attr('data-price')) || 0;
+
+            var newTotal = baseSubtotal + shippingFee;
+            shippingFeeEl.text(formatCurrency(shippingFee));
+            totalEl.text(formatCurrency(newTotal));
+            if (hiddenShippingFee.length) hiddenShippingFee.val(shippingFee);
+            if (hiddenTotalPrice.length) hiddenTotalPrice.val(newTotal);
+        }
+        shippingSelect.on('change', function () {
+            updateTotals();
+        });
+        updateTotals();
+    }
+
+
     $(document).ready(function () {
-        initCartButtons();
+
+        initQuantityLogic();
+        initCheckboxLogic();
+        initSubmitLogic();
+        updateSelectedTotal();
+
+        initCheckoutLogic();
     });
 
 })(jQuery);

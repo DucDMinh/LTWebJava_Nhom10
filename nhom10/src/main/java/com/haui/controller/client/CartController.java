@@ -1,11 +1,13 @@
 package com.haui.controller.client;
 
+import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -82,4 +84,36 @@ public class CartController {
 		this.cartService.handleRemoveCartDetail(cartDetailId, session);
 		return "redirect:/cart";
 	}
+
+	@PostMapping("/checkout")
+	public String getCheckOutPage(@ModelAttribute("cart") Cart cart, Model model, Principal principal) {
+
+		User currentUser = new User();
+		if (principal != null) {
+			currentUser = this.userService.getUserByUsername(principal.getName());
+		}
+
+		List<CartDetail> cartDetails = cart == null ? new ArrayList<>() : cart.getCartDetails();
+		double totalPrice = 0;
+		List<CartDetail> selectedItems = new ArrayList<>();
+
+		for (CartDetail cd : cartDetails) {
+			if (cd.getId() != 0) {
+				CartDetail currentCartDetail = this.cartService.getCartDetailById(cd.getId());
+				if (currentCartDetail != null) {
+					currentCartDetail.setQuantity(cd.getQuantity());
+					totalPrice += currentCartDetail.getPrice() * currentCartDetail.getQuantity();
+					selectedItems.add(currentCartDetail);
+				}
+			}
+		}
+
+		model.addAttribute("cartDetails", selectedItems);
+		model.addAttribute("totalPrice", totalPrice);
+		model.addAttribute("user", currentUser);
+		model.addAttribute("cart", new Cart());
+
+		return "client/checkout";
+	}
+
 }
