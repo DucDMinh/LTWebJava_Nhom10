@@ -280,3 +280,5 @@ document.addEventListener("DOMContentLoaded", () => {
 if (document.getElementById('cart-items')) {
   initCart();
 }
+
+

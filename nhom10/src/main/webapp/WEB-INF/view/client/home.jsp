@@ -157,6 +157,27 @@
 										</div>
 									</div>
 								</div>
+								<div class="swiper-slide">
+									<div class="container">
+										<div class="row d-flex align-items-center">
+											<div class="col-md-6">
+												<div class="banner-content">
+													<h1 class="display-2 text-uppercase text-dark pb-5">Sản phẩm của bạn
+														thật tuyệt vời.</h1>
+													<a href="shop.html"
+														class="btn btn-medium btn-dark text-uppercase btn-rounded-none">Sản
+														Phẩm</a>
+												</div>
+											</div>
+											<div class="col-md-5">
+												<div class="image-holder">
+													<img src="/client/img/banner.jpg" style="object-fit: cover;
+    object-position: center;" alt="banner">
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
 							</div>
 						</div>
 						<div class="swiper-icon swiper-arrow swiper-arrow-prev">
@@ -246,29 +267,32 @@
 										<c:forEach var="product" items="${products}">
 											<c:if test="${product.category == 'Máy Tính'}">
 												<div class="col-md-6 col-lg-4 col-xl-3 mb-4" style="padding: 5px;">
-													<div class="card h-100 shadow-sm border-0">
+													<div class="card h-100 shadow-sm border-0 position-relative">
+
+														<button type="button"
+															class="btn btn-sm position-absolute top-0 start-0 m-2 p-1"
+															style="z-index: 2; width: 40px; height: 40px; border-radius: 50%;">
+															<i class="fa-regular fa-heart" style="font-size: 25px;"></i>
+														</button>
+
+
 														<span class="badge bg-danger position-absolute top-0 end-0 m-2"
-															style="z-index: 2;">
-															Hot
-														</span>
+															style="z-index: 2;"> Hot </span>
+
 														<a href="/product/${product.id}">
 															<img src="/images/product/${product.image}"
 																class="card-img-top" alt="${product.name}">
 														</a>
 
 														<div class="card-body text-center d-flex flex-column">
-
 															<h5 class="card-title fs-6">
 																<a href="/product/${product.id}"
 																	class="text-decoration-none text-dark">
 																	${product.name}
 																</a>
 															</h5>
-
 															<p class="card-text text-muted small mb-2">
-																${product.shortDesc}
-															</p>
-
+																${product.shortDesc}</p>
 															<p class="fs-5 fw-bold text-primary mb-3">
 																<fmt:formatNumber type="number"
 																	value="${product.price}" /> $
@@ -278,13 +302,12 @@
 																class="mt-auto">
 																<button
 																	class="btn btn-outline-primary rounded-pill px-3 w-100">
-																	<i class="fa fa-shopping-bag me-2"></i>
-																	Thêm vào giỏ hàng
+																	<i class="fa fa-shopping-bag me-2"></i> Thêm vào giỏ
+																	hàng
 																</button>
 																<input type="hidden" name="${_csrf.parameterName}"
 																	value="${_csrf.token}" />
 															</form>
-
 														</div>
 													</div>
 												</div>

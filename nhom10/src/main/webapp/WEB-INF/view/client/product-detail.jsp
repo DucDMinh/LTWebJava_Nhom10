@@ -254,6 +254,7 @@
 
 					<jsp:include page="/WEB-INF/view/client/layout/footer.jsp"></jsp:include>
 					<jsp:include page="/WEB-INF/view/client/layout/js.jsp"></jsp:include>
+					<script src="${pageContext.request.contextPath}/client/js/rating-interactions.js"></script>
 
 					<script>
 						function increaseQty() {
