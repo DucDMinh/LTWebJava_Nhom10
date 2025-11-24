@@ -1,6 +1,8 @@
 package com.haui.controller.client;
 
+import java.io.UnsupportedEncodingException;
 import java.util.List;
+import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -12,6 +14,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import com.haui.dto.UserDto;
 import com.haui.model.Product;
@@ -19,7 +22,10 @@ import com.haui.model.User;
 import com.haui.service.ProductService;
 import com.haui.service.RoleService;
 import com.haui.service.UserService;
+import com.haui.service.VNPayService;
 
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 
 @Controller
@@ -36,6 +42,9 @@ public class HomeController {
 
 	@Autowired
 	private ProductService productService;
+
+	@Autowired
+	private VNPayService vnpayService;
 
 	@GetMapping()
 	public String homePage(Model model) {
@@ -85,4 +94,30 @@ public class HomeController {
 		;
 		return "client/wishlist";
 	}
+
+	@GetMapping("/checkout/success")
+	public String checkoutSuccess(Model model) {
+
+		return "client/checkout-success";
+	}
+
+	@PostMapping("/checkout")
+	public String checkout(@RequestParam("paymentMethod") String paymentType,
+			HttpServletRequest request,
+			@RequestParam("totalPrice") String totalPrice) throws UnsupportedEncodingException {
+		HttpSession session = request.getSession();
+		User currentUser = new User();
+		long id = (long) session.getAttribute("id");
+		currentUser.setId(id);
+		final String uuid = UUID.randomUUID().toString().replace("-", "");
+		// this.productService.handlePlaceOrder(currentUser, session,
+		// paymentType, uuid);
+		if (!paymentType.equals("COD")) {
+			String ip = vnpayService.getIpAddress(request);
+			String vnpUrl = this.vnpayService.generateVNPayURL(Double.parseDouble(totalPrice), uuid, ip);
+			return "redirect:" + vnpUrl;
+		}
+		return "redirect:/home/checkout/success";
+	}
+
 }
