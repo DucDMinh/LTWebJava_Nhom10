@@ -360,6 +360,7 @@
 
 					<jsp:include page="/WEB-INF/view/client/layout/js.jsp"></jsp:include>
 					<script src="/client/js/script.js"></script>
+					<script src="/client/js/cart.js"></script>
 				</body>
 
 				</html>
