@@ -29,12 +29,12 @@
                   <ul id="navbar"
                     class="navbar-nav text-uppercase justify-content-end align-items-center flex-grow-1 pe-3">
                     <li class="nav-item">
-                      <a class="nav-link me-4 active" href="${pageContext.request.contextPath}/home#billboard">Trang Chủ</a>
+                      <a class="nav-link me-4 active" href="${pageContext.request.contextPath}/home#billboard">Trang
+                        Chủ</a>
                     </li>
 
                     <li class="nav-item">
-                      <a class="nav-link me-4"
-                        href="${pageContext.request.contextPath}/products">Sản Phẩm</a>
+                      <a class="nav-link me-4" href="${pageContext.request.contextPath}/products">Sản Phẩm</a>
                     </li>
 
                     <li class="nav-item">
@@ -91,7 +91,7 @@
 
                           <!-- Cart -->
                           <li>
-                            <a href="/carts">
+                            <a href="/cart">
                               <svg class="cart">
                                 <use xlink:href="#cart"></use>
                               </svg>
@@ -107,3 +107,30 @@
             </div>
           </nav>
         </header>
+        <c:if test="${not empty successMessage}">
+          <div class="position-fixed bottom-0 end-0 p-3" style="z-index: 11">
+            <div id="liveToast" class="toast show align-items-center text-white bg-success border-0" role="alert"
+              aria-live="assertive" aria-atomic="true">
+              <div class="d-flex">
+                <div class="toast-body">
+                  <i class="fas fa-check-circle me-2"></i> ${successMessage}
+                </div>
+                <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"
+                  aria-label="Close"></button>
+              </div>
+            </div>
+          </div>
+
+          <script>
+            document.addEventListener("DOMContentLoaded", function () {
+              var toastEl = document.getElementById('liveToast');
+              // Dùng Bootstrap Toast API nếu có, hoặc set timeout ẩn thủ công
+              setTimeout(function () {
+                if (toastEl) {
+                  toastEl.classList.remove('show'); // Ẩn bằng CSS
+                  toastEl.classList.add('hide');
+                }
+              }, 3000); // 3000ms = 3 giây
+            });
+          </script>
+        </c:if>

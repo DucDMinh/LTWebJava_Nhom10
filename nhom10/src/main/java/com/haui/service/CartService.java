@@ -30,6 +30,14 @@ public class CartService {
         this.proConfigurationRepository = proConfigurationRepository;
     }
 
+    public CartDetail getCartDetailById(long id) {
+        Optional<CartDetail> cd = this.cartDetailRepository.findById(id);
+        if (cd.isPresent()) {
+            return cd.get();
+        }
+        return null;
+    }
+
     @Transactional
     public void handleAddProductToCart(String email, long variantId, long quantity, HttpSession session) {
 

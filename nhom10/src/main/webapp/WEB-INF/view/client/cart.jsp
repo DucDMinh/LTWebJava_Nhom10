@@ -154,89 +154,109 @@
 						<div aria-label="breadcrumb" class="container"></div>
 					</section>
 
-					<section class="container-cart">
-						<h1 class="cart-title">Your Shopping Cart</h1>
+					<section class="py-5"
+						style="background-color: #f9f9f9; min-height: 600px; display: flex; justify-content: center; align-items: flex-start;">
 
-						<div class="cart-grid mx-auto" style="width: 75%;">
-							<div class="cart-card">
-								<table class="cart-table">
-									<thead>
-										<tr>
-											<th></th>
-											<th>PRODUCT</th>
-											<th>PRICE</th>
-											<th>QUANTITY</th>
-											<th>TOTAL</th>
-											<th></th>
+						<div style="width: 100%; max-width: 1140px; padding: 0 15px; margin: 0 auto;">
+
+							<h1 class="text-center mb-5 fw-bold" style="margin-top: 20px;">Your Shopping Cart</h1>
+
+							<div class="bg-white shadow-sm rounded p-4" style="width: 100%;">
+								<table class="cart-table table table-borderless" style="width: 100%;">
+									<thead style="border-bottom: 1px solid #eee;">
+										<tr class="text-uppercase text-secondary"
+											style="font-size: 12px; letter-spacing: 1px;">
+											<th class="pb-3 text-center" style="width: 5%;">
+												<input type="checkbox" id="selectAll" class="form-check-input"
+													style="cursor: pointer;" checked>
+											</th>
+											<th class="pb-3" style="width: 40%;">Product</th>
+											<th class="pb-3 text-center" style="width: 15%;">Price</th>
+											<th class="pb-3 text-center" style="width: 20%;">Quantity</th>
+											<th class="pb-3 text-end" style="width: 15%;">Total</th>
+											<th class="pb-3" style="width: 5%;"></th>
 										</tr>
 									</thead>
 									<tbody id="cart-items">
 										<c:if test="${ empty cartDetails}">
 											<tr>
-												<td colspan="6" class="text-center py-4">
+												<td colspan="6" class="text-center py-5 text-muted">
 													Không có sản phẩm trong giỏ hàng
 												</td>
 											</tr>
 										</c:if>
 
 										<c:forEach var="item" items="${cartDetails}" varStatus="status">
-											<tr>
-												<td>
-													<img style="width: 80px; height: 80px;"
-														src="/images/product/${item.proConfiguration.product.image}"
-														class="img-fluid rounded" alt="">
+											<tr style="border-bottom: 1px solid #f8f8f8;">
+
+												<td class="align-middle text-center">
+													<input type="checkbox" class="form-check-input item-checkbox"
+														data-item-index="${status.index}" data-item-id="${item.id}"
+														style="cursor: pointer;" checked>
 												</td>
 
-												<td>
-													<span class="fw-bold">${item.proConfiguration.product.name}</span>
-													<br>
-													<small class="text-muted">
-														Màu: ${item.proConfiguration.color} | RAM:
-														${item.proConfiguration.ram}GB
-													</small>
-												</td>
-
-												<td>
-													<fmt:formatNumber value="${item.price}" /> ₫
-												</td>
-
-												<td>
-													<div class="input-group quantity" style="width: 120px;">
-														<div class="input-group-btn">
-															<button type="button"
-																class="btn btn-sm btn-minus rounded-circle bg-light border">
-																<i class="fa fa-minus"></i>
-															</button>
-														</div>
-
-														<input type="text"
-															class="form-control form-control-sm text-center border-0"
-															value="${item.quantity}" data-cart-detail-id="${item.id}"
-															data-cart-detail-price="${item.price}"
-															data-cart-detail-index="${status.index}" readonly>
-
-														<div class="input-group-btn">
-															<button type="button"
-																class="btn btn-sm btn-plus rounded-circle bg-light border">
-																<i class="fa fa-plus"></i>
-															</button>
+												<td class="py-4 align-middle">
+													<div class="d-flex align-items-center">
+														<img src="/images/product/${item.proConfiguration.product.image}"
+															class="rounded border"
+															style="width: 70px; height: 70px; object-fit: cover; margin-right: 20px;"
+															alt="">
+														<div>
+															<div class="fw-bold text-dark" style="font-size: 16px;">
+																${item.proConfiguration.product.name}</div>
+															<small class="text-muted">
+																Màu: ${item.proConfiguration.color} | RAM:
+																${item.proConfiguration.ram}GB
+															</small>
 														</div>
 													</div>
 												</td>
 
-												<td>
-													<p class="mb-0 fw-bold" data-total-price-id="${item.id}">
+												<td class="align-middle text-center fw-bold text-dark">
+													<span class="price-display" data-price="${item.price}">
+														<fmt:formatNumber value="${item.price}" /> ₫
+													</span>
+												</td>
+
+												<td class="align-middle">
+													<div
+														class="d-flex justify-content-center align-items-center quantity">
+														<button type="button"
+															class="btn btn-sm rounded-circle border bg-light d-flex align-items-center justify-content-center btn-minus"
+															style="width: 30px; height: 30px;">
+															<i class="fa fa-minus" style="font-size: 10px;"></i>
+														</button>
+
+														<input type="text"
+															class="form-control border-0 text-center fw-bold mx-2"
+															value="${item.quantity}" data-cart-detail-id="${item.id}"
+															data-cart-detail-price="${item.price}"
+															data-cart-detail-index="${status.index}" readonly
+															style="width: 40px; background: transparent;">
+
+														<button type="button"
+															class="btn btn-sm rounded-circle border bg-light d-flex align-items-center justify-content-center btn-plus"
+															style="width: 30px; height: 30px;">
+															<i class="fa fa-plus" style="font-size: 10px;"></i>
+														</button>
+													</div>
+												</td>
+
+												<td class="align-middle text-end fw-bold"
+													style="color: #ccc; font-size: 18px;">
+													<p class="mb-0 row-total" data-total-price-id="${item.id}"
+														style="color: #aaa;">
 														<fmt:formatNumber type="number"
 															value="${item.price * item.quantity}" /> ₫
 													</p>
 												</td>
 
-												<td>
+												<td class="align-middle text-end">
 													<form method="post" action="/delete-cart-product/${item.id}">
 														<input type="hidden" name="${_csrf.parameterName}"
 															value="${_csrf.token}" />
-														<button class="btn btn-sm text-danger border-0 bg-transparent">
-															<i class="fa fa-times fa-lg"></i>
+														<button class="btn text-danger border-0 bg-transparent p-0">
+															<i class="fa fa-times"></i>
 														</button>
 													</form>
 												</td>
@@ -244,49 +264,45 @@
 										</c:forEach>
 									</tbody>
 								</table>
-							</div>
 
-							<div class="summary-card">
-								<h5 class="summary-title">Thông tin đơn hàng</h5>
-
-								<div class="summary-row">
-									<span class="label">Tạm tính</span>
-									<span class="value" id="cart-subtotal" data-value="${totalPrice}">
-										<fmt:formatNumber type="number" value="${totalPrice}" /> ₫
-									</span>
-								</div>
-
-								<div class="summary-row">
-									<span class="label">Phí vận chuyển</span>
-									<span class="value text-success">Miễn phí</span>
-								</div>
-
-								<div class="summary-row total">
-									<span class="label" style="font-weight: 700; color: #374151;">Tổng cộng</span>
-									<span class="value text-danger fw-bold fs-5" id="cart-total"
-										data-value="${totalPrice}">
-										<fmt:formatNumber type="number" value="${totalPrice}" /> ₫
-									</span>
-								</div>
-
-								<form:form action="/confirm-checkout" method="post" modelAttribute="cart">
-									<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
-
-									<div style="display: none;">
-										<c:forEach var="cartDetail" items="${cart.cartDetails}" varStatus="status">
-											<input type="hidden" name="cartDetails[${status.index}].id"
-												value="${cartDetail.id}" />
-											<input type="hidden" id="hidden-qty-${status.index}"
-												name="cartDetails[${status.index}].quantity"
-												value="${cartDetail.quantity}" />
-										</c:forEach>
+								<div class="d-flex justify-content-between align-items-center mt-4 pt-3 border-top">
+									<div class="fw-bold text-secondary">
+										Đã chọn: <span id="selected-count" class="text-dark">0</span> sản phẩm
 									</div>
+									<div class="d-flex align-items-center">
+										<div class="me-4 text-end">
+											<span class="text-muted d-block" style="font-size: 12px;">Tổng thanh
+												toán:</span>
+											<span id="final-total" class="fw-bold text-danger"
+												style="font-size: 24px;">0 ₫</span>
+										</div>
 
-									<button type="submit" class="checkout-btn" id="checkoutBtn">
-										Proceed to Checkout
-									</button>
-								</form:form>
+										<form:form action="/checkout" method="post" modelAttribute="cart"
+											id="checkout-form">
+											<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
 
+											<div style="display: none;">
+												<c:forEach var="cartDetail" items="${cart.cartDetails}"
+													varStatus="status">
+													<input type="hidden" id="hidden-id-${status.index}"
+														name="cartDetails[${status.index}].id"
+														value="${cartDetail.id}" />
+													<input type="hidden" id="hidden-qty-${status.index}"
+														name="cartDetails[${status.index}].quantity"
+														value="${cartDetail.quantity}" />
+												</c:forEach>
+											</div>
+
+											<c:if test="${not empty cartDetails}">
+												<button type="submit"
+													class="btn btn-dark text-white text-uppercase fw-bold py-3 px-4 shadow-sm"
+													style="border-radius: 4px; letter-spacing: 1px; background-color: #555;">
+													Proceed to Checkout
+												</button>
+											</c:if>
+										</form:form>
+									</div>
+								</div>
 							</div>
 						</div>
 					</section>
@@ -360,6 +376,7 @@
 
 					<jsp:include page="/WEB-INF/view/client/layout/js.jsp"></jsp:include>
 					<script src="/client/js/script.js"></script>
+					<script src="/client/js/cart.js"></script>
 				</body>
 
 				</html>
