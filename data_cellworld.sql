@@ -21,3 +21,46 @@ CREATE TABLE users(
     created_date	DATETIME DEFAULT NOW(),
     FOREIGN KEY(role_id) REFERENCES roles(id) ON DELETE CASCADE
 );
+CREATE TABLE IF NOT EXISTS products (
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(255) NOT NULL,
+    price DOUBLE NOT NULL,
+    image VARCHAR(255),
+    detail_desc MEDIUMTEXT NOT NULL, -- @Column(columnDefinition = "MEDIUMTEXT")
+    short_desc VARCHAR(255) NOT NULL,
+    sold BIGINT NOT NULL DEFAULT 0,
+    factory VARCHAR(255) NOT NULL,
+    category VARCHAR(255) NOT NULL,
+    pin INT,
+    screen_type VARCHAR(255),
+    screen_size DOUBLE,
+    operating_system VARCHAR(255)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE IF NOT EXISTS pro_configuration (
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    color VARCHAR(255),
+    ram INT NOT NULL,
+    storage INT NOT NULL,
+    variant_price DOUBLE, -- @Column(name = "variant_price")
+    quantity BIGINT,
+    product_id BIGINT,
+    CONSTRAINT fk_pro_config_product FOREIGN KEY (product_id) REFERENCES products(id) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE IF NOT EXISTS carts (
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    sum INT DEFAULT 0,
+    user_id BIGINT,
+    CONSTRAINT fk_carts_user FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE IF NOT EXISTS cart_detail (
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    quantity BIGINT NOT NULL,
+    price DOUBLE NOT NULL,
+    cart_id BIGINT,
+    pro_configuration_id BIGINT,
+    CONSTRAINT fk_cart_detail_cart FOREIGN KEY (cart_id) REFERENCES carts(id) ON DELETE CASCADE,
+    CONSTRAINT fk_cart_detail_pro_config FOREIGN KEY (pro_configuration_id) REFERENCES pro_configuration(id) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
