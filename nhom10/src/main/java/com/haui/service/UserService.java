@@ -2,12 +2,11 @@ package com.haui.service;
 
 import com.haui.model.Role;
 import com.haui.model.User;
-import com.haui.repository.RoleRepository;
 import com.haui.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
+
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
@@ -63,5 +62,9 @@ public class UserService {
 
     public Role getRoleByName(String roleName) {
         return roleService.findByName(roleName);
+    }
+
+    public User findByUsername(String username) {
+        return userRepository.findByUsername(username);
     }
 }

@@ -47,7 +47,7 @@
 
 
                           <li class="pe-3">
-                            <a href="/home/wishlist" class="search-button">
+                            <a href="/wishlist" class="search-button">
                               <i class="fa-regular fa-heart fa-lg"></i>
                             </a>
                           </li>
@@ -92,9 +92,7 @@
                           <!-- Cart -->
                           <li>
                             <a href="/cart">
-                              <svg class="cart">
-                                <use xlink:href="#cart"></use>
-                              </svg>
+                              <i class="fa-solid fa-cart-shopping"></i>
                             </a>
                           </li>
 

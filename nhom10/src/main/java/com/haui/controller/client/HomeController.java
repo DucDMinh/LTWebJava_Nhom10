@@ -4,7 +4,10 @@ import java.io.UnsupportedEncodingException;
 import java.util.List;
 import java.util.UUID;
 
+import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -12,6 +15,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -19,6 +23,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import com.haui.dto.UserDto;
 import com.haui.model.Product;
 import com.haui.model.User;
+import com.haui.model.WishList;
 import com.haui.service.ProductService;
 import com.haui.service.RoleService;
 import com.haui.service.UserService;
@@ -47,7 +52,12 @@ public class HomeController {
 	private VNPayService vnpayService;
 
 	@GetMapping()
-	public String homePage(Model model) {
+	public String homePage(@AuthenticationPrincipal UserDetails userDetails, Model model) {
+		User user = userService.findByUsername(userDetails.getUsername());
+		List<WishList> wishlistItems = wishListService.getWishListByUser(user.getId());
+
+		model.addAttribute("wishlistItems", wishlistItems);
+
 		List<Product> products = this.productService.getAllProduct();
 		model.addAttribute("products", products);
 		return "client/home";
