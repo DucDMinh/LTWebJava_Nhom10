@@ -190,7 +190,7 @@
 					<jsp:include page="/WEB-INF/view/client/layout/footer.jsp"></jsp:include>
 					<jsp:include page="/WEB-INF/view/client/layout/js.jsp"></jsp:include>
 
-					<script src="/client/js/checkout.js"></script>
+					<script src="/client/js/cart.js"></script>
 				</body>
 
 				</html>

@@ -28,4 +28,8 @@ public class OrderService {
             this.orderProductRepository.save(op);
         }
     }
+
+    public List<Order> getAllProduct() {
+        return this.orderRepository.findAll();
+    }
 }

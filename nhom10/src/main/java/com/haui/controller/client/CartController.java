@@ -167,7 +167,6 @@ public class CartController {
 					CartDetail dbCartDetail = this.cartDetailService.getCartDetailById(cd.getId());
 
 					if (dbCartDetail != null) {
-						// Tạo OrderProduct
 						OrderProduct orderProduct = new OrderProduct();
 						Product product = dbCartDetail.getProConfiguration().getProduct();
 
@@ -203,10 +202,9 @@ public class CartController {
 		}
 		this.orderService.saveOrder(order, orderProducts);
 		if ("VNPAY".equals(paymentMethod)) {
-			long vnpayAmount = (long) (order.getTotalPrice() * 100);
-			return "redirect:thank-you";
+			return "redirect:/thank-you";
 		} else {
-			return "redirect:thank-you";
+			return "redirect:/thank-you";
 		}
 	}
 
@@ -214,5 +212,4 @@ public class CartController {
 	public String getThankYouPage() {
 		return "client/thank-you";
 	}
-
 }

@@ -39,7 +39,7 @@
                     </p>
 
                     <div class="d-flex justify-content-center">
-                        <a href="/" class="btn btn-dark btn-lg px-5 py-3 text-uppercase fw-bold shadow-sm"
+                        <a href="/home" class="btn btn-dark btn-lg px-5 py-3 text-uppercase fw-bold shadow-sm"
                             style="border-radius: 4px;">
                             Tiếp tục mua sắm
                         </a>
