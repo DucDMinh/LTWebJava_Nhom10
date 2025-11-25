@@ -6,7 +6,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.haui.model.Order;
@@ -34,6 +36,27 @@ public class OrderController {
         model.addAttribute("order", order);
         model.addAttribute("orderProducts", orderProducts);
         return "admin/order/view";
+    }
+
+    @GetMapping("/updates/{id}")
+    public String updateStatus(@PathVariable("id") Long id, Model model) {
+        Order order = this.orderService.getOrderById(id);
+        model.addAttribute("updateOrder", order);
+        return "admin/order/update";
+    }
+
+    @PostMapping("/update")
+    public String updateOrder(@ModelAttribute("updateOrder") Order newOrder) {
+        Order order = this.orderService.getOrderById(newOrder.getId());
+        order.setStatus(newOrder.getStatus());
+        this.orderService.save(order);
+        return "redirect:/admin/orders";
+    }
+
+    @GetMapping("/deletes/{id}")
+    public String deleteOrder(@PathVariable("id") Long id) {
+        this.orderService.deleteOrder(id);
+        return "redirect:/admin/orders";
     }
 
 }

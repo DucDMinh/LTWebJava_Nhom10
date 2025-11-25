@@ -37,4 +37,20 @@ public class OrderService {
         return this.orderRepository.findById(id).orElse(null);
     }
 
+    public void save(Order order) {
+        this.orderRepository.save(order);
+    }
+
+    public void deleteOrder(Long id) {
+        this.orderRepository.deleteById(id);
+    }
+
+    public Order updateOrder(Order order) {
+        return orderRepository.save(order);
+    }
+
+    public Order getOrderByPaymentRef(String paymentRef) {
+        return orderRepository.findByPaymentRef(paymentRef)
+                .orElse(null);
+    }
 }

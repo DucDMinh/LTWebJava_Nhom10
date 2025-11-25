@@ -56,7 +56,7 @@
                                                         <th scope="col">Name</th>
                                                         <th scope="col">Total Price</th>
                                                         <th scope="col">Payment Method</th>
-                                                        <th scope="col">Payment Status</th>
+                                                        <th scope="col">Status</th>
                                                         <th scope="col">Action</th>
                                                     </tr>
                                                 </thead>
@@ -71,20 +71,23 @@
                                                                 $
                                                             </td>
                                                             <td>${order.paymentMethod}</td>
-                                                            <td>${order.paymentStatus}</td>
+                                                            <td>${order.status}</td>
                                                             <td>
                                                                 <a href="/admin/orders/${order.id}" type="submit"
                                                                     class="btn btn-success">View</a>
-                                                                <a href="/admin/order/update/${order.id}" type="submit"
+                                                                <a href="/admin/orders/updates/${order.id}" type="submit"
                                                                     class="btn btn-warning">Update</a>
-                                                                <a href="/admin/order/delete-${order.id}" type="submit"
-                                                                    class="btn btn-danger">Delete</a>
+                                                                <a href="/admin/orders/deletes/${order.id}"
+                                                                    class="btn btn-danger"
+                                                                    onclick="return confirm('Xác nhận xóa order ${order.id}?');">
+                                                                    Delete
+                                                                </a>
                                                             </td>
                                                         </tr>
                                                     </c:forEach>
                                                 </tbody>
                                             </table>
-                                            <a href="/admin" class="btn btn-success">Back</a>
+                                            
                                             <c:if test="${totalPages > 0}">
                                                 <div class="paging d-flex justify-content-center align-items-center ">
                                                     <nav aria-label="Page navigation example">

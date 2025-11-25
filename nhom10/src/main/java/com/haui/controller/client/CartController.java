@@ -4,6 +4,7 @@ import java.io.UnsupportedEncodingException;
 import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -144,80 +145,109 @@ public class CartController {
 			@RequestParam("shippingMethod") String shippingMethod,
 			@RequestParam("note") String note,
 			Principal principal) throws UnsupportedEncodingException {
+
 		if (principal == null)
 			return "redirect:/login";
+
 		User currentUser = this.userService.getUserByUsername(principal.getName());
 		if (currentUser == null)
 			return "redirect:/login";
-		double shippingFee = 0;
-		switch (shippingMethod) {
-			case "FAST":
-				shippingFee = 22000;
-				break;
-			case "EXPRESS":
-				shippingFee = 33000;
-				break;
-			default:
-				shippingFee = 11000;
-				break;
-		}
-		List<CartDetail> formCartDetails = cart.getCartDetails();
 
+		double shippingFee = switch (shippingMethod) {
+			case "FAST" -> 22000;
+			case "EXPRESS" -> 33000;
+			default -> 11000;
+		};
+
+		List<CartDetail> formCartDetails = cart.getCartDetails();
+		List<OrderProduct> orderProducts = new ArrayList<>();
 		double totalItemPrice = 0;
 		int totalQuantity = 0;
-		List<OrderProduct> orderProducts = new ArrayList<>();
 
 		if (formCartDetails != null) {
 			for (CartDetail cd : formCartDetails) {
 				if (cd.getId() > 0) {
-					CartDetail dbCartDetail = this.cartDetailService.getCartDetailById(cd.getId());
+					CartDetail dbCd = cartDetailService.getCartDetailById(cd.getId());
+					if (dbCd != null) {
+						Product product = dbCd.getProConfiguration().getProduct();
 
-					if (dbCartDetail != null) {
-						OrderProduct orderProduct = new OrderProduct();
-						Product product = dbCartDetail.getProConfiguration().getProduct();
+						OrderProduct op = new OrderProduct();
+						op.setProduct(product);
+						op.setPrice(dbCd.getPrice());
+						op.setQuantity((int) cd.getQuantity());
 
-						orderProduct.setProduct(product);
-						orderProduct.setPrice(dbCartDetail.getPrice());
-						orderProduct.setQuantity((int) cd.getQuantity());
 						OrderProductKey key = new OrderProductKey();
 						key.setProductId(product.getId());
-						orderProduct.setOrderProductKey(key);
+						op.setOrderProductKey(key);
 
-						orderProducts.add(orderProduct);
-						totalItemPrice += (dbCartDetail.getPrice() * cd.getQuantity());
+						orderProducts.add(op);
+
+						totalItemPrice += dbCd.getPrice() * cd.getQuantity();
 						totalQuantity += cd.getQuantity();
-						this.cartDetailService.handleRemoveCartDetail(dbCartDetail.getId(), request.getSession());
+
+						cartDetailService.handleRemoveCartDetail(dbCd.getId(), request.getSession());
 					}
 				}
 			}
 		}
+
+		// ====== TẠO ORDER ======
 		Order order = new Order();
 		order.setUser(currentUser);
 		order.setAddress(currentUser.getAddress());
-
-		order.setTotalPrice(totalItemPrice + shippingFee);
 		order.setQuantity(totalQuantity);
+		order.setTotalPrice(totalItemPrice + shippingFee);
 		order.setStatus("PENDING");
-		order.setPaymentMethod(paymentMethod);
+
+		// Lưu trước khi redirect
+		this.orderService.saveOrder(order, orderProducts);
+
+		// ====== THANH TOÁN ONLINE ======
 		if ("VNPAY".equals(paymentMethod)) {
-			final String uuid = UUID.randomUUID().toString().replace("-", "");
+
+			String paymentRef = "VN_" + System.currentTimeMillis();
+			order.setPaymentMethod("VNPAY");
+			order.setPaymentStatus("PENDING");
+			order.setPaymentRef(paymentRef);
+			orderService.updateOrder(order);
+
 			String ip = vnpayService.getIpAddress(request);
-			String vnpUrl = this.vnpayService.generateVNPayURL(order.getTotalPrice(), uuid, ip);
+			String vnpUrl = vnpayService.generateVNPayURL(order.getTotalPrice(), paymentRef, ip);
+
 			return "redirect:" + vnpUrl;
 		} else {
-			order.setPaymentStatus("UNPAID");
-			order.setPaymentRef("COD_" + System.currentTimeMillis());
+			order.setPaymentMethod("COD");
+			order.setPaymentStatus("PENDING");
 		}
-		this.orderService.saveOrder(order, orderProducts);
-		if ("VNPAY".equals(paymentMethod)) {
-			return "redirect:/thank-you";
-		} else {
-			return "redirect:/thank-you";
-		}
+
+		// COD
+		order.setPaymentStatus("UNKNOWN");
+		order.setPaymentRef("COD_" + System.currentTimeMillis());
+		orderService.updateOrder(order);
+
+		return "redirect:/thank-you";
 	}
 
 	@GetMapping("/thank-you")
-	public String getThankYouPage() {
+	public String getThankYouPage(
+			@RequestParam("vnp_ResponseCode") Optional<String> vnpayResponse,
+			@RequestParam("vnp_TxnRef") Optional<String> paymentRef) {
+
+		if (vnpayResponse.isPresent() && paymentRef.isPresent()) {
+
+			Order order = orderService.getOrderByPaymentRef(paymentRef.get());
+			if (order != null) {
+				if ("00".equals(vnpayResponse.get())) {
+					order.setPaymentStatus("PAID");
+					order.setStatus("SUCCESS");
+				} else {
+					order.setPaymentStatus("FAILED");
+					order.setStatus("CANCELLED");
+				}
+				orderService.updateOrder(order);
+			}
+		}
+
 		return "client/thank-you";
 	}
 }

@@ -45,13 +45,13 @@
             <!-- Customer Name -->
             <div class="mb-3">
                 <label class="form-label">Khách hàng</label>
-                <input type="text" class="form-control" value="${updateOrder.address.reciverName}" readonly>
+                <input type="text" class="form-control" value="${updateOrder.user.fullName}" readonly>
             </div>
 
             <!-- Address -->
             <div class="mb-3">
                 <label class="form-label">Địa chỉ giao hàng</label>
-                <input type="text" class="form-control" value="${updateOrder.address.detailDesc}" readonly>
+                <input type="text" class="form-control" value="${updateOrder.user.address}" readonly>
             </div>
 
             <!-- Total Price -->

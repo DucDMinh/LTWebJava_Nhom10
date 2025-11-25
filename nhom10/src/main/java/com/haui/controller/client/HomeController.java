@@ -95,29 +95,4 @@ public class HomeController {
 		return "client/wishlist";
 	}
 
-	@GetMapping("/checkout/success")
-	public String checkoutSuccess(Model model) {
-
-		return "client/checkout-success";
-	}
-
-	@PostMapping("/checkout")
-	public String checkout(@RequestParam("paymentMethod") String paymentType,
-			HttpServletRequest request,
-			@RequestParam("totalPrice") String totalPrice) throws UnsupportedEncodingException {
-		HttpSession session = request.getSession();
-		User currentUser = new User();
-		long id = (long) session.getAttribute("id");
-		currentUser.setId(id);
-		final String uuid = UUID.randomUUID().toString().replace("-", "");
-		// this.productService.handlePlaceOrder(currentUser, session,
-		// paymentType, uuid);
-		if (!paymentType.equals("COD")) {
-			String ip = vnpayService.getIpAddress(request);
-			String vnpUrl = this.vnpayService.generateVNPayURL(Double.parseDouble(totalPrice), uuid, ip);
-			return "redirect:" + vnpUrl;
-		}
-		return "redirect:/home/checkout/success";
-	}
-
 }
