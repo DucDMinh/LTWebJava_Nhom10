@@ -22,6 +22,8 @@
 
 				<body data-bs-spy="scroll" data-bs-target="#navbar" data-bs-root-margin="0px 0px -40%"
 					data-bs-smooth-scroll="true" tabindex="0">
+					<meta name="_csrf" content="${_csrf.token}" />
+					<meta name="_csrf_header" content="${_csrf.headerName}" />
 					<svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
 						<symbol id="search" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
 							<title>Search</title>
@@ -263,17 +265,31 @@
 								</div>
 
 								<div class="swiper product-swiper overflow-x-auto">
-									<div class=" row flex-nowrap">
+									<div class=" row flex-nowrap">`
 										<c:forEach var="product" items="${products}">
 											<c:if test="${product.category == 'Máy Tính'}">
+												<c:set var="wishItem" value="${null}" />
+												<c:forEach var="w" items="${wishlistItems}">
+													<c:if test="${w.product.id == product.id}">
+														<c:set var="wishItem" value="${w}" />
+													</c:if>
+												</c:forEach>
 												<div class="col-md-6 col-lg-4 col-xl-3 mb-4" style="padding: 5px;">
 													<div class="card h-100 shadow-sm border-0 position-relative">
 
-														<button type="button"
-															class="btn btn-sm position-absolute top-0 start-0 m-2 p-1"
-															style="z-index: 2; width: 40px; height: 40px; border-radius: 50%;">
-															<i class="fa-regular fa-heart" style="font-size: 25px;"></i>
-														</button>
+
+														<form action="${pageContext.request.contextPath}/wishlist"
+															method="post" style="display:inline;">
+															<input type="hidden" name="${_csrf.parameterName}"
+																value="${_csrf.token}" />
+															<input type="hidden" name="productId" value="${product.id}">
+
+															<button type="submit"
+																class="btn btn-sm position-absolute top-0 start-0 m-2 p-1 wishlist-btn">
+																<i class="${wishItem != null ? 'fa-solid' : 'fa-regular'} fa-heart"
+																	style="font-size:25px; color: rgba(251, 1, 1, 0.793);"></i>
+															</button>
+														</form>
 
 
 														<span class="badge bg-danger position-absolute top-0 end-0 m-2"
@@ -497,6 +513,7 @@
 					<jsp:include page="/WEB-INF/view/client/layout/insta-shop.jsp"></jsp:include>
 
 					<jsp:include page="/WEB-INF/view/client/layout/footer.jsp"></jsp:include>
+
 
 
 
