@@ -125,6 +125,48 @@
         });
         updateTotals();
     }
+    function initDeleteLogic() {
+        $('.btn-delete-cart').click(function (e) {
+            e.preventDefault();
+
+            var btn = $(this);
+            var cartDetailId = btn.attr('data-cart-detail-id');
+            var csrfName = btn.attr('data-csrf-name');
+            var csrfToken = btn.attr('data-csrf-token');
+
+            var row = btn.closest('tr');
+
+            $.ajax({
+                url: '/api/delete-cart-product/' + cartDetailId,
+                type: 'POST',
+                data: {
+                    [csrfName]: csrfToken
+                },
+                success: function (response) {
+                    row.fadeOut(300, function () {
+                        $(this).remove();
+                        updateSelectedTotal();
+
+                        if (response.newCartSum !== undefined) {
+                            $('.cart-count').text(response.newCartSum);
+                        }
+                        if ($('#cart-items tr').length === 0) {
+                            $('#cart-items').html('<tr><td colspan="6" class="text-center py-5 text-muted">Không có sản phẩm trong giỏ hàng</td></tr>');
+
+                            $('#final-total').text(formatCurrency(0));
+                            $('#selected-count').text(0);
+                            $('#selectAll').prop('checked', false);
+                            $('#checkout-form button[type="submit"]').hide();
+                        }
+                    });
+                },
+                error: function (xhr, status, error) {
+                    alert("Có lỗi xảy ra khi xóa sản phẩm: " + error);
+                    console.log(xhr.responseText);
+                }
+            });
+        });
+    }
 
 
     $(document).ready(function () {
@@ -133,8 +175,42 @@
         initCheckboxLogic();
         initSubmitLogic();
         updateSelectedTotal();
+        initDeleteLogic();
 
         initCheckoutLogic();
+        $('.btn-delete-cart').click(function (e) {
+            e.preventDefault();
+
+            var btn = $(this);
+            var cartDetailId = btn.attr('data-cart-detail-id');
+            var csrfName = btn.attr('data-csrf-name');
+            var csrfToken = btn.attr('data-csrf-token');
+            var row = btn.closest('tr');
+            $.ajax({
+                url: '/api/delete-cart-product/' + cartDetailId,
+                type: 'POST',
+                data: {
+                    [csrfName]: csrfToken
+                },
+                success: function (response) {
+                    row.fadeOut(300, function () {
+                        $(this).remove();
+                        if (typeof updateSelectedTotal === "function") {
+                            updateSelectedTotal();
+                        }
+                        if (response.newCartSum !== undefined) {
+                            $('#cartSum').text(response.newCartSum);
+                        }
+                        if ($('#cart-items tr').length === 0) {
+                            $('#cart-items').html('<tr><td colspan="6" class="text-center py-5 text-muted">Không có sản phẩm trong giỏ hàng</td></tr>');
+                        }
+                    });
+                },
+                error: function (xhr) {
+                    console.log(xhr.responseText);
+                }
+            });
+        });
     });
 
 })(jQuery);

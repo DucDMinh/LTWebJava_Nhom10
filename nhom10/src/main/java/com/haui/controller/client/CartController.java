@@ -15,8 +15,14 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.haui.model.Cart;
 import com.haui.model.CartDetail;
+import com.haui.model.Order;
+import com.haui.model.OrderProduct;
+import com.haui.model.OrderProductKey;
+import com.haui.model.Product;
 import com.haui.model.User;
+import com.haui.service.CartDetailService;
 import com.haui.service.CartService;
+import com.haui.service.OrderService;
 import com.haui.service.ProductService;
 import com.haui.service.UserService;
 
@@ -31,7 +37,13 @@ public class CartController {
 	private CartService cartService;
 
 	@Autowired
+	private CartDetailService cartDetailService;
+
+	@Autowired
 	private UserService userService;
+
+	@Autowired
+	private OrderService orderService;
 
 	@Autowired
 	private ProductService productService;
@@ -41,9 +53,11 @@ public class CartController {
 		User currentUser = new User();
 		HttpSession session = request.getSession(false);
 
-		long id = (long) session.getAttribute("id");
-		currentUser.setId(id);
-
+		Object idObj = session.getAttribute("id");
+		if (idObj != null) {
+			Long id = Long.valueOf(idObj.toString());
+			currentUser.setId(id);
+		}
 		Cart cart = this.productService.fetchByUser(currentUser);
 
 		List<CartDetail> cartDetails = cart == null ? new ArrayList<CartDetail>() : cart.getCartDetails();
@@ -114,6 +128,91 @@ public class CartController {
 		model.addAttribute("cart", new Cart());
 
 		return "client/checkout";
+	}
+
+	@PostMapping("/place-order")
+	public String handlePlaceOrder(
+			HttpServletRequest request,
+			@ModelAttribute("cart") Cart cart,
+			@RequestParam("paymentMethod") String paymentMethod,
+			@RequestParam("shippingMethod") String shippingMethod,
+			@RequestParam("note") String note,
+			Principal principal) {
+		if (principal == null)
+			return "redirect:/login";
+		User currentUser = this.userService.getUserByUsername(principal.getName());
+		if (currentUser == null)
+			return "redirect:/login";
+		double shippingFee = 0;
+		switch (shippingMethod) {
+			case "FAST":
+				shippingFee = 22000;
+				break;
+			case "EXPRESS":
+				shippingFee = 33000;
+				break;
+			default:
+				shippingFee = 11000;
+				break;
+		}
+		List<CartDetail> formCartDetails = cart.getCartDetails();
+
+		double totalItemPrice = 0;
+		int totalQuantity = 0;
+		List<OrderProduct> orderProducts = new ArrayList<>();
+
+		if (formCartDetails != null) {
+			for (CartDetail cd : formCartDetails) {
+				if (cd.getId() > 0) {
+					CartDetail dbCartDetail = this.cartDetailService.getCartDetailById(cd.getId());
+
+					if (dbCartDetail != null) {
+						// Tạo OrderProduct
+						OrderProduct orderProduct = new OrderProduct();
+						Product product = dbCartDetail.getProConfiguration().getProduct();
+
+						orderProduct.setProduct(product);
+						orderProduct.setPrice(dbCartDetail.getPrice());
+						orderProduct.setQuantity((int) cd.getQuantity());
+						OrderProductKey key = new OrderProductKey();
+						key.setProductId(product.getId());
+						orderProduct.setOrderProductKey(key);
+
+						orderProducts.add(orderProduct);
+						totalItemPrice += (dbCartDetail.getPrice() * cd.getQuantity());
+						totalQuantity += cd.getQuantity();
+						this.cartDetailService.handleRemoveCartDetail(dbCartDetail.getId(), request.getSession());
+					}
+				}
+			}
+		}
+		Order order = new Order();
+		order.setUser(currentUser);
+		order.setAddress(currentUser.getAddress());
+
+		order.setTotalPrice(totalItemPrice + shippingFee);
+		order.setQuantity(totalQuantity);
+		order.setStatus("PENDING");
+		order.setPaymentMethod(paymentMethod);
+		if ("VNPAY".equals(paymentMethod)) {
+			order.setPaymentStatus("PAYMENT_PENDING");
+			order.setPaymentRef("VNPAY_" + System.currentTimeMillis());
+		} else {
+			order.setPaymentStatus("UNPAID");
+			order.setPaymentRef("COD_" + System.currentTimeMillis());
+		}
+		this.orderService.saveOrder(order, orderProducts);
+		if ("VNPAY".equals(paymentMethod)) {
+			long vnpayAmount = (long) (order.getTotalPrice() * 100);
+			return "redirect:thank-you";
+		} else {
+			return "redirect:thank-you";
+		}
+	}
+
+	@GetMapping("/thank-you")
+	public String getThankYouPage() {
+		return "client/thank-you";
 	}
 
 }
