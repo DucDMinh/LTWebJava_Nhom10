@@ -41,7 +41,7 @@ public class CartController {
 		User currentUser = new User();
 		HttpSession session = request.getSession(false);
 
-		int id = (int) session.getAttribute("id");
+		long id = (long) session.getAttribute("id");
 		currentUser.setId(id);
 
 		Cart cart = this.productService.fetchByUser(currentUser);
