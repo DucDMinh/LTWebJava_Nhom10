@@ -32,4 +32,9 @@ public class OrderService {
     public List<Order> getAllProduct() {
         return this.orderRepository.findAll();
     }
+
+    public Order getOrderById(Long id) {
+        return this.orderRepository.findById(id).orElse(null);
+    }
+
 }

@@ -1,8 +1,10 @@
 package com.haui.controller.client;
 
+import java.io.UnsupportedEncodingException;
 import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -25,6 +27,7 @@ import com.haui.service.CartService;
 import com.haui.service.OrderService;
 import com.haui.service.ProductService;
 import com.haui.service.UserService;
+import com.haui.service.VNPayService;
 
 import org.springframework.ui.Model;
 import jakarta.servlet.http.HttpServletRequest;
@@ -47,6 +50,9 @@ public class CartController {
 
 	@Autowired
 	private ProductService productService;
+
+	@Autowired
+	private VNPayService vnpayService;
 
 	@GetMapping("/cart")
 	public String getCartPage(Model model, HttpServletRequest request) {
@@ -137,7 +143,7 @@ public class CartController {
 			@RequestParam("paymentMethod") String paymentMethod,
 			@RequestParam("shippingMethod") String shippingMethod,
 			@RequestParam("note") String note,
-			Principal principal) {
+			Principal principal) throws UnsupportedEncodingException {
 		if (principal == null)
 			return "redirect:/login";
 		User currentUser = this.userService.getUserByUsername(principal.getName());
@@ -194,8 +200,10 @@ public class CartController {
 		order.setStatus("PENDING");
 		order.setPaymentMethod(paymentMethod);
 		if ("VNPAY".equals(paymentMethod)) {
-			order.setPaymentStatus("PAYMENT_PENDING");
-			order.setPaymentRef("VNPAY_" + System.currentTimeMillis());
+			final String uuid = UUID.randomUUID().toString().replace("-", "");
+			String ip = vnpayService.getIpAddress(request);
+			String vnpUrl = this.vnpayService.generateVNPayURL(order.getTotalPrice(), uuid, ip);
+			return "redirect:" + vnpUrl;
 		} else {
 			order.setPaymentStatus("UNPAID");
 			order.setPaymentRef("COD_" + System.currentTimeMillis());

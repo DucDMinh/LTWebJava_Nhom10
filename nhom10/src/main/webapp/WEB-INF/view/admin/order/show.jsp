@@ -73,7 +73,7 @@
                                                             <td>${order.paymentMethod}</td>
                                                             <td>${order.paymentStatus}</td>
                                                             <td>
-                                                                <a href="/admin/order/detail-${order.id}" type="submit"
+                                                                <a href="/admin/orders/${order.id}" type="submit"
                                                                     class="btn btn-success">View</a>
                                                                 <a href="/admin/order/update/${order.id}" type="submit"
                                                                     class="btn btn-warning">Update</a>
