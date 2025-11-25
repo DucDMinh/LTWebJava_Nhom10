@@ -1,8 +1,8 @@
 package com.haui.controller.client;
 
-import java.util.HashMap;
+import java.io.UnsupportedEncodingException;
 import java.util.List;
-import java.util.Map;
+import java.util.UUID;
 
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,7 +19,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.haui.dto.UserDto;
 import com.haui.model.Product;
@@ -28,8 +27,10 @@ import com.haui.model.WishList;
 import com.haui.service.ProductService;
 import com.haui.service.RoleService;
 import com.haui.service.UserService;
-import com.haui.service.WishListService;
+import com.haui.service.VNPayService;
 
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 
 @Controller
@@ -48,7 +49,7 @@ public class HomeController {
 	private ProductService productService;
 
 	@Autowired
-	private WishListService wishListService;
+	private VNPayService vnpayService;
 
 	@GetMapping()
 	public String homePage(@AuthenticationPrincipal UserDetails userDetails, Model model) {
@@ -96,6 +97,12 @@ public class HomeController {
 		user.setPhone(signUp.getPhone());
 		userService.save(user);
 		return "redirect:/client/home/signin";
+	}
+
+	@GetMapping("/wishlist")
+	public String wishlist(Model model) {
+		;
+		return "client/wishlist";
 	}
 
 }

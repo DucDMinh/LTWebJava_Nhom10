@@ -1,8 +1,11 @@
 package com.haui.controller.client;
 
+import java.io.UnsupportedEncodingException;
 import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -15,10 +18,17 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.haui.model.Cart;
 import com.haui.model.CartDetail;
+import com.haui.model.Order;
+import com.haui.model.OrderProduct;
+import com.haui.model.OrderProductKey;
+import com.haui.model.Product;
 import com.haui.model.User;
+import com.haui.service.CartDetailService;
 import com.haui.service.CartService;
+import com.haui.service.OrderService;
 import com.haui.service.ProductService;
 import com.haui.service.UserService;
+import com.haui.service.VNPayService;
 
 import org.springframework.ui.Model;
 import jakarta.servlet.http.HttpServletRequest;
@@ -31,19 +41,30 @@ public class CartController {
 	private CartService cartService;
 
 	@Autowired
+	private CartDetailService cartDetailService;
+
+	@Autowired
 	private UserService userService;
 
 	@Autowired
+	private OrderService orderService;
+
+	@Autowired
 	private ProductService productService;
+
+	@Autowired
+	private VNPayService vnpayService;
 
 	@GetMapping("/cart")
 	public String getCartPage(Model model, HttpServletRequest request) {
 		User currentUser = new User();
 		HttpSession session = request.getSession(false);
 
-		int id = (int) session.getAttribute("id");
-		currentUser.setId(id);
-
+		Object idObj = session.getAttribute("id");
+		if (idObj != null) {
+			Long id = Long.valueOf(idObj.toString());
+			currentUser.setId(id);
+		}
 		Cart cart = this.productService.fetchByUser(currentUser);
 
 		List<CartDetail> cartDetails = cart == null ? new ArrayList<CartDetail>() : cart.getCartDetails();
@@ -116,4 +137,117 @@ public class CartController {
 		return "client/checkout";
 	}
 
+	@PostMapping("/place-order")
+	public String handlePlaceOrder(
+			HttpServletRequest request,
+			@ModelAttribute("cart") Cart cart,
+			@RequestParam("paymentMethod") String paymentMethod,
+			@RequestParam("shippingMethod") String shippingMethod,
+			@RequestParam("note") String note,
+			Principal principal) throws UnsupportedEncodingException {
+
+		if (principal == null)
+			return "redirect:/login";
+
+		User currentUser = this.userService.getUserByUsername(principal.getName());
+		if (currentUser == null)
+			return "redirect:/login";
+
+		double shippingFee = switch (shippingMethod) {
+			case "FAST" -> 22000;
+			case "EXPRESS" -> 33000;
+			default -> 11000;
+		};
+
+		List<CartDetail> formCartDetails = cart.getCartDetails();
+		List<OrderProduct> orderProducts = new ArrayList<>();
+		double totalItemPrice = 0;
+		int totalQuantity = 0;
+
+		if (formCartDetails != null) {
+			for (CartDetail cd : formCartDetails) {
+				if (cd.getId() > 0) {
+					CartDetail dbCd = cartDetailService.getCartDetailById(cd.getId());
+					if (dbCd != null) {
+						Product product = dbCd.getProConfiguration().getProduct();
+
+						OrderProduct op = new OrderProduct();
+						op.setProduct(product);
+						op.setPrice(dbCd.getPrice());
+						op.setQuantity((int) cd.getQuantity());
+
+						OrderProductKey key = new OrderProductKey();
+						key.setProductId(product.getId());
+						op.setOrderProductKey(key);
+
+						orderProducts.add(op);
+
+						totalItemPrice += dbCd.getPrice() * cd.getQuantity();
+						totalQuantity += cd.getQuantity();
+
+						cartDetailService.handleRemoveCartDetail(dbCd.getId(), request.getSession());
+					}
+				}
+			}
+		}
+
+		// ====== TẠO ORDER ======
+		Order order = new Order();
+		order.setUser(currentUser);
+		order.setAddress(currentUser.getAddress());
+		order.setQuantity(totalQuantity);
+		order.setTotalPrice(totalItemPrice + shippingFee);
+		order.setStatus("PENDING");
+
+		// Lưu trước khi redirect
+		this.orderService.saveOrder(order, orderProducts);
+
+		// ====== THANH TOÁN ONLINE ======
+		if ("VNPAY".equals(paymentMethod)) {
+
+			String paymentRef = "VN_" + System.currentTimeMillis();
+			order.setPaymentMethod("VNPAY");
+			order.setPaymentStatus("PENDING");
+			order.setPaymentRef(paymentRef);
+			orderService.updateOrder(order);
+
+			String ip = vnpayService.getIpAddress(request);
+			String vnpUrl = vnpayService.generateVNPayURL(order.getTotalPrice(), paymentRef, ip);
+
+			return "redirect:" + vnpUrl;
+		} else {
+			order.setPaymentMethod("COD");
+			order.setPaymentStatus("PENDING");
+		}
+
+		// COD
+		order.setPaymentStatus("UNKNOWN");
+		order.setPaymentRef("COD_" + System.currentTimeMillis());
+		orderService.updateOrder(order);
+
+		return "redirect:/thank-you";
+	}
+
+	@GetMapping("/thank-you")
+	public String getThankYouPage(
+			@RequestParam("vnp_ResponseCode") Optional<String> vnpayResponse,
+			@RequestParam("vnp_TxnRef") Optional<String> paymentRef) {
+
+		if (vnpayResponse.isPresent() && paymentRef.isPresent()) {
+
+			Order order = orderService.getOrderByPaymentRef(paymentRef.get());
+			if (order != null) {
+				if ("00".equals(vnpayResponse.get())) {
+					order.setPaymentStatus("PAID");
+					order.setStatus("SUCCESS");
+				} else {
+					order.setPaymentStatus("FAILED");
+					order.setStatus("CANCELLED");
+				}
+				orderService.updateOrder(order);
+			}
+		}
+
+		return "client/thank-you";
+	}
 }

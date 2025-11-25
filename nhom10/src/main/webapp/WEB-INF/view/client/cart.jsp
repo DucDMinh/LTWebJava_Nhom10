@@ -252,13 +252,13 @@
 												</td>
 
 												<td class="align-middle text-end">
-													<form method="post" action="/delete-cart-product/${item.id}">
-														<input type="hidden" name="${_csrf.parameterName}"
-															value="${_csrf.token}" />
-														<button class="btn text-danger border-0 bg-transparent p-0">
-															<i class="fa fa-times"></i>
-														</button>
-													</form>
+													<button
+														class="btn text-danger border-0 bg-transparent p-0 btn-delete-cart"
+														data-cart-detail-id="${item.id}"
+														data-csrf-name="${_csrf.parameterName}"
+														data-csrf-token="${_csrf.token}">
+														<i class="fa fa-times"></i>
+													</button>
 												</td>
 											</tr>
 										</c:forEach>
