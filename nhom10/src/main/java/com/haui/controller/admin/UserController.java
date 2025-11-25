@@ -120,14 +120,14 @@ public class UserController {
     }
 
     @GetMapping("/views/{id}")
-    public String viewsPage(@PathVariable("id") int id, Model model) {
+    public String viewsPage(@PathVariable("id") long id, Model model) {
         User user = userService.findById(id);
         model.addAttribute("user", user);
         return "admin/users/view";
     }
 
     @GetMapping("/updates/{id}")
-    public String updateUser(Model model, @PathVariable("id") int id) {
+    public String updateUser(Model model, @PathVariable("id") long id) {
         User user = userService.findById(id);
 
         model.addAttribute("updateUser", user);
@@ -161,7 +161,7 @@ public class UserController {
     }
 
     @GetMapping("/deletes/{id}")
-    public String deleteUser(@PathVariable("id") int id) {
+    public String deleteUser(@PathVariable("id") long id) {
         this.userService.delete(id);
         return "redirect:/admin/users";
     }
