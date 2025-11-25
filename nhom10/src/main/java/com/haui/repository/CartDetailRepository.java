@@ -19,4 +19,6 @@ public interface CartDetailRepository extends JpaRepository<CartDetail, Long> {
     long countByCart(Cart cart);
 
     List<CartDetail> findByProConfiguration(ProConfiguration proConfiguration);
+
+    List<CartDetail> findAllByCartAndProConfiguration(Cart cart, ProConfiguration proConfiguration);
 }

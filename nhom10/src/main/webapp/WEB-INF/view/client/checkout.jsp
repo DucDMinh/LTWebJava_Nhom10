@@ -165,33 +165,36 @@
 												value="${totalPrice + 11000}" />
 
 											<h5 class="mt-4 mb-3">Payment Method</h5>
+											<form action="/home/checkout" method="post">
 
-											<div class="form-check mb-2">
-												<input class="form-check-input" type="radio" name="paymentMethod"
-													value="COD" id="cod" checked />
-												<label class="form-check-label" for="cod">Cash on Delivery (COD)</label>
-											</div>
-											<div class="form-check mb-4">
-												<input class="form-check-input" type="radio" name="paymentMethod"
-													value="VNPAY" id="vnpay" />
-												<label class="form-check-label" for="vnpay">Pay with VNPay</label>
-											</div>
+												<div class="form-check mb-2">
+													<input class="form-check-input" type="radio" name="paymentMethod"
+														value="COD" id="cod" checked />
+													<label class="form-check-label" for="cod">Cash on Delivery (COD)</label>
+												</div>
+												<div class="form-check mb-4">
+													<input class="form-check-input" type="radio" name="paymentMethod"
+														value="VNPAY" id="vnpay" />
+													<label class="form-check-label" for="vnpay">Pay with VNPay</label>
+												</div>
 
-											<div style="display: none;">
-												<c:forEach var="item" items="${cartDetails}" varStatus="status">
-													<input type="hidden" name="cartDetails[${status.index}].id"
-														value="${item.id}" />
-													<input type="hidden" name="cartDetails[${status.index}].quantity"
-														value="${item.quantity}" />
-													<input type="hidden" name="cartDetails[${status.index}].price"
-														value="${item.price}" />
-												</c:forEach>
-											</div>
-
-											<button type="submit"
-												class="btn btn-dark w-100 py-3 text-uppercase fw-bold">
-												Place Order
-											</button>
+												<div style="display: none;">
+													<c:forEach var="item" items="${cartDetails}" varStatus="status">
+														<input type="hidden" name="cartDetails[${status.index}].id"
+															value="${item.id}" />
+														<input type="hidden" name="cartDetails[${status.index}].quantity"
+															value="${item.quantity}" />
+														<input type="hidden" name="cartDetails[${status.index}].price"
+															value="${item.price}" />
+													</c:forEach>
+												</div>
+												<input type="text" name="totalPrice" value="${total}" class="d-none">
+												<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
+												<button type="submit"
+													class="btn btn-dark w-100 py-3 text-uppercase fw-bold">
+													Place Order
+												</button>
+											</form>
 										</div>
 									</div>
 								</div>
