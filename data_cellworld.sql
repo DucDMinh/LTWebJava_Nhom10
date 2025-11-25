@@ -64,3 +64,12 @@ CREATE TABLE IF NOT EXISTS cart_detail (
     CONSTRAINT fk_cart_detail_cart FOREIGN KEY (cart_id) REFERENCES carts(id) ON DELETE CASCADE,
     CONSTRAINT fk_cart_detail_pro_config FOREIGN KEY (pro_configuration_id) REFERENCES pro_configuration(id) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+CREATE TABLE IF NOT EXISTS wishlist (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT NOT NULL,
+    product_id INT NOT NULL,
+    created_date DATETIME DEFAULT NOW(),
+    UNIQUE KEY unique_user_product (user_id, product_id),
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+    FOREIGN KEY (product_id) REFERENCES products(id) ON DELETE CASCADE
+);
