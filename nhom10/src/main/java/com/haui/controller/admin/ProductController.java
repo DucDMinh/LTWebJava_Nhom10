@@ -111,11 +111,11 @@ public class ProductController {
         defaultVariant.setPrice(randomPrice);
 
         defaultVariant.setProduct(product);
-        List<ProConfiguration> variants = new ArrayList<>();
-        variants.add(defaultVariant);
-        product.setProductVariants(variants);
-
-        model.addAttribute("newProduct", product);
+        // List<ProConfiguration> variants = new ArrayList<>();
+        // variants.add(defaultVariant);
+        // product.setProductVariants(variants);
+        Product product1 = new Product();
+        model.addAttribute("newProduct", product1);
         return "admin/product/create";
     }
 
