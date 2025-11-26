@@ -28,6 +28,7 @@ import com.haui.service.ProductService;
 import com.haui.service.RoleService;
 import com.haui.service.UserService;
 import com.haui.service.VNPayService;
+import com.haui.service.WishListService;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
@@ -44,6 +45,9 @@ public class HomeController {
 
 	@Autowired
 	private UserService userService;
+
+	@Autowired
+	private WishListService wishListService;
 
 	@Autowired
 	private ProductService productService;
