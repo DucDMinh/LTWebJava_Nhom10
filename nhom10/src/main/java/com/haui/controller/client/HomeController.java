@@ -1,11 +1,13 @@
 package com.haui.controller.client;
 
-import java.util.HashMap;
+import java.io.UnsupportedEncodingException;
 import java.util.List;
-import java.util.Map;
+import java.util.UUID;
 
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -20,16 +22,22 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.haui.dto.UserDto;
+import com.haui.model.Order;
 import com.haui.model.Product;
 import com.haui.model.User;
 import com.haui.model.WishList;
+import com.haui.service.OrderService;
 import com.haui.service.ProductService;
 import com.haui.service.RoleService;
 import com.haui.service.UserService;
+import com.haui.service.VNPayService;
 import com.haui.service.WishListService;
 
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 
 @Controller
@@ -45,7 +53,13 @@ public class HomeController {
 	private UserService userService;
 
 	@Autowired
+	private OrderService orderService;
+
+	@Autowired
 	private ProductService productService;
+
+	@Autowired
+	private VNPayService vnpayService;
 
 	@Autowired
 	private WishListService wishListService;
@@ -75,6 +89,7 @@ public class HomeController {
 	}
 
 	@PostMapping("/signup-create")
+
 	public String signUp(Model model, @ModelAttribute("signUp") @Valid UserDto signUp,
 			BindingResult bindingResult) {
 		List<FieldError> errors = bindingResult.getFieldErrors();
@@ -96,6 +111,27 @@ public class HomeController {
 		user.setPhone(signUp.getPhone());
 		userService.save(user);
 		return "redirect:/client/home/signin";
+	}
+
+	@GetMapping("/order/history")
+	public String orderHistory(Model model, HttpSession session) {
+		Long userId = (Long) session.getAttribute("id");
+		List<Order> orders = orderService.getOrdersByUserId(userId);
+		model.addAttribute("orders", orders); // trùng với JSP
+		return "client/order-history";
+	}
+
+	@GetMapping("/order/detail/{id}")
+	public String orderDetail(@PathVariable Long id, Model model, HttpSession session) {
+		Long userId = (Long) session.getAttribute("id");
+		Order order = orderService.getOrderById(id);
+
+		if (order == null || !order.getId().equals(userId)) {
+			return "redirect:/order/history";
+		}
+
+		model.addAttribute("order", order);
+		return "client/order-detail";
 	}
 
 }

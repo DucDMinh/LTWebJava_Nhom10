@@ -16,7 +16,7 @@ public class WishListService {
     @Autowired
     private WishListRepository wishListRepository;
 
-    public List<WishList> getWishListByUser(Integer userId) {
+    public List<WishList> getWishListByUser(Long userId) {
         return wishListRepository.findByUserId(userId);
     }
 
@@ -31,7 +31,7 @@ public class WishListService {
         return wishListRepository.save(wishList);
     }
 
-    public void removeFromWishList(Integer integer, Long id) {
+    public void removeFromWishList(Long integer, Long id) {
         wishListRepository.deleteById(id);
     }
 

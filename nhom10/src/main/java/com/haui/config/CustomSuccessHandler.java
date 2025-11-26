@@ -80,15 +80,14 @@ public class CustomSuccessHandler implements AuthenticationSuccessHandler {
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
             Authentication authentication) throws IOException, ServletException {
+        clearAuthenticationAttributes(request, authentication);
 
         String targetUrl = determineTargetUrl(authentication);
-        if (response.isCommitted()) {
+        if (!response.isCommitted()) {
+            redirectStrategy.sendRedirect(request, response, targetUrl);
 
             return;
         }
-
-        redirectStrategy.sendRedirect(request, response, targetUrl);
-        clearAuthenticationAttributes(request, authentication);
 
     }
 }
