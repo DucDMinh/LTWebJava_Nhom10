@@ -18,7 +18,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.haui.model.Order;
 import com.haui.model.ProConfiguration;
 import com.haui.model.Product;
 import com.haui.service.ProductService;

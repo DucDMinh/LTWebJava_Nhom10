@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.haui.model.Order;
-import com.haui.model.OrderProduct;
 import com.haui.service.OrderService;
 import com.haui.service.ProductService;
 

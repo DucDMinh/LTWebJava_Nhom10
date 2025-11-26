@@ -17,8 +17,6 @@ import com.haui.model.Product;
 import com.haui.model.User;
 import com.haui.repository.CartDetailRepository;
 import com.haui.repository.CartRepository;
-import com.haui.repository.OrderProductRepository;
-import com.haui.repository.OrderRepository;
 import com.haui.repository.ProductRepository;
 
 import jakarta.transaction.Transactional;

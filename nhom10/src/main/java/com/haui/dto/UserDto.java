@@ -1,8 +1,6 @@
 package com.haui.dto;
 
 import com.haui.service.validator.RegisterChecked;
-import com.haui.service.validator.StrongPassword;
-import jakarta.validation.constraints.Size;
 import lombok.*;
 
 @Builder
