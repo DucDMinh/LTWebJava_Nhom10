@@ -10,10 +10,12 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import com.haui.model.Order;
 import com.haui.model.OrderProduct;
 import com.haui.service.OrderService;
+import com.haui.service.ProductService;
 
 @Controller
 @RequestMapping("/admin/orders")
@@ -21,6 +23,8 @@ public class OrderController {
 
     @Autowired
     private OrderService orderService;
+    @Autowired
+    private ProductService productService;
 
     @GetMapping()
     public String getOrderPage(Model model) {
@@ -46,8 +50,11 @@ public class OrderController {
     }
 
     @PostMapping("/update")
-    public String updateOrder(@ModelAttribute("updateOrder") Order newOrder) {
+    public String updateOrder(@ModelAttribute("updateOrder") Order newOrder, @RequestParam("status") String newStatus) {
         Order order = this.orderService.getOrderById(newOrder.getId());
+        if ("COMPLETED".equals(newStatus) && !"COMPLETED".equals(order.getStatus())) {
+            productService.updateProductSold(order);
+        }
         order.setStatus(newOrder.getStatus());
         this.orderService.save(order);
         return "redirect:/admin/orders";

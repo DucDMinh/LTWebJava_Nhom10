@@ -4,8 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.io.Serializable;
-import java.time.LocalDate;
-import java.time.LocalTime;
+import java.util.Date;
 import java.util.List;
 
 @Entity
@@ -48,7 +47,13 @@ public class Order implements Serializable {
     @NonNull
     private String paymentMethod;
 
+    private Date orderDate;
+
     @OneToMany(mappedBy = "order")
     private List<OrderProduct> orderProducts;
 
+    @PrePersist
+    public void onCreate() {
+        this.orderDate = new Date();
+    }
 }

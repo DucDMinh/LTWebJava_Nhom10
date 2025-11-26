@@ -1,7 +1,5 @@
 package com.haui.controller.client;
 
-import java.util.Optional;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -19,8 +17,10 @@ public class ProductDetailController {
 
 	@GetMapping("/product/{id}")
 	public String getProductDetailPage(Model model, @PathVariable long id) {
-		Optional<Product> products = this.productService.fetchProductById(id);
-		model.addAttribute("product", products.get());
+		Product product = this.productService.fetchProductById(id).get();
+		this.productService.handleIncreaseView(id);
+		model.addAttribute("product", product);
+		model.addAttribute("id", id);
 		return "client/product-detail";
 	}
 }
