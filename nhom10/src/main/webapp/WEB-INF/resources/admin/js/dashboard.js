@@ -1,4 +1,4 @@
-// Biến toàn cục lưu trữ instance của biểu đồ hiện tại
+
 let currentChart = null;
 
 /**
@@ -9,142 +9,107 @@ let currentChart = null;
  */
 function renderChart(type, labels, data) {
     const ctx = document.getElementById("myChart");
-
-    // Nếu không tìm thấy thẻ canvas thì dừng
     if (!ctx) return;
 
-    // Nếu đã có biểu đồ cũ thì hủy bỏ để vẽ cái mới
     if (currentChart) {
         currentChart.destroy();
     }
 
-    // Cấu hình riêng cho từng loại biểu đồ
     let config = {
-        type: 'line', // Mặc định
+        type: 'line',
         label: 'Dữ liệu',
-        color: '#4e73df', // Mặc định xanh dương
-        bgColor: 'rgba(78, 115, 223, 0.05)',
-        isCurrency: false
+        isCurrency: false,
+        colors: ['#4e73df']
     };
-
     if (type === 'revenue') {
         config.type = 'line';
         config.label = 'Doanh Thu';
-        config.color = '#4e73df'; // Primary Blue
-        config.bgColor = 'rgba(78, 115, 223, 0.05)';
+        config.colors = ['#4e73df'];
         config.isCurrency = true;
-
-        // Cập nhật tiêu đề Card
         document.getElementById('chartTitle').innerText = "Biểu Đồ Doanh Thu (Thực Tế)";
         document.getElementById('chartTitle').className = "m-0 font-weight-bold text-primary";
     }
     else if (type === 'orders') {
         config.type = 'bar';
         config.label = 'Số Lượng Đơn Hàng';
-        config.color = '#1cc88a'; // Success Green
-        config.bgColor = '#1cc88a'; // Bar chart cần màu đậm hơn chút
-        config.isCurrency = false;
-
+        config.colors = ['#1cc88a'];
         document.getElementById('chartTitle').innerText = "Thống Kê Số Lượng Đơn Hàng";
         document.getElementById('chartTitle').className = "m-0 font-weight-bold text-success";
     }
     else if (type === 'sold') {
         config.type = 'bar';
         config.label = 'Sản Phẩm Đã Bán';
-        config.color = '#36b9cc'; // Info Cyan
-        config.bgColor = '#36b9cc';
-        config.isCurrency = false;
-
+        config.colors = ['#36b9cc'];
         document.getElementById('chartTitle').innerText = "Thống Kê Số Lượng Sản Phẩm Bán Ra";
         document.getElementById('chartTitle').className = "m-0 font-weight-bold text-info";
     }
+    else if (type === 'best_seller') {
+        config.type = 'doughnut';
+        config.label = 'Số lượng bán';
+        config.colors = ['#4e73df', '#1cc88a', '#36b9cc', '#f6c23e', '#e74a3b'];
+        document.getElementById('chartTitle').innerText = "Top 5 Sản Phẩm Bán Chạy Nhất";
+        document.getElementById('chartTitle').className = "m-0 font-weight-bold text-warning";
+    }
 
-    // Khởi tạo biểu đồ mới
+    let dataset = {
+        label: config.label,
+        data: data,
+        backgroundColor: config.type === 'doughnut' ? config.colors : config.colors[0],
+        borderColor: config.type === 'doughnut' ? '#fff' : config.colors[0],
+        borderWidth: 2
+    };
+    if (config.type !== 'doughnut') {
+        dataset.backgroundColor = config.type === 'line' ? config.colors[0] + '10' : config.colors[0];
+        dataset.tension = 0.3;
+        dataset.fill = true;
+    }
+
     currentChart = new Chart(ctx, {
         type: config.type,
         data: {
             labels: labels,
-            datasets: [{
-                label: config.label,
-                data: data,
-                // Style chung
-                backgroundColor: config.type === 'line' ? config.bgColor : config.color, // Line thì mờ, Bar thì đậm
-                borderColor: config.color,
-                borderWidth: 2,
-
-                // Style cho Line Chart
-                tension: 0.3,
-                pointRadius: 4,
-                pointBackgroundColor: config.color,
-                pointBorderColor: "#fff",
-                pointHoverRadius: 6,
-                fill: true,
-
-                // Style cho Bar Chart
-                barPercentage: 0.5, // Độ rộng cột
-                borderRadius: 4     // Bo góc cột
-            }],
+            datasets: [dataset],
         },
         options: {
             maintainAspectRatio: false,
-            layout: {
-                padding: { left: 10, right: 25, top: 25, bottom: 0 }
-            },
-            scales: {
-                x: {
-                    grid: { display: false, drawBorder: false },
-                    ticks: { maxTicksLimit: 7 }
+            layout: { padding: { left: 10, right: 25, top: 25, bottom: 0 } },
+            plugins: {
+                legend: {
+                    display: config.type === 'doughnut',
+                    position: 'bottom'
                 },
+                tooltip: {
+                    callbacks: {
+                        label: function (context) {
+                            let label = context.dataset.label || '';
+                            if (config.type === 'doughnut') {
+                                label = context.label || '';
+                            }
+
+                            if (label) label += ': ';
+                            if (context.parsed.y !== null) {
+                                if (config.isCurrency) label += new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(context.parsed.y);
+                                else label += context.parsed.y;
+                            } else if (context.parsed !== null) {
+                                label += context.parsed;
+                            }
+                            return label;
+                        }
+                    }
+                }
+            },
+            scales: config.type === 'doughnut' ? {} : {
+                x: { grid: { display: false, drawBorder: false }, ticks: { maxTicksLimit: 7 } },
                 y: {
                     ticks: {
                         maxTicksLimit: 5,
                         padding: 10,
                         callback: function (value) {
-                            if (config.isCurrency) {
-                                return new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(value);
-                            }
-                            return value; // Số lượng thì giữ nguyên
+                            if (config.isCurrency) return new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(value);
+                            return value;
                         }
                     },
-                    grid: {
-                        color: "rgb(234, 236, 244)",
-                        zeroLineColor: "rgb(234, 236, 244)",
-                        drawBorder: false,
-                        borderDash: [2],
-                        zeroLineBorderDash: [2]
-                    }
-                }
-            },
-            plugins: {
-                legend: { display: false },
-                tooltip: {
-                    backgroundColor: "rgb(255,255,255)",
-                    bodyColor: "#858796",
-                    titleMarginBottom: 10,
-                    titleColor: '#6e707e',
-                    titleFont: { size: 14 },
-                    borderColor: '#dddfeb',
-                    borderWidth: 1,
-                    xPadding: 15,
-                    yPadding: 15,
-                    displayColors: false,
-                    intersect: false,
-                    mode: 'index',
-                    caretPadding: 10,
-                    callbacks: {
-                        label: function (context) {
-                            let label = context.dataset.label || '';
-                            if (label) label += ': ';
-                            if (context.parsed.y !== null) {
-                                if (config.isCurrency) {
-                                    label += new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(context.parsed.y);
-                                } else {
-                                    label += context.parsed.y;
-                                }
-                            }
-                            return label;
-                        }
-                    }
+                    grid: { color: "rgb(234, 236, 244)", borderDash: [2], drawBorder: false }
                 }
             }
         }
@@ -152,25 +117,24 @@ function renderChart(type, labels, data) {
 }
 
 /**
- * Hàm xử lý sự kiện click vào Card để chuyển biểu đồ
  * @param {string} type - Loại biểu đồ cần chuyển ('revenue', 'orders', 'sold')
  */
 function switchChart(type) {
-    // 1. Xóa class active cũ
     document.querySelectorAll('.card-clickable').forEach(el => el.classList.remove('card-active'));
 
-    // 2. Thêm class active cho card được click
-    const activeCard = document.getElementById('card-' + type);
-    if (activeCard) {
-        activeCard.classList.add('card-active');
-    }
+    const activeCard = document.getElementById(type === 'best_seller' ? 'card-best-seller' : 'card-' + type);
+    if (activeCard) activeCard.classList.add('card-active');
 
-    // 3. Lấy dữ liệu toàn cục (được khai báo ở index.jsp) và vẽ lại
-    // Lưu ý: Các biến labels, dataRevenue, dataOrders, dataSold phải được định nghĩa ở index.jsp trước khi file này chạy
+    let dataLabels = labels;
     let dataToShow = [];
+
     if (type === 'revenue') dataToShow = dataRevenue;
     else if (type === 'orders') dataToShow = dataOrders;
     else if (type === 'sold') dataToShow = dataSold;
+    else if (type === 'best_seller') {
+        dataLabels = labelsBestSeller;
+        dataToShow = dataBestSeller;
+    }
 
-    renderChart(type, labels, dataToShow);
+    renderChart(type, dataLabels, dataToShow);
 }

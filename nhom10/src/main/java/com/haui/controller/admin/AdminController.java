@@ -31,7 +31,11 @@ public class AdminController {
 		String chartDataJson = mapper.writeValueAsString(stats.get("chartData"));
 		String chartOrdersJson = mapper.writeValueAsString(stats.get("chartOrders"));
 		String chartSoldJson = mapper.writeValueAsString(stats.get("chartSold"));
+		String chartBestSellerLabelsJson = mapper.writeValueAsString(stats.get("bestSellerLabels"));
+		String chartBestSellerDataJson = mapper.writeValueAsString(stats.get("bestSellerData"));
 
+		model.addAttribute("chartBestSellerLabelsJson", chartBestSellerLabelsJson);
+		model.addAttribute("chartBestSellerDataJson", chartBestSellerDataJson);
 		model.addAttribute("chartOrdersJson", chartOrdersJson);
 		model.addAttribute("chartSoldJson", chartSoldJson);
 		model.addAttribute("chartLabelsJson", chartLabelsJson);

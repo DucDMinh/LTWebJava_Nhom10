@@ -9,7 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.haui.model.Product;
-import com.haui.repository.OrderProductRepository;
 import com.haui.repository.OrderRepository;
 import com.haui.repository.ProductRepository;
 
@@ -20,17 +19,13 @@ public class DashboardService {
     private ProductRepository productRepository;
     @Autowired
     private OrderRepository orderRepository;
-    @Autowired
-    private OrderProductRepository orderProductRepository;
 
     public Map<String, Object> getDashboardStats() {
         Map<String, Object> stats = new HashMap<>();
 
-        // 1. Sản phẩm xem nhiều & Mua nhiều
         stats.put("mostViewedProducts", productRepository.findTop10ByOrderByViewDesc());
         stats.put("bestSellingProducts", productRepository.findTop10ByOrderBySoldDesc());
 
-        // 2. Các chỉ số tổng quan
         stats.put("totalOrders", orderRepository.count());
         stats.put("totalRevenue", orderRepository.sumTotalRevenue() != null ? orderRepository.sumTotalRevenue() : 0.0);
         Long totalProd = orderRepository.sumTotalProducts();
@@ -57,7 +52,6 @@ public class DashboardService {
 
         List<Object[]> orderData = orderRepository.getOrderTrend();
         List<Long> chartOrders = new ArrayList<>();
-        // Lưu ý: Query trả về BigInteger hoặc Long tùy DB, ép kiểu Number cho an toàn
         for (Object[] row : orderData) {
             if (row[1] != null)
                 chartOrders.add(((Number) row[1]).longValue());
@@ -66,7 +60,6 @@ public class DashboardService {
         }
         stats.put("chartOrders", chartOrders);
 
-        // 2. Xử lý Sản phẩm bán (Sold Trend)
         List<Object[]> soldData = orderRepository.getProductSoldTrend();
         List<Long> chartSold = new ArrayList<>();
         for (Object[] row : soldData) {
@@ -76,6 +69,19 @@ public class DashboardService {
                 chartSold.add(0L);
         }
         stats.put("chartSold", chartSold);
+        List<Product> bestSellers = productRepository.findTop10ByOrderBySoldDesc();
+        List<String> bestSellerLabels = new ArrayList<>();
+        List<Long> bestSellerData = new ArrayList<>();
+
+        int limit = Math.min(bestSellers.size(), 5);
+        for (int i = 0; i < limit; i++) {
+            Product p = bestSellers.get(i);
+            bestSellerLabels.add(p.getName());
+            bestSellerData.add(p.getSold());
+        }
+
+        stats.put("bestSellerLabels", bestSellerLabels);
+        stats.put("bestSellerData", bestSellerData);
 
         return stats;
     }
