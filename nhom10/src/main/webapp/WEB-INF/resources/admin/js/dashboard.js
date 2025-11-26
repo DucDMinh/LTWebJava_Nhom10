@@ -7,7 +7,6 @@ function initRevenueChart(labels, dataRevenue) {
     console.log("Labels:", labels);
     console.log("Data:", dataRevenue);
 
-    // Lấy thẻ canvas
     var ctx = document.getElementById("revenueChart");
 
     if (ctx) {
@@ -17,8 +16,7 @@ function initRevenueChart(labels, dataRevenue) {
                 labels: labels,
                 datasets: [{
                     label: "Doanh thu",
-                    // Cấu hình đường kẻ
-                    tension: 0.3, // Độ cong của đường
+                    tension: 0.3,
                     backgroundColor: "rgba(78, 115, 223, 0.1)",
                     borderColor: "rgba(78, 115, 223, 1)",
                     pointRadius: 5,
@@ -46,7 +44,6 @@ function initRevenueChart(labels, dataRevenue) {
                             maxTicksLimit: 5,
                             padding: 10,
                             callback: function (value) {
-                                // Format tiền tệ Việt Nam
                                 return new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(value);
                             }
                         },

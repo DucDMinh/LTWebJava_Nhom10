@@ -5,6 +5,9 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Random;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -15,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.haui.model.Order;
 import com.haui.model.ProConfiguration;
 import com.haui.model.Product;
 import com.haui.service.ProductService;
@@ -37,9 +41,21 @@ public class ProductController {
     }
 
     @GetMapping
-    public String getProductPage(Model model) {
-        List<Product> products = this.productService.getAllProduct();
+    public String getProductPage(Model model, @RequestParam("page") Optional<String> pageOptional) {
+        int page = 1;
+        try {
+            if (pageOptional.isPresent()) {
+                page = Integer.parseInt(pageOptional.get());
+            }
+        } catch (Exception e) {
+            // Nếu param không phải số, giữ mặc định là 1
+        }
+        Pageable pageable = PageRequest.of(page - 1, 7);
+        Page<Product> productsPage = this.productService.fetchAllProducts(pageable);
+        List<Product> products = productsPage.getContent();
         model.addAttribute("products", products);
+        model.addAttribute("currentPage", page);
+        model.addAttribute("totalPages", productsPage.getTotalPages());
         return "admin/product/show";
     }
 
@@ -77,7 +93,7 @@ public class ProductController {
         product.setPin(rand.nextInt(2000) + 3000);
         product.setScreenSize(15.6);
         product.setScreenType("IPS LCD");
-        String[] operatingSystems = {"Windows", "Android", "iOS"};
+        String[] operatingSystems = { "Windows", "Android", "iOS" };
         product.setOperatingSystem(operatingSystems[rand.nextInt(operatingSystems.length)]);
 
         ProConfiguration defaultVariant = new ProConfiguration();
@@ -126,14 +142,14 @@ public class ProductController {
         return "redirect:/admin/product";
     }
 
-    @RequestMapping("/detail-{id}")
+    @RequestMapping("/detail/{id}")
     public String getProductDetailPage(Model model, @PathVariable long id) {
         Optional<Product> products = this.productService.fetchProductById(id);
         model.addAttribute("product", products.get());
         return "admin/product/detail";
     }
 
-    @GetMapping("/delete-{id}")
+    @GetMapping("/delete/{id}")
     public String getDeleteProductPage(Model model, @PathVariable long id) {
         model.addAttribute("delete", new Product());
         return "admin/product/delete";

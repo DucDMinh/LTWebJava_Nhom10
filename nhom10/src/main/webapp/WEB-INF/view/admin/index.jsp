@@ -230,11 +230,8 @@
                 <script src="${pageContext.request.contextPath}/admin/js/dashboard.js"></script>
                 <script>
                     document.addEventListener("DOMContentLoaded", function () {
-                        // Lấy dữ liệu từ biến Model của Spring Boot
                         const labels = JSON.parse('${chartLabelsJson}');
                         const dataRevenue = JSON.parse('${chartDataJson}');
-
-                        // Gọi hàm trong file js bên ngoài
                         initRevenueChart(labels, dataRevenue);
                     });
                 </script>
