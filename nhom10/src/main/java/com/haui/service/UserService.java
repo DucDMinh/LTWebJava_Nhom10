@@ -36,11 +36,11 @@ public class UserService {
         return userRepository.findAll(spec, pageable);
     }
 
-    public User findById(Long id) {
+    public User findById(int id) {
         return userRepository.findById(id).get();
     }
 
-    public void delete(Long id) {
+    public void delete(int id) {
         userRepository.deleteById(id);
     }
 
