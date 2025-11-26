@@ -28,7 +28,7 @@
                 </div>
             </div>
             <div class="sb-sidenav-footer d-flex gap-1 align-items-center">
-                <img class="rounded-circle mr-3" src="${env}/admin/images/user/${sessionScope.avatar}" alt="avatar"
+                <img class="rounded-circle mr-3" src="${env}/admin/images/user/user/${sessionScope.avatar}" alt="avatar"
                     width="40" height="40">
                 <div class="media-body">
                     <h5 class="mb-1">${sessionScope.fullName}</h5>

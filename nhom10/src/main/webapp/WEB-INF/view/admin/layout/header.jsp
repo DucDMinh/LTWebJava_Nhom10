@@ -27,7 +27,7 @@
             <a class="nav-link dropdown-toggle d-none d-sm-inline-block"
                href="#" role="button" data-bs-toggle="dropdown"
                aria-expanded="false">
-                <img src="${env}/admin/images/user/${sessionScope.avatar}"
+                <img src="${env}/admin/images/user/user/${sessionScope.avatar}"
                      class="avatar img-fluid rounded-circle me-1"
                      alt="avatar" width="40" height="40">
                 <span class="text-light">${sessionScope.fullName}</span>
