@@ -29,3 +29,6 @@
 
 <!-- Product filtering JS -->
 <script src="${env }/client/js/products-filter.js"></script>
+
+<!-- WishList JS -->
+<script src="${env }/client/js/wishlist.js"></script>
