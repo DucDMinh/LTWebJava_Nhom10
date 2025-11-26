@@ -33,8 +33,8 @@ public class UserService {
         return userRepository.findAll(spec, pageable);
     }
 
-    public User findById(long id) {
-        return userRepository.findById((int) id).get();
+    public User findById(Integer id) {
+        return userRepository.findById(id).get();
     }
 
     public void delete(long id) {
@@ -63,5 +63,10 @@ public class UserService {
 
     public User findByUsername(String username) {
         return userRepository.findByUsername(username);
+    }
+
+    public User findById(long id) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'findById'");
     }
 }
