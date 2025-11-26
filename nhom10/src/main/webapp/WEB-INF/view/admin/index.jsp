@@ -1,584 +1,262 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-         pageEncoding="UTF-8"%>
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="utf-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
-    <meta name="description" content="" />
-    <meta name="author" content="" />
-    <title>ADMIN</title>
-    <!--css-->
-    <jsp:include page="/WEB-INF/view/admin/layout/css.jsp"></jsp:include>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+    <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+        <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 
-</head>
-<body class="sb-nav-fixed">
-<!--header-->
-<jsp:include page="/WEB-INF/view/admin/layout/header.jsp"></jsp:include>
-<div id="layoutSidenav">
-    <!--sibar-->
-    <jsp:include page="/WEB-INF/view/admin/layout/sibar.jsp"></jsp:include>
-    <div id="layoutSidenav_content">
-        <main>
-            <div class="container-fluid px-4">
-                <h1 class="mt-4">Dashboard</h1>
-                <ol class="breadcrumb mb-4">
-                    <li class="breadcrumb-item active">Dashboard</li>
-                </ol>
-                <div class="row">
-                    <div class="col-xl-3 col-md-6">
-                        <div class="card bg-primary text-white mb-4">
-                            <div class="card-body">Primary Card</div>
-                            <div class="card-footer d-flex align-items-center justify-content-between">
-                                <a class="small text-white stretched-link" href="#">View Details</a>
-                                <div class="small text-white"><i class="fas fa-angle-right"></i></div>
+            <!DOCTYPE html>
+            <html lang="en">
+
+            <head>
+                <meta charset="utf-8" />
+                <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+                <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+                <title>Admin Dashboard - CellWorld</title>
+
+                <jsp:include page="/WEB-INF/view/admin/layout/css.jsp"></jsp:include>
+
+                <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+                <style>
+                    .card-dashboard {
+                        border: none;
+                        border-radius: 12px;
+                        box-shadow: 0 0.15rem 1.75rem 0 rgba(58, 59, 69, 0.15);
+                        transition: transform 0.2s;
+                    }
+
+                    /* Hiệu ứng click cho Card */
+                    .card-clickable {
+                        cursor: pointer;
+                        transition: all 0.3s ease;
+                    }
+
+                    .card-clickable:hover {
+                        transform: translateY(-5px);
+                        box-shadow: 0 0.5rem 2rem 0 rgba(58, 59, 69, 0.25);
+                    }
+
+                    /* Class active để biết đang xem biểu đồ nào */
+                    .card-active {
+                        background-color: #f8f9fc;
+                        transform: scale(1.02);
+                        border-left-width: 0.5rem !important;
+                    }
+
+                    .border-left-primary {
+                        border-left: 0.25rem solid #4e73df !important;
+                    }
+
+                    .border-left-success {
+                        border-left: 0.25rem solid #1cc88a !important;
+                    }
+
+                    .border-left-info {
+                        border-left: 0.25rem solid #36b9cc !important;
+                    }
+
+                    .border-left-warning {
+                        border-left: 0.25rem solid #f6c23e !important;
+                    }
+
+                    .text-gray-300 {
+                        color: #dddfeb !important;
+                    }
+
+                    .text-gray-800 {
+                        color: #5a5c69 !important;
+                    }
+
+                    .chart-area {
+                        position: relative;
+                        height: 400px;
+                        width: 100%;
+                    }
+                </style>
+            </head>
+
+            <body class="sb-nav-fixed">
+                <jsp:include page="/WEB-INF/view/admin/layout/header.jsp"></jsp:include>
+
+                <div id="layoutSidenav">
+                    <jsp:include page="/WEB-INF/view/admin/layout/sibar.jsp"></jsp:include>
+
+                    <div id="layoutSidenav_content">
+                        <main>
+                            <div class="container-fluid px-4">
+                                <div class="d-sm-flex align-items-center justify-content-between mb-4 mt-4">
+                                    <h1 class="h3 mb-0 text-gray-800">Tổng Quan</h1>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-xl-3 col-md-6 mb-4">
+                                        <div class="card card-dashboard card-clickable border-left-primary h-100 py-2 card-active"
+                                            id="card-revenue" onclick="switchChart('revenue')">
+                                            <div class="card-body">
+                                                <div class="row no-gutters align-items-center">
+                                                    <div class="col mr-2">
+                                                        <div class="text-xs fw-bold text-primary text-uppercase mb-1">
+                                                            Tổng Doanh Thu</div>
+                                                        <div class="h5 mb-0 fw-bold text-dark">
+                                                            <c:choose>
+                                                                <c:when test="${not empty countRevenue}">
+                                                                    <fmt:formatNumber value="${countRevenue}"
+                                                                        type="currency" currencySymbol="₫" />
+                                                                </c:when>
+                                                                <c:otherwise>0 ₫</c:otherwise>
+                                                            </c:choose>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-auto">
+                                                        <i class="fas fa-dollar-sign fa-2x text-gray-300"></i>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-xl-3 col-md-6 mb-4">
+                                        <div class="card card-dashboard card-clickable border-left-success h-100 py-2"
+                                            id="card-orders" onclick="switchChart('orders')">
+                                            <div class="card-body">
+                                                <div class="row no-gutters align-items-center">
+                                                    <div class="col mr-2">
+                                                        <div class="text-xs fw-bold text-success text-uppercase mb-1">
+                                                            Tổng Đơn Hàng</div>
+                                                        <div class="h5 mb-0 fw-bold text-dark">
+                                                            ${not empty countOrders ? countOrders : 0}
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-auto">
+                                                        <i class="fas fa-file-invoice fa-2x text-gray-300"></i>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-xl-3 col-md-6 mb-4">
+                                        <div class="card card-dashboard card-clickable border-left-info h-100 py-2"
+                                            id="card-sold" onclick="switchChart('sold')">
+                                            <div class="card-body">
+                                                <div class="row no-gutters align-items-center">
+                                                    <div class="col mr-2">
+                                                        <div class="text-xs fw-bold text-info text-uppercase mb-1">SP Đã
+                                                            Bán</div>
+                                                        <div class="h5 mb-0 fw-bold text-dark">
+                                                            ${not empty countSold ? countSold : 0}
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-auto">
+                                                        <i class="fas fa-box fa-2x text-gray-300"></i>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-xl-3 col-md-6 mb-4">
+                                        <div class="card card-dashboard card-clickable border-left-warning h-100 py-2"
+                                            id="card-best-seller" onclick="switchChart('best_seller')">
+                                            <div class="card-body">
+                                                <div class="row no-gutters align-items-center">
+                                                    <div class="col mr-2">
+                                                        <div class="text-xs fw-bold text-warning text-uppercase mb-1">
+                                                            Top 5 Bán Chạy</div>
+                                                    </div>
+                                                    <div class="col-auto">
+                                                        <i class="fas fa-chart-pie fa-2x text-gray-300"></i>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-xl-12 col-lg-12">
+                                        <div class="card card-dashboard mb-4">
+                                            <div
+                                                class="card-header py-3 d-flex flex-row align-items-center justify-content-between bg-white border-bottom-0">
+                                                <h6 class="m-0 font-weight-bold text-primary" id="chartTitle">Biểu Đồ
+                                                    Doanh Thu (Thực Tế)</h6>
+                                            </div>
+                                            <div class="card-body">
+                                                <div class="chart-area">
+                                                    <canvas id="myChart"></canvas>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="card card-dashboard mb-4">
+                                    <div class="card-header py-3 bg-white border-bottom-0">
+                                        <h6 class="m-0 font-weight-bold text-primary"><i class="fas fa-eye me-1"></i>
+                                            Top Sản Phẩm Xem Nhiều Nhất</h6>
+                                    </div>
+                                    <div class="card-body">
+                                        <table id="datatablesSimple" class="table table-bordered table-hover">
+                                            <thead class="table-light">
+                                                <tr>
+                                                    <th>ID</th>
+                                                    <th>Tên Sản Phẩm</th>
+                                                    <th>Giá</th>
+                                                    <th>Đã Bán</th>
+                                                    <th>Lượt Xem</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <c:forEach var="p" items="${mostViewedProducts}">
+                                                    <tr>
+                                                        <td>#${p.id}</td>
+                                                        <td>
+                                                            <div class="d-flex align-items-center">
+                                                                <img src="/images/product/${p.image}" alt=""
+                                                                    style="width: 40px; height: 40px; object-fit: cover; border-radius: 5px; margin-right: 10px;">
+                                                                ${p.name}
+                                                            </div>
+                                                        </td>
+                                                        <td>
+                                                            <fmt:formatNumber value="${p.price}" type="currency"
+                                                                currencySymbol="₫" />
+                                                        </td>
+                                                        <td>${p.sold}</td>
+                                                        <td><span class="badge bg-primary">${p.view} view</span></td>
+                                                    </tr>
+                                                </c:forEach>
+                                                <c:if test="${empty mostViewedProducts}">
+                                                    <tr>
+                                                        <td colspan="5" class="text-center">Chưa có dữ liệu thống kê
+                                                        </td>
+                                                    </tr>
+                                                </c:if>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
                             </div>
-                        </div>
-                    </div>
-                    <div class="col-xl-3 col-md-6">
-                        <div class="card bg-warning text-white mb-4">
-                            <div class="card-body">Warning Card</div>
-                            <div class="card-footer d-flex align-items-center justify-content-between">
-                                <a class="small text-white stretched-link" href="#">View Details</a>
-                                <div class="small text-white"><i class="fas fa-angle-right"></i></div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-xl-3 col-md-6">
-                        <div class="card bg-success text-white mb-4">
-                            <div class="card-body">Success Card</div>
-                            <div class="card-footer d-flex align-items-center justify-content-between">
-                                <a class="small text-white stretched-link" href="#">View Details</a>
-                                <div class="small text-white"><i class="fas fa-angle-right"></i></div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-xl-3 col-md-6">
-                        <div class="card bg-danger text-white mb-4">
-                            <div class="card-body">Danger Card</div>
-                            <div class="card-footer d-flex align-items-center justify-content-between">
-                                <a class="small text-white stretched-link" href="#">View Details</a>
-                                <div class="small text-white"><i class="fas fa-angle-right"></i></div>
-                            </div>
-                        </div>
+                        </main>
+
+                        <jsp:include page="/WEB-INF/view/admin/layout/footer.jsp"></jsp:include>
                     </div>
                 </div>
-                <div class="row">
-                    <div class="col-xl-6">
-                        <div class="card mb-4">
-                            <div class="card-header">
-                                <i class="fas fa-chart-area me-1"></i>
-                                Area Chart Example
-                            </div>
-                            <div class="card-body"><canvas id="myAreaChart" width="100%" height="40"></canvas></div>
-                        </div>
-                    </div>
-                    <div class="col-xl-6">
-                        <div class="card mb-4">
-                            <div class="card-header">
-                                <i class="fas fa-chart-bar me-1"></i>
-                                Bar Chart Example
-                            </div>
-                            <div class="card-body"><canvas id="myBarChart" width="100%" height="40"></canvas></div>
-                        </div>
-                    </div>
-                </div>
-                <div class="card mb-4">
-                    <div class="card-header">
-                        <i class="fas fa-table me-1"></i>
-                        DataTable Example
-                    </div>
-                    <div class="card-body">
-                        <table id="datatablesSimple">
-                            <thead>
-                            <tr>
-                                <th>Name</th>
-                                <th>Position</th>
-                                <th>Office</th>
-                                <th>Age</th>
-                                <th>Start date</th>
-                                <th>Salary</th>
-                            </tr>
-                            </thead>
-                            <tfoot>
-                            <tr>
-                                <th>Name</th>
-                                <th>Position</th>
-                                <th>Office</th>
-                                <th>Age</th>
-                                <th>Start date</th>
-                                <th>Salary</th>
-                            </tr>
-                            </tfoot>
-                            <tbody>
-                            <tr>
-                                <td>Tiger Nixon</td>
-                                <td>System Architect</td>
-                                <td>Edinburgh</td>
-                                <td>61</td>
-                                <td>2011/04/25</td>
-                                <td>$320,800</td>
-                            </tr>
-                            <tr>
-                                <td>Garrett Winters</td>
-                                <td>Accountant</td>
-                                <td>Tokyo</td>
-                                <td>63</td>
-                                <td>2011/07/25</td>
-                                <td>$170,750</td>
-                            </tr>
-                            <tr>
-                                <td>Ashton Cox</td>
-                                <td>Junior Technical Author</td>
-                                <td>San Francisco</td>
-                                <td>66</td>
-                                <td>2009/01/12</td>
-                                <td>$86,000</td>
-                            </tr>
-                            <tr>
-                                <td>Cedric Kelly</td>
-                                <td>Senior Javascript Developer</td>
-                                <td>Edinburgh</td>
-                                <td>22</td>
-                                <td>2012/03/29</td>
-                                <td>$433,060</td>
-                            </tr>
-                            <tr>
-                                <td>Airi Satou</td>
-                                <td>Accountant</td>
-                                <td>Tokyo</td>
-                                <td>33</td>
-                                <td>2008/11/28</td>
-                                <td>$162,700</td>
-                            </tr>
-                            <tr>
-                                <td>Brielle Williamson</td>
-                                <td>Integration Specialist</td>
-                                <td>New York</td>
-                                <td>61</td>
-                                <td>2012/12/02</td>
-                                <td>$372,000</td>
-                            </tr>
-                            <tr>
-                                <td>Herrod Chandler</td>
-                                <td>Sales Assistant</td>
-                                <td>San Francisco</td>
-                                <td>59</td>
-                                <td>2012/08/06</td>
-                                <td>$137,500</td>
-                            </tr>
-                            <tr>
-                                <td>Rhona Davidson</td>
-                                <td>Integration Specialist</td>
-                                <td>Tokyo</td>
-                                <td>55</td>
-                                <td>2010/10/14</td>
-                                <td>$327,900</td>
-                            </tr>
-                            <tr>
-                                <td>Colleen Hurst</td>
-                                <td>Javascript Developer</td>
-                                <td>San Francisco</td>
-                                <td>39</td>
-                                <td>2009/09/15</td>
-                                <td>$205,500</td>
-                            </tr>
-                            <tr>
-                                <td>Sonya Frost</td>
-                                <td>Software Engineer</td>
-                                <td>Edinburgh</td>
-                                <td>23</td>
-                                <td>2008/12/13</td>
-                                <td>$103,600</td>
-                            </tr>
-                            <tr>
-                                <td>Jena Gaines</td>
-                                <td>Office Manager</td>
-                                <td>London</td>
-                                <td>30</td>
-                                <td>2008/12/19</td>
-                                <td>$90,560</td>
-                            </tr>
-                            <tr>
-                                <td>Quinn Flynn</td>
-                                <td>Support Lead</td>
-                                <td>Edinburgh</td>
-                                <td>22</td>
-                                <td>2013/03/03</td>
-                                <td>$342,000</td>
-                            </tr>
-                            <tr>
-                                <td>Charde Marshall</td>
-                                <td>Regional Director</td>
-                                <td>San Francisco</td>
-                                <td>36</td>
-                                <td>2008/10/16</td>
-                                <td>$470,600</td>
-                            </tr>
-                            <tr>
-                                <td>Haley Kennedy</td>
-                                <td>Senior Marketing Designer</td>
-                                <td>London</td>
-                                <td>43</td>
-                                <td>2012/12/18</td>
-                                <td>$313,500</td>
-                            </tr>
-                            <tr>
-                                <td>Tatyana Fitzpatrick</td>
-                                <td>Regional Director</td>
-                                <td>London</td>
-                                <td>19</td>
-                                <td>2010/03/17</td>
-                                <td>$385,750</td>
-                            </tr>
-                            <tr>
-                                <td>Michael Silva</td>
-                                <td>Marketing Designer</td>
-                                <td>London</td>
-                                <td>66</td>
-                                <td>2012/11/27</td>
-                                <td>$198,500</td>
-                            </tr>
-                            <tr>
-                                <td>Paul Byrd</td>
-                                <td>Chief Financial Officer (CFO)</td>
-                                <td>New York</td>
-                                <td>64</td>
-                                <td>2010/06/09</td>
-                                <td>$725,000</td>
-                            </tr>
-                            <tr>
-                                <td>Gloria Little</td>
-                                <td>Systems Administrator</td>
-                                <td>New York</td>
-                                <td>59</td>
-                                <td>2009/04/10</td>
-                                <td>$237,500</td>
-                            </tr>
-                            <tr>
-                                <td>Bradley Greer</td>
-                                <td>Software Engineer</td>
-                                <td>London</td>
-                                <td>41</td>
-                                <td>2012/10/13</td>
-                                <td>$132,000</td>
-                            </tr>
-                            <tr>
-                                <td>Dai Rios</td>
-                                <td>Personnel Lead</td>
-                                <td>Edinburgh</td>
-                                <td>35</td>
-                                <td>2012/09/26</td>
-                                <td>$217,500</td>
-                            </tr>
-                            <tr>
-                                <td>Jenette Caldwell</td>
-                                <td>Development Lead</td>
-                                <td>New York</td>
-                                <td>30</td>
-                                <td>2011/09/03</td>
-                                <td>$345,000</td>
-                            </tr>
-                            <tr>
-                                <td>Yuri Berry</td>
-                                <td>Chief Marketing Officer (CMO)</td>
-                                <td>New York</td>
-                                <td>40</td>
-                                <td>2009/06/25</td>
-                                <td>$675,000</td>
-                            </tr>
-                            <tr>
-                                <td>Caesar Vance</td>
-                                <td>Pre-Sales Support</td>
-                                <td>New York</td>
-                                <td>21</td>
-                                <td>2011/12/12</td>
-                                <td>$106,450</td>
-                            </tr>
-                            <tr>
-                                <td>Doris Wilder</td>
-                                <td>Sales Assistant</td>
-                                <td>Sidney</td>
-                                <td>23</td>
-                                <td>2010/09/20</td>
-                                <td>$85,600</td>
-                            </tr>
-                            <tr>
-                                <td>Angelica Ramos</td>
-                                <td>Chief Executive Officer (CEO)</td>
-                                <td>London</td>
-                                <td>47</td>
-                                <td>2009/10/09</td>
-                                <td>$1,200,000</td>
-                            </tr>
-                            <tr>
-                                <td>Gavin Joyce</td>
-                                <td>Developer</td>
-                                <td>Edinburgh</td>
-                                <td>42</td>
-                                <td>2010/12/22</td>
-                                <td>$92,575</td>
-                            </tr>
-                            <tr>
-                                <td>Jennifer Chang</td>
-                                <td>Regional Director</td>
-                                <td>Singapore</td>
-                                <td>28</td>
-                                <td>2010/11/14</td>
-                                <td>$357,650</td>
-                            </tr>
-                            <tr>
-                                <td>Brenden Wagner</td>
-                                <td>Software Engineer</td>
-                                <td>San Francisco</td>
-                                <td>28</td>
-                                <td>2011/06/07</td>
-                                <td>$206,850</td>
-                            </tr>
-                            <tr>
-                                <td>Fiona Green</td>
-                                <td>Chief Operating Officer (COO)</td>
-                                <td>San Francisco</td>
-                                <td>48</td>
-                                <td>2010/03/11</td>
-                                <td>$850,000</td>
-                            </tr>
-                            <tr>
-                                <td>Shou Itou</td>
-                                <td>Regional Marketing</td>
-                                <td>Tokyo</td>
-                                <td>20</td>
-                                <td>2011/08/14</td>
-                                <td>$163,000</td>
-                            </tr>
-                            <tr>
-                                <td>Michelle House</td>
-                                <td>Integration Specialist</td>
-                                <td>Sidney</td>
-                                <td>37</td>
-                                <td>2011/06/02</td>
-                                <td>$95,400</td>
-                            </tr>
-                            <tr>
-                                <td>Suki Burks</td>
-                                <td>Developer</td>
-                                <td>London</td>
-                                <td>53</td>
-                                <td>2009/10/22</td>
-                                <td>$114,500</td>
-                            </tr>
-                            <tr>
-                                <td>Prescott Bartlett</td>
-                                <td>Technical Author</td>
-                                <td>London</td>
-                                <td>27</td>
-                                <td>2011/05/07</td>
-                                <td>$145,000</td>
-                            </tr>
-                            <tr>
-                                <td>Gavin Cortez</td>
-                                <td>Team Leader</td>
-                                <td>San Francisco</td>
-                                <td>22</td>
-                                <td>2008/10/26</td>
-                                <td>$235,500</td>
-                            </tr>
-                            <tr>
-                                <td>Martena Mccray</td>
-                                <td>Post-Sales support</td>
-                                <td>Edinburgh</td>
-                                <td>46</td>
-                                <td>2011/03/09</td>
-                                <td>$324,050</td>
-                            </tr>
-                            <tr>
-                                <td>Unity Butler</td>
-                                <td>Marketing Designer</td>
-                                <td>San Francisco</td>
-                                <td>47</td>
-                                <td>2009/12/09</td>
-                                <td>$85,675</td>
-                            </tr>
-                            <tr>
-                                <td>Howard Hatfield</td>
-                                <td>Office Manager</td>
-                                <td>San Francisco</td>
-                                <td>51</td>
-                                <td>2008/12/16</td>
-                                <td>$164,500</td>
-                            </tr>
-                            <tr>
-                                <td>Hope Fuentes</td>
-                                <td>Secretary</td>
-                                <td>San Francisco</td>
-                                <td>41</td>
-                                <td>2010/02/12</td>
-                                <td>$109,850</td>
-                            </tr>
-                            <tr>
-                                <td>Vivian Harrell</td>
-                                <td>Financial Controller</td>
-                                <td>San Francisco</td>
-                                <td>62</td>
-                                <td>2009/02/14</td>
-                                <td>$452,500</td>
-                            </tr>
-                            <tr>
-                                <td>Timothy Mooney</td>
-                                <td>Office Manager</td>
-                                <td>London</td>
-                                <td>37</td>
-                                <td>2008/12/11</td>
-                                <td>$136,200</td>
-                            </tr>
-                            <tr>
-                                <td>Jackson Bradshaw</td>
-                                <td>Director</td>
-                                <td>New York</td>
-                                <td>65</td>
-                                <td>2008/09/26</td>
-                                <td>$645,750</td>
-                            </tr>
-                            <tr>
-                                <td>Olivia Liang</td>
-                                <td>Support Engineer</td>
-                                <td>Singapore</td>
-                                <td>64</td>
-                                <td>2011/02/03</td>
-                                <td>$234,500</td>
-                            </tr>
-                            <tr>
-                                <td>Bruno Nash</td>
-                                <td>Software Engineer</td>
-                                <td>London</td>
-                                <td>38</td>
-                                <td>2011/05/03</td>
-                                <td>$163,500</td>
-                            </tr>
-                            <tr>
-                                <td>Sakura Yamamoto</td>
-                                <td>Support Engineer</td>
-                                <td>Tokyo</td>
-                                <td>37</td>
-                                <td>2009/08/19</td>
-                                <td>$139,575</td>
-                            </tr>
-                            <tr>
-                                <td>Thor Walton</td>
-                                <td>Developer</td>
-                                <td>New York</td>
-                                <td>61</td>
-                                <td>2013/08/11</td>
-                                <td>$98,540</td>
-                            </tr>
-                            <tr>
-                                <td>Finn Camacho</td>
-                                <td>Support Engineer</td>
-                                <td>San Francisco</td>
-                                <td>47</td>
-                                <td>2009/07/07</td>
-                                <td>$87,500</td>
-                            </tr>
-                            <tr>
-                                <td>Serge Baldwin</td>
-                                <td>Data Coordinator</td>
-                                <td>Singapore</td>
-                                <td>64</td>
-                                <td>2012/04/09</td>
-                                <td>$138,575</td>
-                            </tr>
-                            <tr>
-                                <td>Zenaida Frank</td>
-                                <td>Software Engineer</td>
-                                <td>New York</td>
-                                <td>63</td>
-                                <td>2010/01/04</td>
-                                <td>$125,250</td>
-                            </tr>
-                            <tr>
-                                <td>Zorita Serrano</td>
-                                <td>Software Engineer</td>
-                                <td>San Francisco</td>
-                                <td>56</td>
-                                <td>2012/06/01</td>
-                                <td>$115,000</td>
-                            </tr>
-                            <tr>
-                                <td>Jennifer Acosta</td>
-                                <td>Junior Javascript Developer</td>
-                                <td>Edinburgh</td>
-                                <td>43</td>
-                                <td>2013/02/01</td>
-                                <td>$75,650</td>
-                            </tr>
-                            <tr>
-                                <td>Cara Stevens</td>
-                                <td>Sales Assistant</td>
-                                <td>New York</td>
-                                <td>46</td>
-                                <td>2011/12/06</td>
-                                <td>$145,600</td>
-                            </tr>
-                            <tr>
-                                <td>Hermione Butler</td>
-                                <td>Regional Director</td>
-                                <td>London</td>
-                                <td>47</td>
-                                <td>2011/03/21</td>
-                                <td>$356,250</td>
-                            </tr>
-                            <tr>
-                                <td>Lael Greer</td>
-                                <td>Systems Administrator</td>
-                                <td>London</td>
-                                <td>21</td>
-                                <td>2009/02/27</td>
-                                <td>$103,500</td>
-                            </tr>
-                            <tr>
-                                <td>Jonas Alexander</td>
-                                <td>Developer</td>
-                                <td>San Francisco</td>
-                                <td>30</td>
-                                <td>2010/07/14</td>
-                                <td>$86,500</td>
-                            </tr>
-                            <tr>
-                                <td>Shad Decker</td>
-                                <td>Regional Director</td>
-                                <td>Edinburgh</td>
-                                <td>51</td>
-                                <td>2008/11/13</td>
-                                <td>$183,000</td>
-                            </tr>
-                            <tr>
-                                <td>Michael Bruce</td>
-                                <td>Javascript Developer</td>
-                                <td>Singapore</td>
-                                <td>29</td>
-                                <td>2011/06/27</td>
-                                <td>$183,000</td>
-                            </tr>
-                            <tr>
-                                <td>Donna Snider</td>
-                                <td>Customer Support</td>
-                                <td>New York</td>
-                                <td>27</td>
-                                <td>2011/01/25</td>
-                                <td>$112,000</td>
-                            </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-        </main>
-        <!--footer-->
-        <jsp:include page="/WEB-INF/view/admin/layout/footer.jsp"></jsp:include>
-    </div>
-</div>
-<!--js-->
-<jsp:include page="/WEB-INF/view/admin/layout/js.jsp"></jsp:include>
-</body>
-</html>
+
+                <jsp:include page="/WEB-INF/view/admin/layout/js.jsp"></jsp:include>
+
+                <script src="${pageContext.request.contextPath}/admin/js/dashboard.js"></script>
+
+                <script>
+                    const labels = JSON.parse('${chartLabelsJson}');
+                    const dataRevenue = JSON.parse('${chartDataJson}');
+                    const dataOrders = JSON.parse('${not empty chartOrdersJson ? chartOrdersJson : "[]"}');
+                    const dataSold = JSON.parse('${not empty chartSoldJson ? chartSoldJson : "[]"}');
+                    const labelsBestSeller = JSON.parse('${chartBestSellerLabelsJson}');
+                    const dataBestSeller = JSON.parse('${chartBestSellerDataJson}');
+
+                    document.addEventListener("DOMContentLoaded", function () {
+                        console.log("Dashboard Data Loaded");
+                        renderChart('revenue', labels, dataRevenue);
+                    });
+                </script>
+            </body>
+
+            </html>

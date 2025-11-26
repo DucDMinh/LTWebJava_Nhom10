@@ -1,10 +1,7 @@
 package com.haui.controller.client;
 
-import java.io.UnsupportedEncodingException;
 import java.util.List;
-import java.util.UUID;
 
-import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -15,10 +12,8 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 
 import com.haui.dto.UserDto;
 import com.haui.model.Product;
@@ -27,10 +22,8 @@ import com.haui.model.WishList;
 import com.haui.service.ProductService;
 import com.haui.service.RoleService;
 import com.haui.service.UserService;
-import com.haui.service.VNPayService;
+import com.haui.service.WishListService;
 
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 
 @Controller
@@ -46,10 +39,10 @@ public class HomeController {
 	private UserService userService;
 
 	@Autowired
-	private ProductService productService;
+	private WishListService wishListService;
 
 	@Autowired
-	private VNPayService vnpayService;
+	private ProductService productService;
 
 	@GetMapping()
 	public String homePage(@AuthenticationPrincipal UserDetails userDetails, Model model) {
