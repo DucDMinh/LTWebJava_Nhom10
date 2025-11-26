@@ -24,4 +24,22 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
             "GROUP BY DATE(order_date) " +
             "ORDER BY DATE(order_date) ASC", nativeQuery = true)
     List<Object[]> getRevenueTrend();
+
+    @Query(value = "SELECT DATE(order_date) as date, COUNT(*) as count " +
+            "FROM orders " +
+            "WHERE status = 'COMPLETED' " +
+            "GROUP BY DATE(order_date) " +
+            "ORDER BY DATE(order_date) ASC", nativeQuery = true)
+    List<Object[]> getOrderTrend();
+
+    // --- THÊM MỚI 2: Số lượng sản phẩm bán ra theo ngày ---
+    @Query(value = "SELECT DATE(order_date) as date, SUM(total_product) as sold " +
+            "FROM orders " +
+            "WHERE status = 'COMPLETED' " +
+            "GROUP BY DATE(order_date) " +
+            "ORDER BY DATE(order_date) ASC", nativeQuery = true)
+    List<Object[]> getProductSoldTrend();
+
+    @Query("SELECT SUM(o.quantity) FROM Order o WHERE o.status = 'COMPLETED'")
+    Long sumTotalProducts();
 }

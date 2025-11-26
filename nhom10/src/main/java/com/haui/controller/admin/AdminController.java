@@ -29,7 +29,11 @@ public class AdminController {
 		ObjectMapper mapper = new ObjectMapper();
 		String chartLabelsJson = mapper.writeValueAsString(stats.get("chartLabels"));
 		String chartDataJson = mapper.writeValueAsString(stats.get("chartData"));
+		String chartOrdersJson = mapper.writeValueAsString(stats.get("chartOrders"));
+		String chartSoldJson = mapper.writeValueAsString(stats.get("chartSold"));
 
+		model.addAttribute("chartOrdersJson", chartOrdersJson);
+		model.addAttribute("chartSoldJson", chartSoldJson);
 		model.addAttribute("chartLabelsJson", chartLabelsJson);
 		model.addAttribute("chartDataJson", chartDataJson);
 

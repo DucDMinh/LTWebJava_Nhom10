@@ -33,9 +33,8 @@ public class DashboardService {
         // 2. Các chỉ số tổng quan
         stats.put("totalOrders", orderRepository.count());
         stats.put("totalRevenue", orderRepository.sumTotalRevenue() != null ? orderRepository.sumTotalRevenue() : 0.0);
-        stats.put("totalProductsSold",
-                orderProductRepository.sumTotalProductsSold() != null ? orderProductRepository.sumTotalProductsSold()
-                        : 0);
+        Long totalProd = orderRepository.sumTotalProducts();
+        stats.put("totalProductsSold", totalProd != null ? totalProd : 0);
         List<Object[]> revenueData = orderRepository.getRevenueTrend();
         List<String> labels = new ArrayList<>();
         List<Double> data = new ArrayList<>();
@@ -55,6 +54,28 @@ public class DashboardService {
         }
         stats.put("chartLabels", labels);
         stats.put("chartData", data);
+
+        List<Object[]> orderData = orderRepository.getOrderTrend();
+        List<Long> chartOrders = new ArrayList<>();
+        // Lưu ý: Query trả về BigInteger hoặc Long tùy DB, ép kiểu Number cho an toàn
+        for (Object[] row : orderData) {
+            if (row[1] != null)
+                chartOrders.add(((Number) row[1]).longValue());
+            else
+                chartOrders.add(0L);
+        }
+        stats.put("chartOrders", chartOrders);
+
+        // 2. Xử lý Sản phẩm bán (Sold Trend)
+        List<Object[]> soldData = orderRepository.getProductSoldTrend();
+        List<Long> chartSold = new ArrayList<>();
+        for (Object[] row : soldData) {
+            if (row[1] != null)
+                chartSold.add(((Number) row[1]).longValue());
+            else
+                chartSold.add(0L);
+        }
+        stats.put("chartSold", chartSold);
 
         return stats;
     }

@@ -23,8 +23,22 @@
                         transition: transform 0.2s;
                     }
 
-                    .card-dashboard:hover {
+                    /* Hiệu ứng click cho Card */
+                    .card-clickable {
+                        cursor: pointer;
+                        transition: all 0.3s ease;
+                    }
+
+                    .card-clickable:hover {
                         transform: translateY(-5px);
+                        box-shadow: 0 0.5rem 2rem 0 rgba(58, 59, 69, 0.25);
+                    }
+
+                    /* Class active để biết đang xem biểu đồ nào */
+                    .card-active {
+                        background-color: #f8f9fc;
+                        transform: scale(1.02);
+                        border-left-width: 0.5rem !important;
                     }
 
                     .border-left-primary {
@@ -54,7 +68,6 @@
                     .chart-area {
                         position: relative;
                         height: 400px;
-                        /* Bắt buộc phải có chiều cao cố định */
                         width: 100%;
                     }
                 </style>
@@ -75,7 +88,8 @@
 
                                 <div class="row">
                                     <div class="col-xl-3 col-md-6 mb-4">
-                                        <div class="card border-start border-primary border-4 shadow h-100 py-2">
+                                        <div class="card card-dashboard card-clickable border-left-primary h-100 py-2 card-active"
+                                            id="card-revenue" onclick="switchChart('revenue')">
                                             <div class="card-body">
                                                 <div class="row no-gutters align-items-center">
                                                     <div class="col mr-2">
@@ -100,7 +114,8 @@
                                     </div>
 
                                     <div class="col-xl-3 col-md-6 mb-4">
-                                        <div class="card border-start border-success border-4 shadow h-100 py-2">
+                                        <div class="card card-dashboard card-clickable border-left-success h-100 py-2"
+                                            id="card-orders" onclick="switchChart('orders')">
                                             <div class="card-body">
                                                 <div class="row no-gutters align-items-center">
                                                     <div class="col mr-2">
@@ -119,7 +134,8 @@
                                     </div>
 
                                     <div class="col-xl-3 col-md-6 mb-4">
-                                        <div class="card border-start border-info border-4 shadow h-100 py-2">
+                                        <div class="card card-dashboard card-clickable border-left-info h-100 py-2"
+                                            id="card-sold" onclick="switchChart('sold')">
                                             <div class="card-body">
                                                 <div class="row no-gutters align-items-center">
                                                     <div class="col mr-2">
@@ -138,7 +154,7 @@
                                     </div>
 
                                     <div class="col-xl-3 col-md-6 mb-4">
-                                        <div class="card border-start border-warning border-4 shadow h-100 py-2">
+                                        <div class="card card-dashboard border-left-warning h-100 py-2">
                                             <div class="card-body">
                                                 <div class="row no-gutters align-items-center">
                                                     <div class="col mr-2">
@@ -162,12 +178,12 @@
                                         <div class="card card-dashboard mb-4">
                                             <div
                                                 class="card-header py-3 d-flex flex-row align-items-center justify-content-between bg-white border-bottom-0">
-                                                <h6 class="m-0 font-weight-bold text-primary">Biểu Đồ Doanh Thu (Thực
-                                                    tế)</h6>
+                                                <h6 class="m-0 font-weight-bold text-primary" id="chartTitle">Biểu Đồ
+                                                    Doanh Thu (Thực Tế)</h6>
                                             </div>
                                             <div class="card-body">
                                                 <div class="chart-area">
-                                                    <canvas id="revenueChart"></canvas>
+                                                    <canvas id="myChart"></canvas>
                                                 </div>
                                             </div>
                                         </div>
@@ -227,12 +243,24 @@
                 </div>
 
                 <jsp:include page="/WEB-INF/view/admin/layout/js.jsp"></jsp:include>
+
                 <script src="${pageContext.request.contextPath}/admin/js/dashboard.js"></script>
+
                 <script>
+                    // KHAI BÁO BIẾN TOÀN CỤC ĐỂ dashboard.js CÓ THỂ DÙNG
+                    // (Sử dụng EL của JSP để inject dữ liệu JSON từ Controller)
+                    const labels = ${ chartLabelsJson };
+                    const dataRevenue = ${ chartDataJson };
+
+                    // Kiểm tra null cho Order và Sold (Nếu controller chưa gửi thì dùng mảng rỗng)
+                    const dataOrders = ${ not empty chartOrdersJson ?chartOrdersJson: '[]'};
+                    const dataSold = ${ not empty chartSoldJson ?chartSoldJson: '[]'};
+
+                    // Khi trang load xong -> Vẽ biểu đồ mặc định
                     document.addEventListener("DOMContentLoaded", function () {
-                        const labels = JSON.parse('${chartLabelsJson}');
-                        const dataRevenue = JSON.parse('${chartDataJson}');
-                        initRevenueChart(labels, dataRevenue);
+                        console.log("Dashboard Data Loaded");
+                        // Mặc định hiển thị biểu đồ Doanh thu
+                        renderChart('revenue', labels, dataRevenue);
                     });
                 </script>
             </body>

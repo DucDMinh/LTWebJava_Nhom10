@@ -1,10 +1,7 @@
 package com.haui.controller.client;
 
-import java.io.UnsupportedEncodingException;
 import java.util.List;
-import java.util.UUID;
 
-import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -25,7 +22,6 @@ import com.haui.model.WishList;
 import com.haui.service.ProductService;
 import com.haui.service.RoleService;
 import com.haui.service.UserService;
-import com.haui.service.VNPayService;
 import com.haui.service.WishListService;
 
 import jakarta.validation.Valid;
@@ -47,9 +43,6 @@ public class HomeController {
 
 	@Autowired
 	private ProductService productService;
-
-	@Autowired
-	private VNPayService vnpayService;
 
 	@GetMapping()
 	public String homePage(@AuthenticationPrincipal UserDetails userDetails, Model model) {
