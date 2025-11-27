@@ -30,7 +30,9 @@ public class CustomSuccessHandler implements AuthenticationSuccessHandler {
 
     private RedirectStrategy redirectStrategy = new DefaultRedirectStrategy();
 
-    // ============== Xác định trang đích sau login ====================
+    // ============================================================
+    // Xác định URL sau khi login theo role
+    // ============================================================
     protected String determineTargetUrl(final Authentication authentication) {
 
         Map<String, String> roleTargetUrlMap = new HashMap<>();
@@ -38,22 +40,34 @@ public class CustomSuccessHandler implements AuthenticationSuccessHandler {
         roleTargetUrlMap.put("ROLE_ADMIN", "/admin");
         roleTargetUrlMap.put("ROLE_STAFF", "/admin");
 
-        for (GrantedAuthority auth : authentication.getAuthorities()) {
-            String roleName = auth.getAuthority();
+        for (GrantedAuthority authority : authentication.getAuthorities()) {
+            String roleName = authority.getAuthority();
             if (roleTargetUrlMap.containsKey(roleName)) {
                 return roleTargetUrlMap.get(roleName);
             }
         }
+
         return "/home"; // fallback
     }
 
-    // ============== Set Session sau khi login ========================
+    // ============================================================
+    // Xóa lỗi đăng nhập cũ trong session
+    // ============================================================
+    protected void clearAuthenticationAttributes(HttpServletRequest request) {
+        HttpSession session = request.getSession(false);
+        if (session != null) {
+            session.removeAttribute(WebAttributes.AUTHENTICATION_EXCEPTION);
+        }
+    }
+
+    // ============================================================
+    // Lưu session sau khi login thành công
+    // ============================================================
     protected void setAuthenticationSession(HttpServletRequest request, Authentication authentication) {
-        HttpSession session = request.getSession(); // LUÔN tạo session nếu chưa có
 
-        session.removeAttribute(WebAttributes.AUTHENTICATION_EXCEPTION);
+        HttpSession session = request.getSession(); // tự tạo session nếu chưa có
 
-        String loginKey = authentication.getName();
+        String loginKey = authentication.getName(); // username/email
         User user = userService.getUserByUsername(loginKey);
 
         if (user == null) {
@@ -66,32 +80,37 @@ public class CustomSuccessHandler implements AuthenticationSuccessHandler {
             session.setAttribute("email", user.getEmail());
             session.setAttribute("role", user.getRole().getName().trim());
 
-            // avatar mặc định nếu null
+            // Avatar mặc định
             String avatar = (user.getAvatar() != null && !user.getAvatar().isEmpty())
                     ? user.getAvatar()
                     : "/images/default-avatar.png";
 
             session.setAttribute("avatar", avatar);
 
-            // gửi mail đăng nhập thành công
+            // Gửi email thông báo đăng nhập thành công
             emailService.sendLoginSuccessEmail(user.getEmail(), user.getFullName());
         }
     }
 
-    // ============== Xử lý khi login thành công =======================
+    // ============================================================
+    // Xử lý khi đăng nhập thành công
+    // ============================================================
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
             Authentication authentication) throws IOException, ServletException {
-        clearAuthenticationAttributes(request, authentication);
 
-        // 2️⃣ Redirect sau
+        // Xóa lỗi đăng nhập cũ
+        clearAuthenticationAttributes(request);
+
+        // Lưu các thông tin session
+        setAuthenticationSession(request, authentication);
+
+        // Xác định target
         String targetUrl = determineTargetUrl(authentication);
-        if (!response.isCommitted()) {
-            redirectStrategy.sendRedirect(request, response, targetUrl);
 
+        // Redirect 1 lần duy nhất
         if (!response.isCommitted()) {
             redirectStrategy.sendRedirect(request, response, targetUrl);
         }
-
     }
 }
