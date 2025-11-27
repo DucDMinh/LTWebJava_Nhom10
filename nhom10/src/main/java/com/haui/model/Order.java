@@ -48,7 +48,13 @@ public class Order implements Serializable {
     @NonNull
     private String paymentMethod;
 
+    private Date orderDate;
+
     @OneToMany(mappedBy = "order")
     private List<OrderProduct> orderProducts;
 
+    @PrePersist
+    public void onCreate() {
+        this.orderDate = new Date();
+    }
 }

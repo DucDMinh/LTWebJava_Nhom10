@@ -17,6 +17,7 @@
 					<meta name="keywords" content="">
 					<meta name="description" content="">
 					<jsp:include page="/WEB-INF/view/client/layout/css.jsp"></jsp:include>
+					<link href="${pageContext.request.contextPath}/client/css/home.css" rel="stylesheet">
 
 				</head>
 
@@ -257,45 +258,44 @@
 						<div class="container">
 							<div class="row">
 								<div class="display-header d-flex justify-content-between pb-3">
-									<h2 class="display-7 text-dark text-uppercase">Sản Phẩm Điện Thoại</h2>
+									<h2 class="">Máy Tính</h2>
 									<div class="btn-right">
-										<a href="shop.html" class="btn btn-medium btn-normal text-uppercase">Đi tới
-											Shop</a>
+										<a href="shop.html" class="btn btn-medium btn-normal">Xem Toàn Bộ Sản Phẩm</a>
 									</div>
 								</div>
 
 								<div class="swiper product-swiper overflow-x-auto">
-									<div class=" row flex-nowrap">`
+									<div class="row flex-nowrap">
 										<c:forEach var="product" items="${products}">
 											<c:if test="${product.category == 'Máy Tính'}">
+
 												<c:set var="wishItem" value="${null}" />
 												<c:forEach var="w" items="${wishlistItems}">
 													<c:if test="${w.product.id == product.id}">
 														<c:set var="wishItem" value="${w}" />
 													</c:if>
 												</c:forEach>
+
 												<div class="col-md-6 col-lg-4 col-xl-3 mb-4" style="padding: 5px;">
 													<div class="card h-100 shadow-sm border-0 position-relative">
-
 
 														<form action="${pageContext.request.contextPath}/wishlist"
 															method="post" style="display:inline;">
 															<input type="hidden" name="${_csrf.parameterName}"
 																value="${_csrf.token}" />
 															<input type="hidden" name="productId" value="${product.id}">
-
 															<button type="submit"
-																class="btn btn-sm position-absolute top-0 start-0 m-2 p-1 wishlist-btn">
+																class="btn btn-sm position-absolute top-0 start-0 m-2 p-1 wishlist-btn"
+																style="z-index: 3;">
 																<i class="${wishItem != null ? 'fa-solid' : 'fa-regular'} fa-heart"
 																	style="font-size:25px; color: rgba(251, 1, 1, 0.793);"></i>
 															</button>
 														</form>
 
-
 														<span class="badge bg-danger position-absolute top-0 end-0 m-2"
 															style="z-index: 2;"> Hot </span>
 
-														<a href="/product/${product.id}">
+														<a href="/product/${product.id}" class="card-img-wrapper">
 															<img src="/images/product/${product.image}"
 																class="card-img-top" alt="${product.name}">
 														</a>
@@ -303,12 +303,16 @@
 														<div class="card-body text-center d-flex flex-column">
 															<h5 class="card-title fs-6">
 																<a href="/product/${product.id}"
-																	class="text-decoration-none text-dark">
+																	class="text-decoration-none text-dark text-truncate d-block"
+																	title="${product.name}">
 																	${product.name}
 																</a>
 															</h5>
-															<p class="card-text text-muted small mb-2">
-																${product.shortDesc}</p>
+
+															<p class="card-text text-muted small mb-2 text-truncate">
+																${product.shortDesc}
+															</p>
+
 															<p class="fs-5 fw-bold text-primary mb-3">
 																<fmt:formatNumber type="number"
 																	value="${product.price}" /> $
@@ -319,7 +323,6 @@
 																<button
 																	class="btn btn-outline-primary rounded-pill px-3 w-100">
 																	<i class="fa fa-shopping-bag me-2"></i> Thêm vào giỏ
-																	hàng
 																</button>
 																<input type="hidden" name="${_csrf.parameterName}"
 																	value="${_csrf.token}" />
@@ -336,41 +339,62 @@
 						<div class="swiper-pagination position-absolute text-center"></div>
 					</section>
 
-					<section id="smart-watches" class="product-store padding-large position-relative">
+					<section id="mobile-products" class="product-store position-relative padding-large no-padding-top">
 						<div class="container">
 							<div class="row">
 								<div class="display-header d-flex justify-content-between pb-3">
-									<h2 class="display-7 text-dark text-uppercase">Đồng Hồ Thông Minh</h2>
+									<h2 class="">Đồng Hồ</h2>
 									<div class="btn-right">
-										<a href="shop.html" class="btn btn-medium btn-normal text-uppercase">Đi tới
-											Shop</a>
+										<a href="shop.html" class="btn btn-medium btn-normal">Xem Toàn Bộ Sản Phẩm</a>
 									</div>
 								</div>
+
 								<div class="swiper product-swiper overflow-x-auto">
-									<div class=" row flex-nowrap">
+									<div class="row flex-nowrap">
 										<c:forEach var="product" items="${products}">
 											<c:if test="${product.category == 'Đồng Hồ'}">
+
+												<c:set var="wishItem" value="${null}" />
+												<c:forEach var="w" items="${wishlistItems}">
+													<c:if test="${w.product.id == product.id}">
+														<c:set var="wishItem" value="${w}" />
+													</c:if>
+												</c:forEach>
+
 												<div class="col-md-6 col-lg-4 col-xl-3 mb-4" style="padding: 5px;">
-													<div class="card h-100 shadow-sm border-0">
+													<div class="card h-100 shadow-sm border-0 position-relative">
+
+														<form action="${pageContext.request.contextPath}/wishlist"
+															method="post" style="display:inline;">
+															<input type="hidden" name="${_csrf.parameterName}"
+																value="${_csrf.token}" />
+															<input type="hidden" name="productId" value="${product.id}">
+															<button type="submit"
+																class="btn btn-sm position-absolute top-0 start-0 m-2 p-1 wishlist-btn"
+																style="z-index: 3;">
+																<i class="${wishItem != null ? 'fa-solid' : 'fa-regular'} fa-heart"
+																	style="font-size:25px; color: rgba(251, 1, 1, 0.793);"></i>
+															</button>
+														</form>
+
 														<span class="badge bg-danger position-absolute top-0 end-0 m-2"
-															style="z-index: 2;">
-															Hot
-														</span>
-														<a href="/product/${product.id}">
+															style="z-index: 2;"> Hot </span>
+
+														<a href="/product/${product.id}" class="card-img-wrapper">
 															<img src="/images/product/${product.image}"
 																class="card-img-top" alt="${product.name}">
 														</a>
 
 														<div class="card-body text-center d-flex flex-column">
-
 															<h5 class="card-title fs-6">
 																<a href="/product/${product.id}"
-																	class="text-decoration-none text-dark">
+																	class="text-decoration-none text-dark text-truncate d-block"
+																	title="${product.name}">
 																	${product.name}
 																</a>
 															</h5>
 
-															<p class="card-text text-muted small mb-2">
+															<p class="card-text text-muted small mb-2 text-truncate">
 																${product.shortDesc}
 															</p>
 
@@ -379,16 +403,100 @@
 																	value="${product.price}" /> $
 															</p>
 
-															<form action="/product/{id}" method="get" class="mt-auto">
+															<form action="/product/${product.id}" method="get"
+																class="mt-auto">
 																<button
 																	class="btn btn-outline-primary rounded-pill px-3 w-100">
-																	<i class="fa fa-shopping-bag me-2"></i>
-																	Thêm vào giỏ hàng
+																	<i class="fa fa-shopping-bag me-2"></i> Thêm vào giỏ
 																</button>
 																<input type="hidden" name="${_csrf.parameterName}"
 																	value="${_csrf.token}" />
 															</form>
+														</div>
+													</div>
+												</div>
+											</c:if>
+										</c:forEach>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="swiper-pagination position-absolute text-center"></div>
+					</section>
 
+					<section id="mobile-products" class="product-store position-relative padding-large no-padding-top">
+						<div class="container">
+							<div class="row">
+								<div class="display-header d-flex justify-content-between pb-3">
+									<h2 class="">Điện Thoại</h2>
+									<div class="btn-right">
+										<a href="shop.html" class="btn btn-medium btn-normal">Xem Toàn Bộ Sản Phẩm</a>
+									</div>
+								</div>
+
+								<div class="swiper product-swiper overflow-x-auto">
+									<div class="row flex-nowrap">
+										<c:forEach var="product" items="${products}">
+											<c:if test="${product.category == 'Điện Thoại'}">
+
+												<c:set var="wishItem" value="${null}" />
+												<c:forEach var="w" items="${wishlistItems}">
+													<c:if test="${w.product.id == product.id}">
+														<c:set var="wishItem" value="${w}" />
+													</c:if>
+												</c:forEach>
+
+												<div class="col-md-6 col-lg-4 col-xl-3 mb-4" style="padding: 5px;">
+													<div class="card h-100 shadow-sm border-0 position-relative">
+
+														<form action="${pageContext.request.contextPath}/wishlist"
+															method="post" style="display:inline;">
+															<input type="hidden" name="${_csrf.parameterName}"
+																value="${_csrf.token}" />
+															<input type="hidden" name="productId" value="${product.id}">
+															<button type="submit"
+																class="btn btn-sm position-absolute top-0 start-0 m-2 p-1 wishlist-btn"
+																style="z-index: 3;">
+																<i class="${wishItem != null ? 'fa-solid' : 'fa-regular'} fa-heart"
+																	style="font-size:25px; color: rgba(251, 1, 1, 0.793);"></i>
+															</button>
+														</form>
+
+														<span class="badge bg-danger position-absolute top-0 end-0 m-2"
+															style="z-index: 2;"> Hot </span>
+
+														<a href="/product/${product.id}" class="card-img-wrapper">
+															<img src="/images/product/${product.image}"
+																class="card-img-top" alt="${product.name}">
+														</a>
+
+														<div class="card-body text-center d-flex flex-column">
+															<h5 class="card-title fs-6">
+																<a href="/product/${product.id}"
+																	class="text-decoration-none text-dark text-truncate d-block"
+																	title="${product.name}">
+																	${product.name}
+																</a>
+															</h5>
+
+															<p class="card-text text-muted small mb-2 text-truncate">
+																${product.shortDesc}
+															</p>
+
+															<p class="fs-5 fw-bold text-primary mb-3">
+																<fmt:formatNumber type="number"
+																	value="${product.price}" /> $
+															</p>
+
+															<form action="/product/${product.id}" method="get"
+																class="mt-auto">
+																<button
+																	class="btn btn-outline-primary rounded-pill px-3 w-100">
+																	<i class="fa fa-shopping-bag me-2"></i> Thêm vào giỏ
+																</button>
+																<input type="hidden" name="${_csrf.parameterName}"
+																	value="${_csrf.token}" />
+															</form>
 														</div>
 													</div>
 												</div>

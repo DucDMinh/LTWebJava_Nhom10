@@ -138,7 +138,8 @@
 
                                             <div class="form-section-title">Initial Configuration (Variant)</div>
                                             <div class="alert alert-info" role="alert">
-                                                Đây là cấu hình mặc định đầu tiên. Bạn có thể thêm nhiều màu sắc/RAM/storage
+                                                Đây là cấu hình mặc định đầu tiên. Bạn có thể thêm nhiều màu
+                                                sắc/RAM/storage
                                                 khác sau khi tạo xong.
                                             </div>
 

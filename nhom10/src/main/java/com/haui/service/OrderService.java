@@ -1,6 +1,8 @@
 package com.haui.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -54,6 +56,9 @@ public class OrderService {
                 .orElse(null);
     }
 
+    public Page<Order> fetchAllOrders(Pageable pageable) {
+        return orderRepository.findAll(pageable);
+    }
     public Order getOrderById(Long id) {
         return orderRepository.findById(id).orElse(null);
     }

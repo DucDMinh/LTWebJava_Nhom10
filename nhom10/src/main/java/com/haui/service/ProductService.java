@@ -6,6 +6,8 @@ import java.util.Map;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.haui.model.Cart;
@@ -47,6 +49,10 @@ public class ProductService {
         this.productRepository = productRepository;
     }
 
+    public Page<Product> fetchAllProducts(Pageable pageable) {
+        return productRepository.findAll(pageable);
+    }
+
     public Product handleSaveProduct(Product laptop) {
         return this.productRepository.save(laptop);
     }
@@ -80,8 +86,29 @@ public class ProductService {
         }
     }
 
-    public void handlePlaceOrder(User user, HttpSession session, String paymentType, String uuid) {
+    public void handleIncreaseView(long productId) {
+        Optional<Product> productOpt = this.productRepository.findById(productId);
+        if (productOpt.isPresent()) {
+            Product product = productOpt.get();
+            long currentView = product.getView();
+            product.setView(currentView + 1);
+            this.productRepository.save(product);
+        }
+    }
 
+    @Transactional
+    public void updateProductSold(Order order) {
+        for (OrderProduct detail : order.getOrderProducts()) {
+            Product product = detail.getProduct();
+
+            if (product != null) {
+                long currentSold = product.getSold();
+                long quantitySold = detail.getQuantity();
+
+                product.setSold(currentSold + quantitySold);
+                productRepository.save(product);
+            }
+        }
     }
 
 }
