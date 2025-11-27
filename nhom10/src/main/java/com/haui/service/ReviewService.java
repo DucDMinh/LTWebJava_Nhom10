@@ -38,7 +38,7 @@ public class ReviewService {
 
         // join thủ công thêm tên + avatar
         for (Review r : list) {
-            User u = userRepo.findById(r.getUserId()).orElse(null);
+            User u = userRepo.findById((long) r.getUserId()).orElse(null);
             if (u != null) {
                 r.setFullName(u.getFullName());
                 r.setAvatar(u.getAvatar());
@@ -54,25 +54,27 @@ public class ReviewService {
     public Page<Review> getAllReviewsWithDetails(String status, String search, int page, int size) {
         Pageable pageable = PageRequest.of(page, size);
         Page<Review> reviewsPage;
-        
+
         if (status != null && !status.isEmpty() && !status.equals("ALL")) {
             reviewsPage = reviewRepo.findByStatusOrderByCreatedAtDesc(status, pageable);
         } else {
             reviewsPage = reviewRepo.findAllByOrderByCreatedAtDesc(pageable);
         }
-        
+
         // Join thủ công thêm thông tin user và product
         for (Review r : reviewsPage.getContent()) {
-            User u = userRepo.findById(r.getUserId()).orElse(null);
+            User u = userRepo.findById((long) r.getUserId()).orElse(null);
             if (u != null) {
                 r.setFullName(u.getFullName());
                 r.setAvatar(u.getAvatar());
             }
         }
-        
-        // Note: Search filtering should be implemented at repository level for better performance
-        // For now, basic search can be done client-side or implement custom repository query
-        
+
+        // Note: Search filtering should be implemented at repository level for better
+        // performance
+        // For now, basic search can be done client-side or implement custom repository
+        // query
+
         return reviewsPage;
     }
 
@@ -80,7 +82,7 @@ public class ReviewService {
         Optional<Review> reviewOpt = reviewRepo.findById(id);
         if (reviewOpt.isPresent()) {
             Review r = reviewOpt.get();
-            User u = userRepo.findById(r.getUserId()).orElse(null);
+            User u = userRepo.findById((long) r.getUserId()).orElse(null);
             if (u != null) {
                 r.setFullName(u.getFullName());
                 r.setAvatar(u.getAvatar());

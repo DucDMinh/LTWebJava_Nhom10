@@ -11,34 +11,36 @@ import com.haui.model.Order;
 
 @Repository
 public interface OrderRepository extends JpaRepository<Order, Long> {
-    Optional<Order> findByPaymentRef(String paymentRef);
+        Optional<Order> findByPaymentRef(String paymentRef);
 
-    long count();
+        long count();
 
-    @Query("SELECT SUM(o.totalPrice) FROM Order o WHERE o.status = 'COMPLETED'")
-    Double sumTotalRevenue();
+        @Query("SELECT SUM(o.totalPrice) FROM Order o WHERE o.status = 'COMPLETED'")
+        Double sumTotalRevenue();
 
-    @Query(value = "SELECT DATE(order_date) as date, SUM(total_price) as revenue " +
-            "FROM orders " +
-            "WHERE status = 'COMPLETED' " +
-            "GROUP BY DATE(order_date) " +
-            "ORDER BY DATE(order_date) ASC", nativeQuery = true)
-    List<Object[]> getRevenueTrend();
+        @Query(value = "SELECT DATE(order_date) as date, SUM(total_price) as revenue " +
+                        "FROM orders " +
+                        "WHERE status = 'COMPLETED' " +
+                        "GROUP BY DATE(order_date) " +
+                        "ORDER BY DATE(order_date) ASC", nativeQuery = true)
+        List<Object[]> getRevenueTrend();
 
-    @Query(value = "SELECT DATE(order_date) as date, COUNT(*) as count " +
-            "FROM orders " +
-            "WHERE status = 'COMPLETED' " +
-            "GROUP BY DATE(order_date) " +
-            "ORDER BY DATE(order_date) ASC", nativeQuery = true)
-    List<Object[]> getOrderTrend();
+        @Query(value = "SELECT DATE(order_date) as date, COUNT(*) as count " +
+                        "FROM orders " +
+                        "WHERE status = 'COMPLETED' " +
+                        "GROUP BY DATE(order_date) " +
+                        "ORDER BY DATE(order_date) ASC", nativeQuery = true)
+        List<Object[]> getOrderTrend();
 
-    @Query(value = "SELECT DATE(order_date) as date, SUM(total_product) as sold " +
-            "FROM orders " +
-            "WHERE status = 'COMPLETED' " +
-            "GROUP BY DATE(order_date) " +
-            "ORDER BY DATE(order_date) ASC", nativeQuery = true)
-    List<Object[]> getProductSoldTrend();
+        @Query(value = "SELECT DATE(order_date) as date, SUM(total_product) as sold " +
+                        "FROM orders " +
+                        "WHERE status = 'COMPLETED' " +
+                        "GROUP BY DATE(order_date) " +
+                        "ORDER BY DATE(order_date) ASC", nativeQuery = true)
+        List<Object[]> getProductSoldTrend();
 
-    @Query("SELECT SUM(o.quantity) FROM Order o WHERE o.status = 'COMPLETED'")
-    Long sumTotalProducts();
+        @Query("SELECT SUM(o.quantity) FROM Order o WHERE o.status = 'COMPLETED'")
+        Long sumTotalProducts();
+
+        List<Order> findByUser_Id(Long userId);
 }
