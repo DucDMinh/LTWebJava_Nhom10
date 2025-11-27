@@ -114,6 +114,7 @@ CREATE TABLE order_product(
     FOREIGN KEY(order_id) REFERENCES orders(id) ON DELETE CASCADE,
     FOREIGN KEY(product_id) REFERENCES products(id) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
 CREATE TABLE  wishlist (
     id INT AUTO_INCREMENT PRIMARY KEY,
     user_id BIGINT NOT NULL,
@@ -126,20 +127,4 @@ CREATE TABLE  wishlist (
 
 
 
-INSERT INTO roles (`name`, `description`) VALUES
-('USER', 'Người dùng bình thường'),
-('ADMIN', 'Quản trị hệ thống'),
-('STAFF', 'Nhân viên');
-
--- User bình thường
-INSERT INTO users (username, email, `password`, full_name, role_id) VALUES
-('user', 'user@gmail.com', '$2a$10$yWabUhcc84uStXPyJa.4j.4vq.uH53IwL5ybQc2VJNhuHx9tk9faG', 'User Example', 1);
-
--- Admin
-INSERT INTO users (username, email, `password`, full_name, role_id) VALUES
-('admin', 'admin@gmail.com', '$2a$10$yWabUhcc84uStXPyJa.4j.4vq.uH53IwL5ybQc2VJNhuHx9tk9faG', 'Admin Example', 2);
-
--- Staff
-INSERT INTO users (username, email, `password`, full_name, role_id) VALUES
-('staff', 'staff@gmail.com', '$2a$10$yWabUhcc84uStXPyJa.4j.4vq.uH53IwL5ybQc2VJNhuHx9tk9faG', 'Staff Example', 3);
 
