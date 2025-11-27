@@ -35,8 +35,8 @@ public class OrderService {
         return this.orderRepository.findAll();
     }
 
-    public Order getOrderById(Long id) {
-        return this.orderRepository.findById(id).orElse(null);
+    public List<Order> getOrdersByUserId(Long userId) {
+        return this.orderRepository.findByUser_Id(userId);
     }
 
     public void save(Order order) {
@@ -58,5 +58,8 @@ public class OrderService {
 
     public Page<Order> fetchAllOrders(Pageable pageable) {
         return orderRepository.findAll(pageable);
+    }
+    public Order getOrderById(Long id) {
+        return orderRepository.findById(id).orElse(null);
     }
 }

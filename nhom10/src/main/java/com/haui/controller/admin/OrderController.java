@@ -52,7 +52,9 @@ public class OrderController {
     @GetMapping("/{id}")
     public String view(@PathVariable("id") Long id, Model model) {
         Order order = this.orderService.getOrderById(id);
+        List<OrderProduct> orderProducts = order.getOrderProducts();
         model.addAttribute("order", order);
+        model.addAttribute("orderProducts", orderProducts);
         return "admin/order/view";
     }
 

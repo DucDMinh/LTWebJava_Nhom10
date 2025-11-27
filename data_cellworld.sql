@@ -114,12 +114,17 @@ CREATE TABLE order_product(
     FOREIGN KEY(order_id) REFERENCES orders(id) ON DELETE CASCADE,
     FOREIGN KEY(product_id) REFERENCES products(id) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-CREATE TABLE IF NOT EXISTS wishlist (
+
+CREATE TABLE  wishlist (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    user_id INT NOT NULL,
-    product_id INT NOT NULL,
+    user_id BIGINT NOT NULL,
+    product_id BIGINT NOT NULL,
     created_date DATETIME DEFAULT NOW(),
     UNIQUE KEY unique_user_product (user_id, product_id),
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
     FOREIGN KEY (product_id) REFERENCES products(id) ON DELETE CASCADE
 );
+
+
+
+

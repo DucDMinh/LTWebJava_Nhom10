@@ -81,17 +81,17 @@ public class CustomSuccessHandler implements AuthenticationSuccessHandler {
     // ============== Xử lý khi login thành công =======================
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
-            Authentication authentication)
-            throws IOException, ServletException {
-
-        // 1️⃣ Set session trước
-        setAuthenticationSession(request, authentication);
+            Authentication authentication) throws IOException, ServletException {
+        clearAuthenticationAttributes(request, authentication);
 
         // 2️⃣ Redirect sau
         String targetUrl = determineTargetUrl(authentication);
+        if (!response.isCommitted()) {
+            redirectStrategy.sendRedirect(request, response, targetUrl);
 
         if (!response.isCommitted()) {
             redirectStrategy.sendRedirect(request, response, targetUrl);
         }
+
     }
 }

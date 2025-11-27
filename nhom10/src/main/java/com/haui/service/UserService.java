@@ -33,12 +33,12 @@ public class UserService {
         return userRepository.findAll(spec, pageable);
     }
 
-    public User findById(Integer id) {
+    public User findById(long id) {
         return userRepository.findById(id).get();
     }
 
     public void delete(long id) {
-        userRepository.deleteById((int) id);
+        userRepository.deleteById(id);
     }
 
     public Boolean checkEmailExists(String email) {

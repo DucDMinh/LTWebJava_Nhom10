@@ -49,7 +49,7 @@
                         <tr>
                             <td>${loop.index + 1}</td>
                             <td>
-                                <img src="${env}/images/product/${orderProduct.product.image}">
+                                <img src="${env}/admin/images/user/user/${orderProduct.product.image}">
                             </td>
                             <td>${orderProduct.product.name}</td>
                             <td>${orderProduct.quantity}</td>

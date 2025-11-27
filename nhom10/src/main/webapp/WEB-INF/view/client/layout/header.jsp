@@ -69,7 +69,7 @@
                               </li>
 
                               <li>
-                                <a class="dropdown-item" href="/order/history">
+                                <a class="dropdown-item" href="/home/order/history">
                                   <i class="align-middle me-1" data-feather="shopping-bag"></i> Lịch sử mua hàng
                                 </a>
                               </li>
