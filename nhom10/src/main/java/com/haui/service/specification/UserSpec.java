@@ -1,7 +1,7 @@
 package com.haui.service.specification;
 
 import com.haui.model.User;
-import com.haui.model.User_;
+// ĐÃ XÓA: import com.haui.model.User_; -> Vì file này không sinh ra được trên Docker
 import org.springframework.data.jpa.domain.Specification;
 
 public class UserSpec {
@@ -11,8 +11,11 @@ public class UserSpec {
             if (name == null || name.isEmpty()) {
                 return criteriaBuilder.conjunction();
             }
+            
+            // SỬA Ở ĐÂY: Dùng chuỗi "fullName" thay vì User_.fullName
+            // Lưu ý: "fullName" phải viết đúng y hệt tên biến trong class User.java
             return criteriaBuilder.like(
-                    criteriaBuilder.lower(root.get(User_.fullName)),
+                    criteriaBuilder.lower(root.get("fullName")),
                     "%" + name.toLowerCase() + "%");
         };
     }
