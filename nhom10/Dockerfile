@@ -1,19 +1,21 @@
-# --- Giai đoạn 1: Build (Dùng Maven để đóng gói file JAR) ---
+# --- Giai đoạn 1: Build ---
 FROM maven:3.9.6-eclipse-temurin-17 AS build
 WORKDIR /app
 COPY . .
-# Lệnh build bỏ qua test cho nhanh
+# Build ra file WAR
 RUN mvn clean package -DskipTests
 
-# --- Giai đoạn 2: Run (Dùng Java để chạy file JAR) ---
+# --- Giai đoạn 2: Run ---
 FROM eclipse-temurin:17-jdk-alpine
 WORKDIR /app
-# Copy file JAR từ giai đoạn build sang giai đoạn run
-# Lưu ý: Dòng này sẽ tự tìm file .jar trong thư mục target
-COPY --from=build /app/target/*.jar app.jar
 
-# Mở cổng 8080
+# --- SỬA Ở ĐÂY ---
+# 1. Đổi *.jar thành *.war (vì pom.xml là war)
+# 2. Đổi tên file đích thành app.war cho đúng bản chất
+COPY --from=build /app/target/*.war app.war
+
 EXPOSE 8080
 
-# Lệnh chạy ứng dụng
-ENTRYPOINT ["java", "-jar", "app.jar"]
+# --- SỬA Ở ĐÂY ---
+# Chạy file war bằng java -jar vẫn hoạt động bình thường với Spring Boot
+ENTRYPOINT ["java", "-jar", "app.war"]
