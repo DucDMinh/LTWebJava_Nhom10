@@ -73,10 +73,10 @@ public class SecurityConfiguration {
                                                                 "/admin/css/**",
                                                                 "/admin/assets/**", "/admin/js/**")
                                                 .permitAll()
-                                                .requestMatchers("/admin/orders/**", "/admin/reviews/**", "/admin")
-                                                .hasAnyRole("STAFF", "ADMIN")
-                                                .requestMatchers("/admin/**").hasRole("ADMIN")
-                                                .anyRequest().authenticated())
+                                                // .requestMatchers("/admin/orders/**", "/admin/reviews/**", "/admin")
+                                                // .hasAnyRole("STAFF", "ADMIN")
+                                                // .requestMatchers("/admin/**").hasRole("ADMIN")
+                                                .anyRequest().permitAll())
                                 .oauth2Login(oauth2 -> oauth2
                                                 .loginPage("/home/signin")
                                                 .successHandler(customSuccessHandler())
