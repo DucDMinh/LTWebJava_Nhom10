@@ -14,12 +14,14 @@ import org.springframework.security.web.DefaultRedirectStrategy;
 import org.springframework.security.web.RedirectStrategy;
 import org.springframework.security.web.WebAttributes;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
+import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
+@Component
 public class CustomSuccessHandler implements AuthenticationSuccessHandler {
 
     @Autowired
@@ -30,87 +32,58 @@ public class CustomSuccessHandler implements AuthenticationSuccessHandler {
 
     private RedirectStrategy redirectStrategy = new DefaultRedirectStrategy();
 
-    // ============================================================
-    // Xác định URL sau khi login theo role
-    // ============================================================
+    @Override
+    public void onAuthenticationSuccess(HttpServletRequest request,
+            HttpServletResponse response,
+            Authentication authentication)
+            throws IOException, ServletException {
+
+        Object principal = authentication.getPrincipal();
+        User user = null;
+
+        // LOGIN FORM
+        if (principal instanceof org.springframework.security.core.userdetails.User userDetails) {
+            user = userService.getUserByUsername(userDetails.getUsername());
+        }
+
+        // LOGIN GOOGLE OAUTH2
+        else if (principal instanceof org.springframework.security.oauth2.core.user.DefaultOAuth2User oauthUser) {
+            String email = oauthUser.getAttribute("email");
+            user = userService.getUserByEmail(email);
+        }
+
+        // SET SESSION + SEND EMAIL
+        if (user != null) {
+            HttpSession session = request.getSession();
+            session.setAttribute("fullName", user.getFullName());
+            session.setAttribute("avatar", user.getAvatar());
+            session.setAttribute("email", user.getEmail());
+            session.setAttribute("id", user.getId());
+            session.setAttribute("role", user.getRole().getName());
+
+            emailService.sendLoginSuccessEmail(user.getEmail(), user.getFullName());
+        }
+
+        // REDIRECT SAU LOGIN
+        String targetUrl = determineTargetUrl(authentication);
+        redirectStrategy.sendRedirect(request, response, targetUrl);
+    }
+
+    // CHỌN TRANG REDIRECT THEO ROLE
     protected String determineTargetUrl(final Authentication authentication) {
 
-        Map<String, String> roleTargetUrlMap = new HashMap<>();
-        roleTargetUrlMap.put("ROLE_USER", "/home");
-        roleTargetUrlMap.put("ROLE_ADMIN", "/admin");
-        roleTargetUrlMap.put("ROLE_STAFF", "/admin");
+        Map<String, String> map = new HashMap<>();
+        map.put("ROLE_USER", "/home");
+        map.put("ROLE_ADMIN", "/admin");
+        map.put("ROLE_STAFF", "/admin");
 
         for (GrantedAuthority authority : authentication.getAuthorities()) {
-            String roleName = authority.getAuthority();
-            if (roleTargetUrlMap.containsKey(roleName)) {
-                return roleTargetUrlMap.get(roleName);
+            String role = authority.getAuthority().trim();
+            if (map.containsKey(role)) {
+                return map.get(role);
             }
         }
 
-        return "/home"; // fallback
-    }
-
-    // ============================================================
-    // Xóa lỗi đăng nhập cũ trong session
-    // ============================================================
-    protected void clearAuthenticationAttributes(HttpServletRequest request) {
-        HttpSession session = request.getSession(false);
-        if (session != null) {
-            session.removeAttribute(WebAttributes.AUTHENTICATION_EXCEPTION);
-        }
-    }
-
-    // ============================================================
-    // Lưu session sau khi login thành công
-    // ============================================================
-    protected void setAuthenticationSession(HttpServletRequest request, Authentication authentication) {
-
-        HttpSession session = request.getSession(); // tự tạo session nếu chưa có
-
-        String loginKey = authentication.getName(); // username/email
-        User user = userService.getUserByUsername(loginKey);
-
-        if (user == null) {
-            user = userService.getUserByEmail(loginKey);
-        }
-
-        if (user != null) {
-            session.setAttribute("id", user.getId());
-            session.setAttribute("fullName", user.getFullName());
-            session.setAttribute("email", user.getEmail());
-            session.setAttribute("role", user.getRole().getName().trim());
-
-            // Avatar mặc định
-            String avatar = (user.getAvatar() != null && !user.getAvatar().isEmpty())
-                    ? user.getAvatar()
-                    : "/images/default-avatar.png";
-
-            session.setAttribute("avatar", avatar);
-
-            // Gửi email thông báo đăng nhập thành công
-            emailService.sendLoginSuccessEmail(user.getEmail(), user.getFullName());
-        }
-    }
-
-    // ============================================================
-    // Xử lý khi đăng nhập thành công
-    // ============================================================
-    @Override
-    public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
-            Authentication authentication) throws IOException, ServletException {
-
-        // Xóa lỗi đăng nhập cũ
-        clearAuthenticationAttributes(request);
-
-        // Lưu các thông tin session
-        setAuthenticationSession(request, authentication);
-
-        // Xác định target
-        String targetUrl = determineTargetUrl(authentication);
-
-        // Redirect 1 lần duy nhất
-        if (!response.isCommitted()) {
-            redirectStrategy.sendRedirect(request, response, targetUrl);
-        }
+        return "/home";
     }
 }

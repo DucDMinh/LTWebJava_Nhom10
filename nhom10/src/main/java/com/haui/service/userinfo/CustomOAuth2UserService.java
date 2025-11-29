@@ -26,54 +26,29 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
     public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
         OAuth2User oAuth2User = super.loadUser(userRequest);
         Map<String, Object> attributes = oAuth2User.getAttributes();
-        String registrationId = userRequest.getClientRegistration().getRegistrationId();
 
         Role userRole = this.userService.getRoleByName("USER");
 
-        if (registrationId.equalsIgnoreCase("github")) {
-            String login = (String) attributes.get("login");
-            String fullName = login;
-            String email = (String) attributes.get("email");
-            if (email == null) {
-                email = login + "@github.com";
-            }
+        // GOOGLE
+        String email = (String) attributes.get("email");
+        String fullName = (String) attributes.get("name");
 
-            User user = this.userService.getUserByEmail(email);
-            if (user == null) {
-                // tạo mới
-                user = new User();
-                user.setEmail(email);
-                user.setFullName(fullName);
-                user.setProvider("GITHUB");
-                user.setAvatar("default-github.png");
-                user.setRole(userRole);
-                this.userService.save(user);
-            }
-
-            return new DefaultOAuth2User(
-                    Collections.singletonList(new SimpleGrantedAuthority("ROLE_" + userRole.getName())),
-                    oAuth2User.getAttributes(),
-                    "login");
-        } else { // GOOGLE
-            String email = (String) attributes.get("email");
-            String fullName = (String) attributes.get("name");
-
-            User user = this.userService.getUserByEmail(email);
-            if (user == null) {
-                user = new User();
-                user.setEmail(email);
-                user.setFullName(fullName);
-                user.setProvider("GOOGLE");
-                user.setAvatar("default-google.png");
-                user.setRole(userRole);
-                this.userService.save(user);
-            }
-
-            return new DefaultOAuth2User(
-                    Collections.singletonList(new SimpleGrantedAuthority("ROLE_" + userRole.getName())),
-                    oAuth2User.getAttributes(),
-                    "email");
+        User user = this.userService.getUserByEmail(email);
+        if (user == null) {
+            user = new User();
+            user.setEmail(email);
+            user.setFullName(fullName);
+            user.setProvider("GOOGLE");
+            user.setAvatar("default-google.png");
+            user.setRole(userRole);
+            this.userService.save(user);
         }
+
+        return new DefaultOAuth2User(
+                Collections.singletonList(new SimpleGrantedAuthority("ROLE_" + userRole.getName())),
+                oAuth2User.getAttributes(),
+                "email");
+
     }
 
 }
