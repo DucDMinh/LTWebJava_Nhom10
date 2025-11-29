@@ -80,7 +80,7 @@
 
             <c:if test="${order.status eq 'COMPLETED'}">
                 <h5>In hóa đơn</h5>
-                <a href="#" class="btn btn-primary">Xác nhận</a>
+                <a href="/report/order/${order.id}" class="btn btn-primary">Xác nhận</a>
             </c:if>
             <div class="mt-3">
                 <a href="/admin/orders" class="btn btn-secondary">⬅ Quay lại danh sách</a>
