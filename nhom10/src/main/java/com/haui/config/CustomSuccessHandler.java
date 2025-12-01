@@ -21,69 +21,75 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
-@Component
 public class CustomSuccessHandler implements AuthenticationSuccessHandler {
-
     @Autowired
     private UserService userService;
 
     @Autowired
     private EmailService emailService;
 
-    private RedirectStrategy redirectStrategy = new DefaultRedirectStrategy();
+    protected String determineTargetUrl(final Authentication authentication) {
 
-    @Override
-    public void onAuthenticationSuccess(HttpServletRequest request,
-            HttpServletResponse response,
-            Authentication authentication)
-            throws IOException, ServletException {
+        Map<String, String> roleTargetUrlMap = new HashMap<>();
+        roleTargetUrlMap.put("ROLE_USER", "/client/homes");
+        roleTargetUrlMap.put("ROLE_ADMIN", "/admin");
+        roleTargetUrlMap.put("ROLE_STAFF", "/admin/orders");
 
-        Object principal = authentication.getPrincipal();
-        User user = null;
-
-        // LOGIN FORM
-        if (principal instanceof org.springframework.security.core.userdetails.User userDetails) {
-            user = userService.getUserByUsername(userDetails.getUsername());
+        final Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
+        for (final GrantedAuthority grantedAuthority : authorities) {
+            String authorityName = grantedAuthority.getAuthority();
+            if (roleTargetUrlMap.containsKey(authorityName)) {
+                return roleTargetUrlMap.get(authorityName);
+            }
         }
 
-        // LOGIN GOOGLE OAUTH2
-        else if (principal instanceof org.springframework.security.oauth2.core.user.DefaultOAuth2User oauthUser) {
-            String email = oauthUser.getAttribute("email");
-            user = userService.getUserByEmail(email);
-        }
+        throw new IllegalStateException();
+    }
 
-        // SET SESSION + SEND EMAIL
+    protected void clearAuthenticationAttributes(HttpServletRequest request, Authentication authentication) {
+        HttpSession session = request.getSession(false);
+        if (session == null) {
+            return;
+        }
+        session.removeAttribute(WebAttributes.AUTHENTICATION_EXCEPTION);
+
+        String username = authentication.getName();
+        User user = userService.getUserByUsername(username);
         if (user != null) {
-            HttpSession session = request.getSession();
             session.setAttribute("fullName", user.getFullName());
             session.setAttribute("avatar", user.getAvatar());
             session.setAttribute("email", user.getEmail());
             session.setAttribute("id", user.getId());
-            session.setAttribute("role", user.getRole().getName());
-
+            session.setAttribute("role", user.getRole().getName().toString().trim());
             emailService.sendLoginSuccessEmail(user.getEmail(), user.getFullName());
-        }
-
-        // REDIRECT SAU LOGIN
-        String targetUrl = determineTargetUrl(authentication);
-        redirectStrategy.sendRedirect(request, response, targetUrl);
-    }
-
-    // CHỌN TRANG REDIRECT THEO ROLE
-    protected String determineTargetUrl(final Authentication authentication) {
-
-        Map<String, String> map = new HashMap<>();
-        map.put("ROLE_USER", "/home");
-        map.put("ROLE_ADMIN", "/admin");
-        map.put("ROLE_STAFF", "/admin");
-
-        for (GrantedAuthority authority : authentication.getAuthorities()) {
-            String role = authority.getAuthority().trim();
-            if (map.containsKey(role)) {
-                return map.get(role);
+        } else {
+            user = userService.getUserByEmail(username);
+            if (user != null) {
+                session.setAttribute("fullName", user.getFullName());
+                session.setAttribute("avatar", user.getAvatar());
+                session.setAttribute("email", user.getEmail());
+                session.setAttribute("id", user.getId());
+                session.setAttribute("role", user.getRole().getName().toString().trim());
+                emailService.sendLoginSuccessEmail(user.getEmail(), user.getFullName());
             }
         }
 
-        return "/home";
+    }
+
+    private RedirectStrategy redirectStrategy = new DefaultRedirectStrategy();
+
+    @Override
+    public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
+            Authentication authentication) throws IOException, ServletException {
+
+        String targetUrl = determineTargetUrl(authentication);
+        if (response.isCommitted()) {
+
+            return;
+        }
+
+        redirectStrategy.sendRedirect(request, response, targetUrl);
+        clearAuthenticationAttributes(request, authentication);
+
     }
 }

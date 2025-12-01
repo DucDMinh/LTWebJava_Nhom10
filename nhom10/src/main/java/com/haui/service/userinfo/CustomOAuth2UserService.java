@@ -2,8 +2,13 @@ package com.haui.service.userinfo;
 
 import com.haui.model.Role;
 import com.haui.model.User;
+import com.haui.service.RoleService;
 import com.haui.service.UserService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
 import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
@@ -26,29 +31,54 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
     public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
         OAuth2User oAuth2User = super.loadUser(userRequest);
         Map<String, Object> attributes = oAuth2User.getAttributes();
+        String registrationId = userRequest.getClientRegistration().getRegistrationId();
 
         Role userRole = this.userService.getRoleByName("USER");
 
-        // GOOGLE
-        String email = (String) attributes.get("email");
-        String fullName = (String) attributes.get("name");
+        if (registrationId.equalsIgnoreCase("github")) {
+            String login = (String) attributes.get("login");
+            String fullName = login;
+            String email = (String) attributes.get("email");
+            if (email == null) {
+                email = login + "@github.com";
+            }
 
-        User user = this.userService.getUserByEmail(email);
-        if (user == null) {
-            user = new User();
-            user.setEmail(email);
-            user.setFullName(fullName);
-            user.setProvider("GOOGLE");
-            user.setAvatar("default-google.png");
-            user.setRole(userRole);
-            this.userService.save(user);
+            User user = this.userService.getUserByEmail(email);
+            if (user == null) {
+                // tạo mới
+                user = new User();
+                user.setEmail(email);
+                user.setFullName(fullName);
+                user.setProvider("GITHUB");
+                user.setAvatar("default-github.png");
+                user.setRole(userRole);
+                this.userService.save(user);
+            }
+
+            return new DefaultOAuth2User(
+                    Collections.singletonList(new SimpleGrantedAuthority("ROLE_" + userRole.getName())),
+                    oAuth2User.getAttributes(),
+                    "login");
+        } else { // GOOGLE
+            String email = (String) attributes.get("email");
+            String fullName = (String) attributes.get("name");
+
+            User user = this.userService.getUserByEmail(email);
+            if (user == null) {
+                user = new User();
+                user.setEmail(email);
+                user.setFullName(fullName);
+                user.setProvider("GOOGLE");
+                user.setAvatar("default-google.png");
+                user.setRole(userRole);
+                this.userService.save(user);
+            }
+
+            return new DefaultOAuth2User(
+                    Collections.singletonList(new SimpleGrantedAuthority("ROLE_" + userRole.getName())),
+                    oAuth2User.getAttributes(),
+                    "email");
         }
-
-        return new DefaultOAuth2User(
-                Collections.singletonList(new SimpleGrantedAuthority("ROLE_" + userRole.getName())),
-                oAuth2User.getAttributes(),
-                "email");
-
     }
 
 }

@@ -86,10 +86,10 @@ public class SecurityConfiguration {
                                                 .anyRequest().authenticated())
                                 .oauth2Login(oauth2 -> oauth2
                                                 .loginPage("/home/signin")
-                                                .userInfoEndpoint(info -> info
-                                                                .userService(new CustomOAuth2UserService(userService)))
                                                 .successHandler(customSuccessHandler())
-                                                .failureUrl("/home/signin?error"))
+                                                .failureUrl("/signin?error")
+                                                .userInfoEndpoint(user -> user
+                                                                .userService(new CustomOAuth2UserService(userService))))
                                 .sessionManagement(session -> session
                                                 .sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED))
                                 .logout(logout -> logout
