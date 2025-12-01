@@ -72,6 +72,7 @@ public class SecurityConfiguration {
                                                                 "/home/signin", "/home/signin/**",
                                                                 "/signup/**",
                                                                 "/client/**",
+                                                                "/products/**",
                                                                 "/css/**",
                                                                 "/js/**",
                                                                 "/images/**",
