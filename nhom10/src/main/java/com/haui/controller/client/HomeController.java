@@ -65,13 +65,17 @@ public class HomeController {
 
 	@GetMapping()
 	public String homePage(@AuthenticationPrincipal UserDetails userDetails, Model model) {
-		User user = userService.findByUsername(userDetails.getUsername());
-		List<WishList> wishlistItems = wishListService.getWishListByUser(user.getId());
-
-		model.addAttribute("wishlistItems", wishlistItems);
+		if (userDetails != null) {
+			User user = userService.findByUsername(userDetails.getUsername());
+			List<WishList> wishlistItems = wishListService.getWishListByUser(user.getId());
+			model.addAttribute("wishlistItems", wishlistItems);
+		} else {
+			model.addAttribute("wishlistItems", List.of());
+		}
 
 		List<Product> products = this.productService.getAllProduct();
 		model.addAttribute("products", products);
+
 		return "client/home";
 	}
 

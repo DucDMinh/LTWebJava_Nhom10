@@ -67,11 +67,18 @@ public class SecurityConfiguration {
                                                 .dispatcherTypeMatchers(DispatcherType.FORWARD, DispatcherType.INCLUDE)
                                                 .permitAll()
                                                 .requestMatchers(
-                                                                "/home/**", "/products/**", "/signup/**",
-                                                                "/admin/images/**",
-                                                                "/client/**", "/css/**", "/js/**", "/images/**", "/",
+                                                                "/home", "/home/**",
+                                                                "/home/signin", "/home/signin/**",
+                                                                "/signup/**",
+                                                                "/client/**",
+                                                                "/css/**",
+                                                                "/js/**",
+                                                                "/images/**",
+                                                                "/",
                                                                 "/admin/css/**",
-                                                                "/admin/assets/**", "/admin/js/**")
+                                                                "/admin/assets/**",
+                                                                "/admin/js/**",
+                                                                "/admin/images/**")
                                                 .permitAll()
                                                 .requestMatchers("/admin/orders/**", "/admin/reviews/**", "/admin")
                                                 .hasAnyRole("STAFF", "ADMIN")
@@ -84,10 +91,7 @@ public class SecurityConfiguration {
                                                 .userInfoEndpoint(user -> user
                                                                 .userService(new CustomOAuth2UserService(userService))))
                                 .sessionManagement(session -> session
-                                                .sessionCreationPolicy(SessionCreationPolicy.ALWAYS)
-                                                .invalidSessionUrl("/signin?expired")
-                                                .maximumSessions(1)
-                                                .maxSessionsPreventsLogin(false))
+                                                .sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED))
                                 .logout(logout -> logout
                                                 .deleteCookies("JSESSIONID")
                                                 .invalidateHttpSession(true))

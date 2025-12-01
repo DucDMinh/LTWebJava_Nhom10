@@ -57,7 +57,7 @@
         <c:set var="homeUrl" value="/admin"/>
     </c:otherwise>
 </c:choose>
-    <a href="${homeUrl}" class="btn btn-dark" style="text-decoration: none">
+    <a href="/admin" class="btn btn-dark" style="text-decoration: none">
     <i class="fas fa-home"></i> Về trang chủ
 </a>
 </div>

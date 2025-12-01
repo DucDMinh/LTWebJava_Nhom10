@@ -1,7 +1,7 @@
 package com.haui.service.specification;
 
 import com.haui.model.User;
-import com.haui.model.User_;
+
 import org.springframework.data.jpa.domain.Specification;
 
 public class UserSpec {
@@ -12,7 +12,7 @@ public class UserSpec {
                 return criteriaBuilder.conjunction();
             }
             return criteriaBuilder.like(
-                    criteriaBuilder.lower(root.get(User_.fullName)),
+                    criteriaBuilder.lower(root.get("fullName")),
                     "%" + name.toLowerCase() + "%");
         };
     }

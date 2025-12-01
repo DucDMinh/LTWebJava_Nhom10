@@ -616,16 +616,31 @@
 						</div>
 					</section>
 
+					<!-- Nút chat -->
+					<button class="chat-toggle" onclick="toggleChat()">
+						<i class="fa-regular fa-comment-dots fa-bounce" style="color: #fff;"></i>
+					</button>
 
-					<!--insta Shop-->
-					<jsp:include page="/WEB-INF/view/client/layout/insta-shop.jsp"></jsp:include>
+					<input type="hidden" id="username" value="${empty sessionScope.username ? '' : sessionScope.username}" />
+					<input type="hidden" id="userRole" value="${empty sessionScope.role ? '' : sessionScope.role}" />
 
-					<jsp:include page="/WEB-INF/view/client/layout/footer.jsp"></jsp:include>
-
-
-
-
-					<jsp:include page="/WEB-INF/view/client/layout/js.jsp"></jsp:include>
-				</body>
-
-				</html>
+					<!-- Khung chat (giữ như bạn có) -->
+					<div id="chat-box" style="display:none; flex-direction:column;">
+						<div id="chat-header">
+							Hỗ trợ trực tuyến
+							<button onclick="toggleChat()">✖</button>
+						</div>
+						<div id="chat-messages" style="flex:1; overflow-y:auto; padding:10px;"></div>
+						<form id="messageForm" name="messageForm" onsubmit="sendMsg(event)">
+							<div id="chat-input" style="display:flex;">
+								<input type="text" id="msg" placeholder="Nhập tin nhắn..." style="flex:1;"/>
+								<button type="submit">Gửi</button>
+							</div>
+						</form>
+					</div>
+<!--insta Shop-->
+<jsp:include page="/WEB-INF/view/client/layout/insta-shop.jsp"></jsp:include>
+<jsp:include page="/WEB-INF/view/client/layout/footer.jsp"></jsp:include>
+<jsp:include page="/WEB-INF/view/client/layout/js.jsp"></jsp:include>
+</body>
+</html>
