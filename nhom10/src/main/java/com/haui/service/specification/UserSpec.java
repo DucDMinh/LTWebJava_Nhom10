@@ -1,7 +1,7 @@
 package com.haui.service.specification;
 
 import com.haui.model.User;
-// ĐÃ XÓA: import com.haui.model.User_; -> Vì file này không sinh ra được trên Docker
+
 import org.springframework.data.jpa.domain.Specification;
 
 public class UserSpec {

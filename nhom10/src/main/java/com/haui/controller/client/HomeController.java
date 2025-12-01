@@ -66,24 +66,17 @@ public class HomeController {
 
 	@GetMapping()
 	public String homePage(@AuthenticationPrincipal UserDetails userDetails, Model model) {
-		// 1. Luôn load danh sách sản phẩm dù đã đăng nhập hay chưa
+		if (userDetails != null) {
+			User user = userService.findByUsername(userDetails.getUsername());
+			List<WishList> wishlistItems = wishListService.getWishListByUser(user.getId());
+			model.addAttribute("wishlistItems", wishlistItems);
+		} else {
+			model.addAttribute("wishlistItems", List.of());
+		}
+
 		List<Product> products = this.productService.getAllProduct();
 		model.addAttribute("products", products);
 
-		// 2. Kiểm tra xem user có đăng nhập không để tránh NullPointerException
-		if (userDetails != null) {
-			User user = userService.findByUsername(userDetails.getUsername());
-			if (user != null) {
-				List<WishList> wishlistItems = wishListService.getWishListByUser(user.getId());
-				model.addAttribute("wishlistItems", wishlistItems);
-				// Có thể thêm thông tin user để hiển thị trên header
-				model.addAttribute("currentUser", user); 
-			}
-		} else {
-			// Nếu chưa đăng nhập, truyền list rỗng để JSP không bị lỗi khi lặp
-			model.addAttribute("wishlistItems", new ArrayList<WishList>());
-		}
-		
 		return "client/home";
 	}
 

@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -40,7 +41,7 @@ public class OrderController {
         } catch (Exception e) {
             // Nếu param không phải số, giữ mặc định là 1
         }
-        Pageable pageable = PageRequest.of(page - 1, 7);
+        Pageable pageable = PageRequest.of(page - 1, 7, Sort.by("id").descending());
         Page<Order> ordersPage = this.orderService.fetchAllOrders(pageable);
         List<Order> orders = ordersPage.getContent();
         model.addAttribute("orders", orders);

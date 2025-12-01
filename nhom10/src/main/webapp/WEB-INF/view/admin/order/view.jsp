@@ -49,7 +49,7 @@
                         <tr>
                             <td>${loop.index + 1}</td>
                             <td>
-                                <img src="${env}/admin/images/user/user/${orderProduct.product.image}">
+                                <img src="${env}/images/product/${orderProduct.product.image}">
                             </td>
                             <td>${orderProduct.product.name}</td>
                             <td>${orderProduct.quantity}</td>
@@ -80,7 +80,7 @@
 
             <c:if test="${order.status eq 'COMPLETED'}">
                 <h5>In hóa đơn</h5>
-                <a href="#" class="btn btn-primary">Xác nhận</a>
+                <a href="/report/order/${order.id}" class="btn btn-primary">Xác nhận</a>
             </c:if>
             <div class="mt-3">
                 <a href="/admin/orders" class="btn btn-secondary">⬅ Quay lại danh sách</a>

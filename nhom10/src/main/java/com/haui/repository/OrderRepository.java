@@ -43,4 +43,6 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
         Long sumTotalProducts();
 
         List<Order> findByUser_Id(Long userId);
+
+        Optional<Order> findById(Long id);
 }
