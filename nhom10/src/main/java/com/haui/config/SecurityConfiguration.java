@@ -66,6 +66,7 @@ public class SecurityConfiguration {
                                 .authorizeHttpRequests(authorize -> authorize
                                                 .dispatcherTypeMatchers(DispatcherType.FORWARD, DispatcherType.INCLUDE)
                                                 .permitAll()
+                                                // Cho phép truy cập tài nguyên tĩnh và các trang public
                                                 .requestMatchers(
                                                                 "/home/**", "/products/**", "/signup/**",
                                                                 "/admin/images/**",
@@ -73,6 +74,9 @@ public class SecurityConfiguration {
                                                                 "/admin/css/**",
                                                                 "/admin/assets/**", "/admin/js/**")
                                                 .permitAll()
+                                                // --- THÊM MỚI: Cho phép API QR Code hoạt động không cần đăng nhập ---
+                                                .requestMatchers("/api/qr/**").permitAll()
+                                                // -------------------------------------------------------------------
                                                 .requestMatchers("/admin/orders/**", "/admin/reviews/**", "/admin")
                                                 .hasAnyRole("STAFF", "ADMIN")
                                                 .requestMatchers("/admin/**").hasRole("ADMIN")
@@ -100,6 +104,10 @@ public class SecurityConfiguration {
                                                 .successHandler(customSuccessHandler())
                                                 .permitAll())
                                 .exceptionHandling(ex -> ex.accessDeniedPage("/error/403"));
+
+                // --- THÊM MỚI: Tắt CSRF cho API QR scan để dễ dàng test từ Postman/External
+                // ---
+                http.csrf(csrf -> csrf.ignoringRequestMatchers("/api/qr/**"));
 
                 return http.build();
 
